@@ -1,0 +1,7 @@
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.csproj.AssemblyReference.cache
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.AssemblyInfoInputs.cache
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.AssemblyInfo.cs
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.csproj.CoreCompileInputs.cache
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\MatasPC\source\repos\IT Balandžiai\PokerFace\obj\Debug\net6.0\PokerFace.MvcApplicationPartsAssemblyInfo.cache
