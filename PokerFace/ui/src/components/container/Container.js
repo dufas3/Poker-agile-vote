@@ -1,7 +1,11 @@
-
+import Header from "../header/Header";
 function Container(){
     return(
-        <h2>Cia kazkas bus Testing policy changessssssss</h2>
+        <>
+            <Header/>
+            <h2>Cia kazkas bus Testing policy changessssssss</h2>
+        </>
+
     );
 }
 export default Container;

@@ -10,7 +10,7 @@ function Header() {
                 <h3 className="login">&#61447; Login</h3>
             </Link>
 
-            <a href="src/components/header/Header" className="logo-link">
+            <a href="https://www.festo.com/us/en/" className="logo-link">
                 <img src={FestoLogo} className="logo"></img>
             </a>
         </header>

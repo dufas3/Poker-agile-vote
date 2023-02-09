@@ -8,8 +8,6 @@ a{
 }
 .App{
     margin-top: 75px;
-    height: 804px;
+    height: 810px;
     padding-top: 10px;
-    display: flex;
-    flex-direction: row;
 }
