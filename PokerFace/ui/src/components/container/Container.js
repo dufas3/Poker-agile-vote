@@ -1,9 +1,12 @@
-import Header from "../header/Header";
-function Container(){
-    return(
+import Nav from "../header/Nav";
+import Join from "../join/Join";
+
+
+function Container() {
+    return (
         <>
-            <Header/>
-            <h2>Cia kazkas bus Testing policy changessssssss</h2>
+            <Nav />
+            <Join />
         </>
 
     );
