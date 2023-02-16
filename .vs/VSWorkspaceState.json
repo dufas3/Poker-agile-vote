@@ -2,8 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\PokerFace",
-    "\\PokerFace\\Data"
+    "\\PokerFace\\ui",
+    "\\PokerFace\\ui\\public",
+    "\\PokerFace\\ui\\src",
+    "\\PokerFace\\ui\\src\\components",
+    "\\PokerFace\\ui\\src\\components\\app",
+    "\\PokerFace\\ui\\src\\components\\header",
+    "\\PokerFace\\ui\\src\\components\\join",
+    "\\PokerFace\\ui\\src\\components\\login"
   ],
-  "SelectedNode": "\\PokerFace",
+  "SelectedNode": "\\PokerFace\\ui\\src\\components\\footer\\Footer.css",
   "PreviewInSolutionExplorer": false
 }
