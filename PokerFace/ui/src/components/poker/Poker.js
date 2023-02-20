@@ -8,11 +8,12 @@ function Poker() {
         <>
             <Nav/>
             <div className="poker">
-            <div className="voting">
-                <VotingArea/>
-                <VotingControls/>
-            </div>
-            <PlayerList/>
+                <div className="voting">
+                    <VotingArea/>
+                    {localStorage.getItem("role") == "moderator" ?
+                        <VotingControls/> : ""}
+                </div>
+                <PlayerList/>
             </div>
         </>
 
