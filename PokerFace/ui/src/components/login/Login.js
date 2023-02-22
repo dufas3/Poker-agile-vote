@@ -64,7 +64,7 @@ function Login() {
                        placeholder="  &#61475;   Enter your password"></input>
 
                 <div className="error">{errors &&
-                    <h5 className="error-text text-danger">Worng username or password!</h5>}
+                    <h5 className="error-text text-danger">Wrong username or password!</h5>}
                 </div>
 
                 <button onClick={() => {
