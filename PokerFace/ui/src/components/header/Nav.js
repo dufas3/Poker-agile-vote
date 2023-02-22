@@ -22,7 +22,7 @@ const Nav = () => {
                     <a class="navbar-brand">Festo Scrum Poker</a>
                     {!userName ?
                         <Link to="/Login">
-                            <a className="btn"><i className="bi bi-person-fill" />Login</a>
+                            <a className="btn" id="H1"><i className="bi bi-person-fill" />Login</a>
                         </Link> :
                         <div className="component">
                             <Dropdown>
@@ -33,7 +33,7 @@ const Nav = () => {
                                 <Dropdown.Menu>
                                     <Dropdown.Item>
                                         <Link to="/">
-                                            <a onClick={() => HandleLogout()} className="btn">
+                                            <a onClick={() => HandleLogout()} className="btn" id="logoutbutton">
                                                 <i className="fa-solid fa-arrow-right-from-bracket" />Logout</a>
                                         </Link>
                                     </Dropdown.Item>
@@ -41,7 +41,7 @@ const Nav = () => {
                             </Dropdown>
                         </div>
                     }
-                    <a class="navbar-brand" href="https://www.festo.com/us/en/" target="_blank">
+                    <a class="navbar-brand" href="https://www.festo.com/us/en/" target="_blank" id="logolink">
                         <img src={FestoLogo} className="logo" />
                     </a>
                 </div>

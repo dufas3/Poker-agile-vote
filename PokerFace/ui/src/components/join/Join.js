@@ -49,7 +49,7 @@ function Join() {
                     setName(e.currentTarget.value)
                 }} type="text" placeholder="  &#61447;   Enter your name"
                        className={errors ? "border-danger" : ""}
-                       minlength="2" maxLength="25" length></input>
+                       minlength="2" maxLength="25" length id="loginname"></input>
 
                 <div className="error">{errors &&
                     <h5 className="error-text text-danger">Please enter username!</h5>}
@@ -57,7 +57,7 @@ function Join() {
 
                 <button onClick={() => {
                     validation()
-                }} className="join-button">
+                }} className="join-button" id="joinbutton">
                     {enter ? <Link to="/Poker">
                         <h3>Enter</h3>
                     </Link> : <Link to="/">
@@ -71,7 +71,7 @@ function Join() {
                     <h3 className="middle-text"> Already have an account? </h3>
                     <h3 className="right-line"> ——————</h3>
                 </div>
-                <Link to="/Login" className="button">
+                <Link to="/Login" className="button" id="loginbutton">
                     <h3 className="login-button">Login</h3>
                 </Link>
             </div>
