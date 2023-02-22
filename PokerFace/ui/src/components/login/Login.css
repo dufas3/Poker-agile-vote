@@ -48,10 +48,10 @@
     border-style: solid;
     border-color: cornflowerblue;
 }
-.login .login-button:hover{
-    background: #5e9b6e;
-    border-color: #5e9b6e;
-}
+    .login .login-button:hover {
+        background: #0307fc;
+        border-color: #0307fc;
+    }
 .login .button{
     text-decoration: none;
 
