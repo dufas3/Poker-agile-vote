@@ -112,15 +112,15 @@
     text-decoration: none;
 }
 
-.register .join-button h3:hover {
-    background: #5e9b6e;
-    border-color: #5e9b6e;
-}
+    .register .join-button h3:hover {
+        background: #0307fc;
+        border-color: #0307fc;
+    }
 
-.register .login-button:hover {
-    border-color: #5e9b6e;
-    color: #5e9b6e;
-}
+    .register .login-button:hover {
+        border-color: #0307fc;
+        color: #0307fc;
+    }
 /*-------------------------------(Errors)-------------------------------*/
 .error{
     height: 10px;
