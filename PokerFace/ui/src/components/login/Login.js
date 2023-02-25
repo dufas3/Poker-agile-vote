@@ -2,46 +2,38 @@ import './Login.css'
 import {Link} from "react-router-dom";
 import Nav from "../header/Nav";
 import {useEffect, useState} from "react";
+import getModerator from "../../api/getModerator";
 
 function Login() {
-
 
     localStorage.removeItem("name");
     localStorage.removeItem("role");
 
-    const testEmail = "testemail@gmail.com";
-    const testPassword = "testpassword123";
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [roomId, setRoomId] = useState('');
     const [enter, setEnter] = useState(false);
     const [errors, setErrors] = useState(false);
 
-    useEffect(() => {
-        if (!email || !password) {
-            setEnter(false);
-        } else if (email.length == 0 || password.length == 0) {
-            setEnter(false);
-        } else if (email == testEmail && password == testPassword) {
-            setEnter(true);
-        } else {
-            setEnter(false);
-        }
-    }, [email, password])
+    let generatedId = (Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
+    setRoomId(generatedId);
+    console.log(roomId);
 
-    const validation = () => {
-        if (!email || !password) {
-            setErrors(true);
-        } else if (email.length == 0 || password.length == 0) {
-            setErrors(true);
-        } else if (email == testEmail && password == testPassword) {
+    const validation = async () => {
+        let response = await getModerator(email, password);
+
+        if (response['Id'] == undefined) {
+            setEnter(false);
+        } else {
             setErrors(false);
-            localStorage.setItem("name", email);
-            localStorage.setItem("role", "moderator");
-        } else {
-            setErrors(true);
+            setEnter(true);
         }
 
+        if (enter == false) {
+            setErrors(true);
+        } else {
+            setErrors(false);
+        }
     }
     return (
         <>
@@ -56,12 +48,12 @@ function Login() {
                 <input onChange={(e) => {
                     setEmail(e.currentTarget.value)
                 }} className={errors ? "border-danger" : ""} type="email"
-                       placeholder="  &#61447;   Enter your email" id="emailenter"></input>
+                       placeholder="&#61447;   Enter your email" id="emailenter"></input>
 
                 <input onChange={(e) => {
                     setPassword(e.currentTarget.value)
                 }} className={errors ? "border-danger" : ""} type="password"
-                       placeholder="  &#61475;   Enter your password" id="passwordenter"></input>
+                       placeholder="&#61475;   Enter your password" id="passwordenter"></input>
 
                 <div className="error">{errors &&
                     <h5 className="error-text text-danger">Wrong username or password!</h5>}
