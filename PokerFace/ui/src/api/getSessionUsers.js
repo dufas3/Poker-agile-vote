@@ -1,12 +1,15 @@
-const GetModerator = async (props) => {
-  if (!props) return;
+const GetSessionUsers = async (props) => {
   const requestOptions = {
     method: "Get",
     headers: { "Content-Type": "application/json" },
   };
-  const url = new URL("https://localhost:5001/api/user/getModerator");
-  url.searchParams.append("userEmail", props.email);
-  url.searchParams.append("userPassword", props.password);
+
+  if (!props) return;
+
+  console.log("props", props);
+
+  const url = new URL("https://localhost:5001/api/session/getSessionUsers");
+  url.searchParams.append("id", props.id);
 
   try {
     const response = await fetch(url.toString(), requestOptions);
@@ -16,8 +19,8 @@ const GetModerator = async (props) => {
     const data = isJson && (await response.json());
     return data;
   } catch (error) {
-    console.log("Caugh error");
+    console.log("Caught error", error);
     return;
   }
 };
-export default GetModerator;
+export default GetSessionUsers;

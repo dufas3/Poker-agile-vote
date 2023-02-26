@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using PokerFace.Data;
+using PokerFace.Data.Common;
 using PokerFace.Data.Entities;
 using PokerFace.Data.Repositories;
 
@@ -11,8 +12,8 @@ namespace PokerFace.Commands.User
 
     public class GetUsersCommandHandler : IRequestHandler<GetUsersCommand, List<Data.Entities.User>>
     {
-        private readonly UsersRepository usersRepository;
-        public GetUsersCommandHandler(UsersRepository usersRepository)
+        private readonly IUserRepository usersRepository;
+        public GetUsersCommandHandler(IUserRepository usersRepository)
         {
             this.usersRepository = usersRepository;
         }
@@ -22,7 +23,7 @@ namespace PokerFace.Commands.User
             if (users == null)
                 throw new BadHttpRequestException("No users");
             return users;*/
-            return UsersRepository.StaticUsers;
+            return null;
         }
     }
 }

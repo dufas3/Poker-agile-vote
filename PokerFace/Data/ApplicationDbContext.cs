@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PokerFace.Data.Common;
 using PokerFace.Data.Entities;
 
 namespace PokerFace.Data
@@ -19,6 +20,22 @@ namespace PokerFace.Data
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<User>()
+            //   .HasKey(u => u.Id);
+
+            modelBuilder.Entity<Session>()
+                .HasKey(s => s.Id);
+            
+            modelBuilder.Entity<Session>()
+                .Property(s => s.UserIds)
+                .HasConversion(
+                    v => string.Join(',', v),   
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList());
+        }
+
         public DbSet<User> Users { get; set; }
+        public DbSet<Session> Sessions { get; set; }
     }
 }

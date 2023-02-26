@@ -1,5 +1,6 @@
 using MediatR;
 using PokerFace.Data;
+using PokerFace.Data.Common;
 using PokerFace.Data.Repositories;
 
 namespace PokerFace.Web
@@ -11,7 +12,7 @@ namespace PokerFace.Web
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddMediatR(typeof(Program));
-           // builder.Services.AddSingleton<ApplicationDbContext>();
+            // builder.Services.AddSingleton<ApplicationDbContext>();
 
             // Add services to the container.
 
@@ -20,7 +21,8 @@ namespace PokerFace.Web
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddDbContext<ApplicationDbContext>();
-            builder.Services.AddScoped<UsersRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 
             builder.Services.AddCors(options =>
             {
@@ -28,6 +30,8 @@ namespace PokerFace.Web
                                   policy =>
                                   {
                                       policy.WithOrigins("http://localhost:3000");
+                                      policy.AllowAnyHeader();
+                                      policy.AllowAnyMethod();
                                   });
             });
 

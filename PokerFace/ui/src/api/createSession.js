@@ -1,12 +1,16 @@
-const GetModerator = async (props) => {
+const CreateSession = async (props) => {
   if (!props) return;
+  console.log("create session props", props);
   const requestOptions = {
-    method: "Get",
+    method: "Post",
     headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: props.id,
+      moderatorId: props.moderatorId,
+    }),
   };
-  const url = new URL("https://localhost:5001/api/user/getModerator");
-  url.searchParams.append("userEmail", props.email);
-  url.searchParams.append("userPassword", props.password);
+
+  const url = new URL("https://localhost:5001/api/session/createSession");
 
   try {
     const response = await fetch(url.toString(), requestOptions);
@@ -16,8 +20,9 @@ const GetModerator = async (props) => {
     const data = isJson && (await response.json());
     return data;
   } catch (error) {
-    console.log("Caugh error");
+    console.log("Caught error");
     return;
   }
 };
-export default GetModerator;
+
+export default CreateSession;
