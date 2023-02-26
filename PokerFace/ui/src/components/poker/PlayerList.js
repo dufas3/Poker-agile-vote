@@ -10,7 +10,10 @@ const PlayerList = () => {
       let response = await GetSessionUsers({
         id: localStorage.getItem("roomId"),
       });
-      if (response) setUsers(response);
+      if (response) {
+        console.log(response);
+        setUsers(response);
+      }
     };
     GetData();
     return () => {};

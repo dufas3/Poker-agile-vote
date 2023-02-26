@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using PokerFace.Data.Common;
-using PokerFace.Data.Entities;
 
 namespace PokerFace.Commands.Session
 {
-    public class CreateSessionCommand : IRequest<Data.Entities.Session>
+    public class CreateSessionCommand : IRequest
     {
         public int Id { get; set; }
         public int ModeratorId { get; set; }
     }
-    public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand, Data.Entities.Session>
+    public class CreateSessionCommandHandler : IRequestHandler<CreateSessionCommand>
     {
         private readonly ISessionRepository sessionRepository;
         private readonly IUserRepository userRepository;
@@ -20,18 +19,25 @@ namespace PokerFace.Commands.Session
             this.userRepository = userRepository;
         }
 
-        public async Task<Data.Entities.Session> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateSessionCommand request, CancellationToken cancellationToken)
         {
             Data.Entities.Session session = new Data.Entities.Session();
+            var moderator = await userRepository.GetAsync(request.ModeratorId);
 
-            if (await userRepository.GetAsync(request.ModeratorId) == null)
-                return null;
+            if (moderator == null)
+                throw new BadHttpRequestException("No moderator found");
 
-            session.Id = request.Id;
+            if (moderator.RoomId != null)
+                throw new BadHttpRequestException("This moderator already has active session");
+
+            session.RoomId = request.Id;
             session.ModeratorId = request.ModeratorId;
-            await sessionRepository.AddAsync(session);
+            moderator.RoomId = session.RoomId;
 
-            return session;
+            await sessionRepository.AddAsync(session);
+            await userRepository.UpdateAsync(moderator);
+
+            return Unit.Value;
         }
     }
 }
