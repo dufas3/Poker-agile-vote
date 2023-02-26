@@ -5,14 +5,15 @@ import "./Nav.css";
 import { useEffect, useState } from "react";
 
 const Nav = () => {
-  const [userName, setUserName] = useState(undefined);
+
+  const [userData, setUserData] = useState(undefined);
+
   useEffect(() => {
-    setUserName(localStorage.getItem("name"));
-  }, [localStorage.getItem("name")]);
+      setUserData(JSON.parse(localStorage.getItem("userData")));
+  }, ([]));
 
   const HandleLogout = () => {
-    localStorage.removeItem("name");
-    localStorage.removeItem("roomId");
+    localStorage.removeItem("userData");
   };
 
   return (
@@ -20,7 +21,7 @@ const Nav = () => {
       <nav className="navbar navbar-expand-sm navbar-light bg-light border-bottom box-shadow mb-3 fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand">Festo Scrum Poker</a>
-          {!userName ? (
+          {!userData ? (
             <Link to="/Login">
               <a className="btn" id="H1">
                 <i className="bi bi-person-fill" />
@@ -31,12 +32,12 @@ const Nav = () => {
             <div className="component">
               <Dropdown>
                 <Dropdown.Toggle variant="btn-secondary" id="dropdown-basic">
-                  <i className="bi bi-person-fill" /> {userName}
+                  <i className="bi bi-person-fill" /> {userData["name"]}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
                   <Dropdown.Item>
-                    <Link to="/">
+                    <Link to="/" style={{ textDecoration: 'none' }}>
                       <a
                         onClick={() => HandleLogout()}
                         className="btn"
@@ -52,7 +53,7 @@ const Nav = () => {
             </div>
           )}
           <a
-            class="navbar-brand"
+            className="navbar-brand"
             href="https://www.festo.com/us/en/"
             target="_blank"
             id="logolink"

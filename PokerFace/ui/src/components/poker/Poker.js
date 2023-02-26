@@ -4,15 +4,20 @@ import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
 
 function Poker() {
+
+  let userData = JSON.parse(localStorage.getItem("userData"))
+
+  console.log(userData["role"])
+
   return (
     <>
-      {localStorage.getItem("roomId") ? (
+      {userData["roomId"] ? (
         <>
           <Nav />
           <div className="poker">
             <div className="voting">
               <VotingArea />
-              {localStorage.getItem("role") == "moderator" ? (
+              {userData["role"] == "moderator" ? (
                 <VotingControls />
               ) : (
                 ""
