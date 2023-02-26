@@ -55,6 +55,7 @@
     }
 .login .button{
     text-decoration: none;
+    border-style: none;
 
 }
 .login .reset-button{

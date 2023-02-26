@@ -50,7 +50,7 @@ function Join() {
                     setName(e.currentTarget.value)
                 }} type="text" placeholder="&#61447;   Enter your name"
                        className={errors ? "border-danger" : ""}
-                       minlength="2" maxLength="25" length id="loginname"></input>
+                       minLength="2" maxLength="25" length id="loginname"></input>
                 <input onChange={(e) => {
                     setId(e.currentTarget.value)
                 }} type="number" placeholder="   Enter room ID"
@@ -64,9 +64,9 @@ function Join() {
                 <button onClick={() => {
                     validation()
                 }} className="join-button" id="joinbutton">
-                    {enter ? <Link to="/Poker">
+                    {enter ? <Link to="/Poker" style={{ textDecoration: 'none' }}>
                         <h3>Enter</h3>
-                    </Link> : <Link to="/">
+                    </Link> : <Link to="/" style={{ textDecoration: 'none' }}>
                         <h3>Enter</h3>
                     </Link>
                     }

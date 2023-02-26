@@ -2,7 +2,7 @@ import "./Poker.css";
 import { useState } from "react";
 
 function VotingControls() {
-  const [inSettings, setInSettings] = useState(true);
+  const [inSettings, setInSettings] = useState(false);
 
   const test = () => {
     if (inSettings) {
