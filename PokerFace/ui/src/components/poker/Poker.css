@@ -78,4 +78,71 @@
     flex-direction: row;
     justify-content: space-evenly;
 }
+.card{
+    width: 150px;
+    height: 200px;
+    background-color: white;
+    border-width: 1px;
+    border-color: #ececec;
+    border-radius: 5px;
+    border-style: solid;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-middle{
+    border-width: 1px;
+    border-color: #cccccc;
+    border-radius: 5px;
+    border-style: solid;
+    width: 100px;
+    height: 150px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-middle .number{
+    font-family: Snell Roundhand, cursive;
+}
+.number-top {
+    text-align: right;
+    padding-right: 95px;
+    font-family: Snell Roundhand, cursive;
+}
+.number-bottom {
+    transform: rotate(180deg);
+    padding-right: 95px;
+    font-family: Snell Roundhand, cursive;
+}
+.number-top1 {
+    text-align: right;
+    padding-right: 120px;
+    font-family: Snell Roundhand, cursive;
+}
+.number-bottom1 {
+    transform: rotate(180deg);
+    padding-right: 120px;
+    font-family: Snell Roundhand, cursive;
+}
+.card:hover{
+    border-width: 1px;
+    border-color: #0307fc;
+    border-style: solid;
+    border-radius: 5px;
+}
+.row-1{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.row-2{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
 

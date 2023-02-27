@@ -9,11 +9,12 @@
 .login input{
     width: 400px;
     height: 40px;
-    margin-bottom: 15px;
     border-radius: 5px;
     border-style: solid;
     font-family: Segoe UI, FontAwesome;
     color: #706f6f;
+    padding: 12px 20px;
+    margin: 8px 0;
 }
 
 .login .info h2{
@@ -54,6 +55,7 @@
     }
 .login .button{
     text-decoration: none;
+    border-style: none;
 
 }
 .login .reset-button{

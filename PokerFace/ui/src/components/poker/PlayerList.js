@@ -1,17 +1,22 @@
 import "./Poker.css";
 import UserIcon from "../../imgs/user.png";
 import { useEffect, useState } from "react";
-function PlayerList() {
+import GetSessionUsers from "../../api/getSessionUsers";
+const PlayerList = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    //get all users api
-    fetch("https://localhost:5001/api/user/getall")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setUsers(data);
+    const GetData = async () => {
+      let response = await GetSessionUsers({
+        id: localStorage.getItem("roomId"),
       });
+      if (response) {
+        console.log(response);
+        setUsers(response);
+      }
+    };
+    GetData();
+    return () => {};
   }, []);
 
   return (
@@ -22,6 +27,6 @@ function PlayerList() {
       ))}
     </div>
   );
-}
+};
 
 export default PlayerList;
