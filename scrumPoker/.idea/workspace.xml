@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79204f4c-f074-408d-bae9-075a99b01112" name="Changes" comment="" />
+    <list default="true" id="79204f4c-f074-408d-bae9-075a99b01112" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/libs/msedgedriver_110.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_30.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Selenium.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Selenium.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/Selenium.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/Selenium.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scrumPokerProject/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../scrumPokerProject/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scrumPokerProject/src/test/java/Selenium.java" beforeDir="false" afterPath="$PROJECT_DIR$/../scrumPokerProject/src/test/java/Selenium.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/Selenium.class" beforeDir="false" afterPath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/Selenium.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/SeleniumJunitFooterTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/SeleniumJunitFooterTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/SeleniumJunitHeaderTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/SeleniumJunitHeaderTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/SeleniumJunitLoginTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../scrumPokerProject/target/test-classes/SeleniumJunitLoginTest.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +41,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Github/ITBalandziai/scrumPoker/src/test/java",
+    "last_opened_file_path": "C:/Users/tomas/Desktop/github/ITBalandziai/scrumPoker",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0"
@@ -61,6 +76,10 @@
       <option name="presentableId" value="Default" />
       <updated>1677252427303</updated>
       <workItem from="1677252428693" duration="347000" />
+      <workItem from="1677503677431" duration="40000" />
+      <workItem from="1677504438818" duration="1715000" />
+      <workItem from="1677506198468" duration="746000" />
+      <workItem from="1677507967089" duration="621000" />
     </task>
     <servers />
   </component>

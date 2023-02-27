@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="scrumPoker" />
         <module name="scrumPoker - Copy" />
+        <module name="scrumPokerProject" />
       </profile>
     </annotationProcessing>
   </component>
