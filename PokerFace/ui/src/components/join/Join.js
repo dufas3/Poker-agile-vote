@@ -1,37 +1,46 @@
 import './Join.css'
-import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useCallback, useEffect, useState} from "react";
 import Nav from "../header/Nav";
+import addToSession from "../../api/addToSession";
 
 function Join() {
 
-    localStorage.removeItem("name");
-    localStorage.removeItem("role");
-
     const [name, setName] = useState('');
-    const [id, setId] = useState('');
+    const [roomId, setId] = useState('');
     const [enter, setEnter] = useState(false);
     const [errors, setErrors] = useState(false);
+    const [userData, setUserData] = useState({})
 
-    useEffect(() => {
-        if (!name) {
-            setEnter(false);
-        } else if (name.replaceAll(" ", "").length == 0) {
-            setEnter(false);
-        } else {
-            setEnter(true);
+    const [navig, setNavig] = useState();
+
+    const navigate = useNavigate();
+    const handleOnClick = useCallback(() => navig, [navigate]);
+
+    const validation = async () => {
+        let response = await addToSession({name: name, roomId: roomId});
+        if (!response) {
+            setErrors(true);
+            return;
         }
-    }, [name])
-
-    const validation = () => {
-        if (!name) {
+        console.log(response);
+        if (!name || !roomId) {
             setErrors(true);
         } else if (name.replaceAll(" ", "").length == 0) {
             setErrors(true);
         } else {
             setErrors(false);
-            localStorage.setItem("name", name);
-            localStorage.setItem("role", "player");
+            const userData = {
+                name: name,
+                roomId: roomId,
+                role: "player"
+            };
+
+            setUserData(userData)
+            setNavig(navigate("/Poker", {replace: true, state: userData}));
+
+            handleOnClick();
+
         }
 
     }
@@ -64,9 +73,9 @@ function Join() {
                 <button onClick={() => {
                     validation()
                 }} className="join-button" id="joinbutton">
-                    {enter ? <Link to="/Poker" style={{ textDecoration: 'none' }}>
+                    {enter ? <Link to="/Poker" style={{textDecoration: 'none'}}>
                         <h3>Enter</h3>
-                    </Link> : <Link to="/" style={{ textDecoration: 'none' }}>
+                    </Link> : <Link to="/" style={{textDecoration: 'none'}}>
                         <h3>Enter</h3>
                     </Link>
                     }

@@ -1,7 +1,7 @@
 import "./Login.css";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Nav from "../header/Nav";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import GetModerator from "../../api/getModerator";
 import CreateSession from "../../api/createSession";
 
@@ -14,6 +14,12 @@ function Login() {
     const [errors, setErrors] = useState(false);
     const [responseUser, setResponseUser] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
+    const [navig, setNavig] = useState();
+
+    const navigate = useNavigate();
+    const handleOnClick = useCallback(() => navig, [navigate]);
+
 
     const validation = async () => {
         setIsLoading(true);
@@ -26,29 +32,27 @@ function Login() {
             return;
         } else {
             setErrors(false);
-
-            setEnter(true);
-
+            setIsLoading(true);
 
             let generatedId = (Math.floor(Math.random() * 10000) + 10000)
                 .toString()
                 .substring(1);
-
-            console.log(generatedId);
-
-            localStorage.removeItem("userData")
+            if (generatedId[0] == "0") generatedId = "1" + generatedId.slice(1);
 
             const userData = {
-                name : email,
-                roomId : generatedId,
-                role : "moderator"
-            }
-            window.localStorage.setItem("userData", JSON.stringify(userData));
-
+                name: email,
+                roomId: generatedId,
+                role: "moderator",
+            };
 
             await CreateSession({id: generatedId, moderatorId: response.id});
-            window.location.replace('http://localhost:3000/Poker');
+            setUserData(userData);
+            console.log("userdata in login", userData);
+            setIsLoading(false);
+            setEnter(true);
+            setNavig(navigate("/Poker", { replace: true, state: userData }));
 
+            handleOnClick();
 
         }
     };
@@ -103,13 +107,21 @@ function Login() {
                         id="loginbutton"
                     >
                         {enter ? (
-                            <Link to="/Poker" style={{ textDecoration: 'none' }}>
+                            <Link
+                                to="/Poker"
+                                state={{
+                                    name: userData.name,
+                                    roomId: userData.roomId,
+                                    role: userData.role,
+                                }}
+                                style={{textDecoration: "none"}}
+                            >
                                 <h3 className="login-button">
                                     {isLoading ? "Loading" : "Login"}
                                 </h3>
                             </Link>
                         ) : (
-                            <Link to="/Login" style={{ textDecoration: 'none' }}>
+                            <Link to="/Login" style={{textDecoration: "none"}}>
                                 <h3 className="login-button">
                                     {isLoading ? "Loading" : "Login"}
                                 </h3>

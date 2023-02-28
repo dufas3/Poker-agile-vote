@@ -23,7 +23,7 @@ namespace PokerFace.Commands.User
         public async Task<UserDto> Handle(AddToSessionCommand request, CancellationToken cancellationToken)
         {
             //check if session existing
-            var session = await sessionRepository.GetAsync(request.RoomId);
+            var session = await sessionRepository.GetByRoomIdAsync(request.RoomId);
             if (session == null)
                 throw new BadHttpRequestException("Session not found!");
 
