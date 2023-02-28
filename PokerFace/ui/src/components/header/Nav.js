@@ -4,17 +4,15 @@ import { Link } from "react-router-dom";
 import "./Nav.css";
 import { useEffect, useState } from "react";
 
-const Nav = () => {
-
-  const [userData, setUserData] = useState(undefined);
+const Nav = (props) => {
+  const [userData, setUserData] = useState({ name: "", roomId: "", role: "" });
 
   useEffect(() => {
-      setUserData(JSON.parse(localStorage.getItem("userData")));
-  }, ([]));
-
-  const HandleLogout = () => {
-    localStorage.removeItem("userData");
-  };
+    const setData = () => {
+      setUserData(props.userData);
+    };
+    setData();
+  }, []);
 
   return (
     <header>
@@ -32,17 +30,13 @@ const Nav = () => {
             <div className="component">
               <Dropdown>
                 <Dropdown.Toggle variant="btn-secondary" id="dropdown-basic">
-                  <i className="bi bi-person-fill" /> {userData["name"]}
+                  <i className="bi bi-person-fill" /> {userData.name}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
                   <Dropdown.Item>
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                      <a
-                        onClick={() => HandleLogout()}
-                        className="btn"
-                        id="logoutbutton"
-                      >
+                    <Link to="/" style={{ textDecoration: "none" }}>
+                      <a onClick={() => {}} className="btn" id="logoutbutton">
                         <i className="fa-solid fa-arrow-right-from-bracket" />
                         Logout
                       </a>
