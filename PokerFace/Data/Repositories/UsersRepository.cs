@@ -36,12 +36,9 @@ namespace PokerFace.Data.Repositories
             if (session == null)
                 throw new BadHttpRequestException("There's no session with this Id!");
 
-            var ussr = await context.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+            var ussr = await context.Users.AddAsync(user);       
 
-            if (ussr == null)
-                throw new BadHttpRequestException("There's no user with this Id!");
-
-            session.UserIds.Add(ussr.Id);
+            session.UserIds.Add(ussr.Entity.Id);
             context.Sessions.Update(session);
             await context.SaveChangesAsync();
         }
