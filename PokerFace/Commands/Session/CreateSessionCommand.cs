@@ -27,8 +27,8 @@ namespace PokerFace.Commands.Session
             if (moderator == null)
                 throw new BadHttpRequestException("No moderator found");
 
-            if (moderator.RoomId != null)
-                throw new BadHttpRequestException("This moderator already has active session");
+            //if (moderator.RoomId != null)
+                //throw new BadHttpRequestException("This moderator already has active session");
 
             session.RoomId = request.Id;
             session.ModeratorId = request.ModeratorId;
