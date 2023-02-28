@@ -11,7 +11,7 @@ namespace PokerFace.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAll([FromRoute]GetUsersCommand command) => await SendMessage(command);
         [HttpPost]
-        public async Task<ActionResult> AddToSession([FromBody] GetUsersCommand command) => await SendMessage(command);
+        public async Task<ActionResult> AddToSession([FromBody] AddToSessionCommand command) => await SendMessage(command);
 
     }
 }

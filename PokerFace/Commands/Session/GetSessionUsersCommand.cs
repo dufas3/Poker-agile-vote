@@ -1,14 +1,15 @@
 ﻿using MediatR;
+using PokerFace.Commands.User;
 using PokerFace.Data.Common;
 
 namespace PokerFace.Commands.Session
 {
-    public class GetSessionUsersCommand : IRequest<List<Data.Entities.User>>
+    public class GetSessionUsersCommand : IRequest<List<UserDto>>
     {
         public int Id { get; set; }
     }
 
-    public class GetSessionUsersCommandHandler : IRequestHandler<GetSessionUsersCommand, List<Data.Entities.User>>
+    public class GetSessionUsersCommandHandler : IRequestHandler<GetSessionUsersCommand, List<UserDto>>
     {
         private readonly ISessionRepository sessionRepository;
 
@@ -17,12 +18,15 @@ namespace PokerFace.Commands.Session
             this.sessionRepository = sessionRepository;
         }
 
-        public async Task<List<Data.Entities.User>> Handle(GetSessionUsersCommand request, CancellationToken cancellationToken)
+        public async Task<List<UserDto>> Handle(GetSessionUsersCommand request, CancellationToken cancellationToken)
         {
             var session = await sessionRepository.GetByRoomIdAsync(request.Id);
             if (session == null)
                 throw new BadHttpRequestException("No session found!");
-            return await sessionRepository.GetSessionUsersAsync(request.Id);
+
+            var users = await sessionRepository.GetSessionUsersAsync(request.Id);
+
+            return users.Select(x => x.ToUserDto()).ToList();
         }
     }
 }

@@ -3,13 +3,14 @@ using PokerFace.Data.Common;
 
 namespace PokerFace.Commands.User
 {
-    public class AddToSessionCommand : IRequest
+    //will create new user here
+    public class AddToSessionCommand : IRequest<UserDto>
     {
-        public int UserId { get; set; }
-        public int SessionId { get; set; }
+        public string Name { get; set; }
+        public int RoomId { get; set; }
     }
 
-    public class AddToSessionCommandHandler : IRequestHandler<AddToSessionCommand>
+    public class AddToSessionCommandHandler : IRequestHandler<AddToSessionCommand, UserDto>
     {
         ISessionRepository sessionRepository { get; set; }
         IUserRepository userRepository { get; set; }
@@ -19,14 +20,18 @@ namespace PokerFace.Commands.User
             this.userRepository = userRepository;
             this.sessionRepository = sessionRepository;
         }
-        public async Task<Unit> Handle(AddToSessionCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(AddToSessionCommand request, CancellationToken cancellationToken)
         {
-            //fix
-            var session = await sessionRepository.GetAsync(request.SessionId);
+            //check if session existing
+            var session = await sessionRepository.GetAsync(request.RoomId);
             if (session == null)
                 throw new BadHttpRequestException("Session not found!");
 
-            return Unit.Value;
+            var user = new Data.Entities.User { Name = request.Name, RoomId = request.RoomId };
+
+            await userRepository.AddUserToSessionAsync(user, request.RoomId);
+
+            return user.ToUserDto();
         }
     }
 }

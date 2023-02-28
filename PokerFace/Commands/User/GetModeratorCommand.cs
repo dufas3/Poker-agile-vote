@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using PokerFace.Data;
 
 namespace PokerFace.Commands.User
@@ -22,7 +21,7 @@ namespace PokerFace.Commands.User
             var user = context.Users.First(x => x.Name == request.UserEmail);
             if (user == null || user.Password != request.UserPassword)
                 return null;
-            return user.ToDto();
+            return user.ToModeratorDto();
         }
     }
 }

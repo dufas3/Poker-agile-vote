@@ -4,12 +4,21 @@ namespace PokerFace.Commands
 {
     public static class DtoExtensions
     {
-        public static ModeratorDto ToDto(this Data.Entities.User user)
+        public static ModeratorDto ToModeratorDto(this Data.Entities.User user)
         {
             return new ModeratorDto()
             {
                 Email = user.Name,
                 Id = user.Id
+            };
+        }
+        public static UserDto ToUserDto(this Data.Entities.User user)
+        {
+            return new UserDto()
+            {
+                Name = user.Name,
+                Id = user.Id,
+                CardId = user.SelectedCard != null ? user.SelectedCard.Value : 0,
             };
         }
     }
