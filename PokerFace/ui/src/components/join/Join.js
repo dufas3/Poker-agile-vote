@@ -30,7 +30,13 @@ function Join() {
             setErrors(true);
         } else {
             setErrors(false);
-            setUserData({name: name, userId: response.id, roomId: roomId, role: "player"})
+            const userData = {
+                name: name,
+                roomId: roomId,
+                role: "player"
+            };
+
+            setUserData(userData)
             setNavig(navigate("/Poker", {replace: true, state: userData}));
 
             handleOnClick();

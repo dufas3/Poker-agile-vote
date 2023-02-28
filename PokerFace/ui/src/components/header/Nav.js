@@ -16,6 +16,8 @@ const Nav = (props) => {
     setData();
   }, []);
 
+  console.log(location.state);
+
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-light bg-light border-bottom box-shadow mb-3 fixed-top">

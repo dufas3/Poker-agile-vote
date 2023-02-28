@@ -2,13 +2,18 @@ import "./Poker.css";
 import UserIcon from "../../imgs/user.png";
 import { useEffect, useState } from "react";
 import GetSessionUsers from "../../api/getSessionUsers";
-const PlayerList = () => {
+import poker from "./Poker";
+const PlayerList = (props) => {
   const [users, setUsers] = useState([]);
+  const [userData, setUserData] = useState({});
 
-  useEffect(() => {
+
+  useEffect( () => {
+    setUserData(props.userData);
+    console.log("User data props: ", props);
     const GetData = async () => {
       let response = await GetSessionUsers({
-        id: localStorage.getItem("roomId"),
+        id: props.userData.roomId,
       });
       if (response) {
         console.log(response);
