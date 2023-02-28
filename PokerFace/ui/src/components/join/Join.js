@@ -9,6 +9,7 @@ function Join() {
     localStorage.removeItem("role");
 
     const [name, setName] = useState('');
+    const [id, setId] = useState('');
     const [enter, setEnter] = useState(false);
     const [errors, setErrors] = useState(false);
 
@@ -47,9 +48,14 @@ function Join() {
                 </div>
                 <input onChange={(e) => {
                     setName(e.currentTarget.value)
-                }} type="text" placeholder="  &#61447;   Enter your name"
+                }} type="text" placeholder="&#61447;   Enter your name"
                        className={errors ? "border-danger" : ""}
-                       minlength="2" maxLength="25" length id="loginname"></input>
+                       minLength="2" maxLength="25" length id="loginname"></input>
+                <input onChange={(e) => {
+                    setId(e.currentTarget.value)
+                }} type="number" placeholder="   Enter room ID"
+                       className={errors ? "border-danger" : ""}
+                       minLength="2" maxLength="4" length id="loginid"></input>
 
                 <div className="error">{errors &&
                     <h5 className="error-text text-danger">Please enter username!</h5>}
@@ -58,9 +64,9 @@ function Join() {
                 <button onClick={() => {
                     validation()
                 }} className="join-button" id="joinbutton">
-                    {enter ? <Link to="/Poker">
+                    {enter ? <Link to="/Poker" style={{ textDecoration: 'none' }}>
                         <h3>Enter</h3>
-                    </Link> : <Link to="/">
+                    </Link> : <Link to="/" style={{ textDecoration: 'none' }}>
                         <h3>Enter</h3>
                     </Link>
                     }

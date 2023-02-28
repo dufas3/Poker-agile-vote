@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Selenium {
     private static WebDriver browser;
-    public static final String POKER_URL = "http://localhost:3000/";
+    public static final String POKER_URL = "https://pokerfaceapp-17528.azurewebsites.net/";
     public static final String FIELD_NAME = "Antanukas";
     public static final String EMAIL = "testemail@gmail.com";
     public static final String PASSWORD = "testpassword123";
@@ -24,9 +24,14 @@ public class Selenium {
         //LOGIN
         //loginPlayer();
         loginModerator();
+        moderatorFlipCard();
+        moderatorClearVotes();
+        moderatorFinishVoting();
+
         //HEADER
         //clickUserIcon();
         //clickFestoLogo();
+
         //FOOTER
         //clickFooterImprintLink();
         //acceptFestoCookies();
@@ -183,6 +188,18 @@ public class Selenium {
 
 
     }
+     public static void moderatorFlipCard(){
+        WebElement flipCardButton = browser.findElement(By.id(""));
+        flipCardButton.click();
+     }
+     public static void moderatorClearVotes(){
+        WebElement clearCardButton = browser.findElement(By.id(""));
+        clearCardButton.click();
+     }
+     public static void moderatorFinishVoting(){
+        WebElement finishVotingButton = browser.findElement(By.id(""));
+        finishVotingButton.click();
+     }
 
     //patikrinam headerio elementa ir patikrinam (paasertinam Logintest)ar tiktai tas userio name'as yra rodomas
     public static String getLoginResults() {

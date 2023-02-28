@@ -21,12 +21,15 @@ public class Selenium {
     public static void main(String[] args) {
         System.out.println("Scrum Poker");
         setup(POKER_URL);
+
         //LOGIN
         //loginPlayer();
         loginModerator();
+
         //HEADER
         //clickUserIcon();
         //clickFestoLogo();
+
         //FOOTER
         //clickFooterImprintLink();
         //acceptFestoCookies();
@@ -41,6 +44,7 @@ public class Selenium {
         //Susiejamas Edge narsykles driveris su kodu. Narsykle privalo buti idiegta i OS
         //Linking Edge browser driver with code. The browser must be installed in the OS
         System.setProperty("webdriver.edge.driver", "libs/msedgedriver_109.exe");
+
 
         EdgeOptions options = new EdgeOptions();
         //SSL sertifikatu tikrinimo ignoravimas
