@@ -1,15 +1,17 @@
 import FestoLogo from "../../imgs/festo.png";
 import Dropdown from "react-bootstrap/Dropdown";
-import { Link } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import "./Nav.css";
 import { useEffect, useState } from "react";
 
 const Nav = (props) => {
   const [userData, setUserData] = useState({ name: "", roomId: "", role: "" });
+  const location = useLocation();
 
   useEffect(() => {
     const setData = () => {
-      setUserData(props.userData);
+      if(location.state)
+      setUserData({ name: location.state.name, roomId: location.state.roomId, role: location.state.role });
     };
     setData();
   }, []);
@@ -19,7 +21,7 @@ const Nav = (props) => {
       <nav className="navbar navbar-expand-sm navbar-light bg-light border-bottom box-shadow mb-3 fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand">Festo Scrum Poker</a>
-          {!userData ? (
+          {!userData.name ? (
             <Link to="/Login">
               <a className="btn" id="H1">
                 <i className="bi bi-person-fill" />

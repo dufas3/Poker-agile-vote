@@ -11,11 +11,9 @@ function Poker() {
 
   useEffect(() => {
     const setData = () => {
-      const { name, roomId, role } = location.state;
-      setUserData({ name: name, roomId: roomId, role: role });
+      setUserData({ name: location.state.name, roomId: location.state.roomId, role: location.state.role });
     };
     setData();
-    console.log(userData);
   }, []);
 
   return (

@@ -36,7 +36,7 @@ namespace PokerFace.Data.Repositories
 
         public async Task<Session> GetAsync(int id)
         {
-            return await Task.FromResult(context.Sessions.Where(x => x.Id == id).First());
+            return await Task.FromResult(context.Sessions.Where(x => x.RoomId == id).First());
         }
 
         public async Task<Session> GetByRoomIdAsync(int id)
