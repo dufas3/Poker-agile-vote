@@ -23,14 +23,9 @@ namespace PokerFace.Data.Repositories
             if (session == null)
                 throw new BadHttpRequestException("No session by that id");
             var users = new List<User>();
-            var sessionUserIds = session.UserIds;
 
-            foreach (var id in sessionUserIds)
-            {
-                var user = await Task.FromResult(context.Users.FirstOrDefault(x => x.RoomId == roomId));
-                if (user != null)
-                    users.Add(user);
-            }
+            users = await Task.FromResult(context.Users.Where(x => x.RoomId == roomId).ToList());
+
             return users;
         }
 

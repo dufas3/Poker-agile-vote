@@ -16,8 +16,6 @@ const Nav = (props) => {
     setData();
   }, []);
 
-  console.log(location.state);
-
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-light bg-light border-bottom box-shadow mb-3 fixed-top">
@@ -39,6 +37,9 @@ const Nav = (props) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => {navigator.clipboard.writeText(userData.roomId)}}>
+                    <h6>Room ID: {userData.roomId}</h6>
+                  </Dropdown.Item>
                   <Dropdown.Item>
                     <Link to="/" style={{ textDecoration: "none" }}>
                       <a onClick={() => {}} className="btn" id="logoutbutton">
