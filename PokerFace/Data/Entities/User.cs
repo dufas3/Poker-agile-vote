@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PokerFace.Data.Entities
 {
-    public class User 
+    public class User
     {
         [Key]
         public int Id { get; set; }

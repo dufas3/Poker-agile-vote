@@ -12,24 +12,24 @@ namespace PokerFace.Web
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddMediatR(typeof(Program));
-            // builder.Services.AddSingleton<ApplicationDbContext>();
-
-            // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddDbContext<ApplicationDbContext>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<ICardsRepository, CardsRepository>();
+            
+            //for adding static data 
+            builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
 
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: "MyCors",
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:3000");
+                                      policy.AllowAnyOrigin();
                                       policy.AllowAnyHeader();
                                       policy.AllowAnyMethod();
                                   });

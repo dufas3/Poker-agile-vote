@@ -15,8 +15,12 @@ namespace PokerFace.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(
-    "Server = tcp:pokerappusers.database.windows.net, 1433; Initial Catalog = Balandziaiusers; Persist Security Info = False; User ID = KitmBalandziai; Password =Balandis@; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30; ");
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("PokerFaceDb"));
             }
         }
 
@@ -24,15 +28,16 @@ namespace PokerFace.Data
         {
             modelBuilder.Entity<Session>()
                 .HasKey(s => s.Id);
-            
+
             modelBuilder.Entity<Session>()
                 .Property(s => s.UserIds)
                 .HasConversion(
-                    v => string.Join(',', v),   
+                    v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList());
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<Card> Cards { get; set; }
     }
 }

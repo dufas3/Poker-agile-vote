@@ -15,5 +15,8 @@ namespace PokerFace.Controllers
         
         [HttpGet]
         public async Task<ActionResult<Session>> GetSessionUsers([FromQuery]GetSessionUsersCommand command) => await SendMessage(command);
+
+        [HttpGet]
+        public async Task<ActionResult<Session>> LogoutSession([FromQuery]LogoutSessionCommand command) => await SendMessage(command);
     }
 }

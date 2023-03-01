@@ -1,7 +1,8 @@
 import "./Poker.css";
 import { useState } from "react";
+import ControllSetting from "./controllSetting";
 
-function VotingControls() {
+function VotingControls(props) {
   const [inSettings, setInSettings] = useState(false);
 
   const test = () => {
@@ -51,150 +52,9 @@ function VotingControls() {
                 Use all cards
               </label>
             </div>
-
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                0
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                1/2
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                1
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                2
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                3
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                5
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                8
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                13
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                20
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                40
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                100
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                ?
-              </label>
-            </div>
-            <div className="form-check border rounded bg-light">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value="1"
-                id="flexCheckDefault"
-              />
-              <label className="form-check-label" htmlFor="flexCheckDefault">
-                Coffee
-              </label>
-            </div>
+            {props.cards.map((card) => (
+              <ControllSetting value={card.value} />
+            ))}
           </div>
           <div className="exit-settings w-50">
             <button onClick={test} className="w-25 btn btn-primary">

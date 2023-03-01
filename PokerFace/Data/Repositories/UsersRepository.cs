@@ -36,10 +36,38 @@ namespace PokerFace.Data.Repositories
             if (session == null)
                 throw new BadHttpRequestException("There's no session with this Id!");
 
-            var ussr = await context.Users.AddAsync(user);       
+            var ussr = await context.Users.AddAsync(user);
 
             session.UserIds.Add(ussr.Entity.Id);
             context.Sessions.Update(session);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task SetSelectedCardAsync(int userId, int cardId)
+        {
+            var user = await context.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
+
+            if (user == null)
+                throw new BadHttpRequestException("There's no user with this Id!");
+
+            user.SelectedCard = cardId;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task LogoutUserAsync(int userId, int roomId)
+        {
+            var session = await Task.FromResult(context.Sessions.Where(x => x.RoomId == roomId).First());
+            if (session == null)
+                throw new BadHttpRequestException("There's no session with this Id!");
+
+            var user = await GetAsync(userId);
+            if (user == null)
+                throw new BadHttpRequestException("There's no user with this Id!");
+
+            session.UserIds.Remove(user.Id);
+
+            context.Update(session);
+            context.Remove(user);
             await context.SaveChangesAsync();
         }
     }

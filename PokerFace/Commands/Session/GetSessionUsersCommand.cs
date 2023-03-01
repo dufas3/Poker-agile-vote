@@ -20,10 +20,6 @@ namespace PokerFace.Commands.Session
 
         public async Task<List<UserDto>> Handle(GetSessionUsersCommand request, CancellationToken cancellationToken)
         {
-            var session = await sessionRepository.GetByRoomIdAsync(request.Id);
-            if (session == null)
-                throw new BadHttpRequestException("No session found!");
-
             var users = await sessionRepository.GetSessionUsersAsync(request.Id);
 
             return users.Select(x => x.ToUserDto()).ToList();

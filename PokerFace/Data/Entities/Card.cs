@@ -7,6 +7,6 @@ namespace PokerFace.Data.Entities
         [Key]
         public int Id { get; set; }
         public string Value { get; set; }
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

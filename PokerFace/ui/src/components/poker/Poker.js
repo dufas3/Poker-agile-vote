@@ -2,38 +2,58 @@ import Nav from "../header/Nav";
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import {useLocation} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import GetCards from "../../api/getCards";
 
 function Poker() {
-    const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
-    const location = useLocation();
+  const [userData, setUserData] = useState({ name: "", roomId: "", role: "" });
+  const [cards, setCards] = useState([]);
+  const location = useLocation();
 
-    useEffect(() => {
-        const setData = () => {
-            setUserData({name: location.state.name, roomId: location.state.roomId, role: location.state.role});
-        };
-        setData();
-    }, []);
+  useEffect(() => {
+    const setData = () => {
+      setUserData({
+        name: location.state.name,
+        roomId: location.state.roomId,
+        role: location.state.role,
+      });
+    };
 
-    return (
+    const setCardsFromApi = async () => {
+      let response = await GetCards({
+        roomId: location.state.roomId,
+      });
+      if (response) {
+        setCards(response);
+      }
+    };
+    setData();
+    setCardsFromApi();
+  }, []);
+
+  return (
+    <>
+      {userData ? (
         <>
-            {userData ? (
-                <>
-                    <Nav/>
-                    <div className="poker">
-                        <div className="voting">
-                            <VotingArea/>
-                            {userData.role == "moderator" ? <VotingControls/> : ""}
-                        </div>
-                        <PlayerList userData={location.state}/>
-                    </div>
-                </>
-            ) : (
-                <h3 style={{textAlign: "center"}}>Unauthorized Login!</h3> //redirect to login page
-            )}
+          <Nav />
+          <div className="poker">
+            <div className="voting">
+              <VotingArea cards={cards} />
+              {userData.role == "moderator" ? (
+                <VotingControls cards={cards} />
+              ) : (
+                ""
+              )}
+            </div>
+            <PlayerList userData={location.state} />
+          </div>
         </>
-    );
+      ) : (
+        <h3 style={{ textAlign: "center" }}>Unauthorized Login!</h3> //redirect to login page
+      )}
+    </>
+  );
 }
 
 export default Poker;

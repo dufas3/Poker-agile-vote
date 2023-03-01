@@ -22,6 +22,7 @@ namespace PokerFace.Data.Repositories
             var session = await GetByRoomIdAsync(roomId);
             if (session == null)
                 throw new BadHttpRequestException("No session by that id");
+
             var users = new List<User>();
 
             users = await Task.FromResult(context.Users.Where(x => x.RoomId == roomId).ToList());
@@ -42,6 +43,21 @@ namespace PokerFace.Data.Repositories
         public async Task AddAsync(Session session)
         {
             await context.Sessions.AddAsync(session);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task LogoutSessionAsync(int roomId)
+        {
+            var session = await GetByRoomIdAsync(roomId);
+
+            if (session == null)
+                throw new BadHttpRequestException("No session by that id");
+
+            var users = await Task.FromResult(context.Users.Where(x => x.RoomId == roomId).ToList());
+
+            context.Users.RemoveRange(users);
+            context.Sessions.Remove(session);
+                
             await context.SaveChangesAsync();
         }
     }

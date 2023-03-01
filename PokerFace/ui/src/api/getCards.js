@@ -1,15 +1,12 @@
-const CreateSession = async (props) => {
+const GetCards = async (props) => {
   if (!props) return;
+
   const requestOptions = {
-    method: "Post",
+    method: "Get",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      id: props.id,
-      moderatorId: props.moderatorId,
-    }),
   };
 
-  const url = new URL("https://localhost:5001/api/session/createSession");
+  const url = new URL("https://localhost:5001/api/card/getCards");
 
   try {
     const response = await fetch(url.toString(), requestOptions);
@@ -24,4 +21,4 @@ const CreateSession = async (props) => {
   }
 };
 
-export default CreateSession;
+export default GetCards;
