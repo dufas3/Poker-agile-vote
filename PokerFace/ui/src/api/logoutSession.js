@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const LogoutSession = async (props) => {
   if (!props) return;
 
@@ -6,7 +8,7 @@ const LogoutSession = async (props) => {
     headers: { "Content-Type": "application/json" },
   };
 
-  const url = new URL("https://localhost:5001/api/session/logoutsesion");
+  const url = ConnectionUrl({ appendix: "/session/logoutsesion" });
   url.searchParams.append("roomId", props.roomId);
 
   try {

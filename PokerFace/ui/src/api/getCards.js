@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const GetCards = async (props) => {
   if (!props) return;
 
@@ -6,7 +8,7 @@ const GetCards = async (props) => {
     headers: { "Content-Type": "application/json" },
   };
 
-  const url = new URL("https://localhost:5001/api/card/getCards");
+  const url = ConnectionUrl({ appendix: "/card/getCards" });
 
   try {
     const response = await fetch(url.toString(), requestOptions);

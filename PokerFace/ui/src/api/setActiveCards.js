@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const SetActiveCards = async () => {
   if (!props) return;
 
@@ -10,7 +12,7 @@ const SetActiveCards = async () => {
     }),
   };
 
-  const url = new URL("https://localhost:5001/api/card/SetActiveCards");
+  const url = ConnectionUrl({ appendix: "/card/SetActiveCards" });
   try {
     const response = await fetch(url.toString(), requestOptions);
     const isJson = response.headers

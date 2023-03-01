@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const GetSessionUsers = async (props) => {
   const requestOptions = {
     method: "Get",
@@ -8,7 +10,7 @@ const GetSessionUsers = async (props) => {
 
   console.log("props", props);
 
-  const url = new URL("https://localhost:5001/api/session/getSessionUsers");
+  const url = ConnectionUrl({ appendix: "/session/getSessionUsers" });
   url.searchParams.append("id", props.id);
 
   try {

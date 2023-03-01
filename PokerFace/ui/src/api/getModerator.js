@@ -1,10 +1,13 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const GetModerator = async (props) => {
   if (!props) return;
   const requestOptions = {
     method: "Get",
     headers: { "Content-Type": "application/json" },
   };
-  const url = new URL("https://localhost:5001/api/user/getModerator");
+
+  const url = ConnectionUrl({ appendix: "/user/getModerator" });
   url.searchParams.append("userEmail", props.email);
   url.searchParams.append("userPassword", props.password);
 

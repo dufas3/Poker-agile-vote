@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const GetActiveCards = async (props) => {
   if (!props) return;
 
@@ -6,7 +8,8 @@ const GetActiveCards = async (props) => {
     headers: { "Content-Type": "application/json" },
   };
 
-  const url = new URL("https://localhost:5001/api/card/getActiveCards");
+  const url = ConnectionUrl({ appendix: "/card/getActiveCards" });
+
   url.searchParams.append("roomId", props.roomId);
   try {
     const response = await fetch(url.toString(), requestOptions);

@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const CreateSession = async (props) => {
   if (!props) return;
   const requestOptions = {
@@ -9,7 +11,7 @@ const CreateSession = async (props) => {
     }),
   };
 
-  const url = new URL("https://localhost:5001/api/session/createSession");
+  const url = ConnectionUrl({ appendix: "/session/createSession" });
 
   try {
     const response = await fetch(url.toString(), requestOptions);

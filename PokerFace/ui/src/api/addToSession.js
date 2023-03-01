@@ -1,3 +1,5 @@
+import ConnectionUrl from "../common/connectionUrl";
+
 const AddToSession = async (props) => {
   const requestOptions = {
     method: "Post",
@@ -12,7 +14,8 @@ const AddToSession = async (props) => {
 
   console.log("props", props);
 
-  const url = new URL("https://localhost:5001/api/user/addToSession");
+  const url = ConnectionUrl({ appendix: "/user/addToSession" });
+
   try {
     const response = await fetch(url.toString(), requestOptions);
     const isJson = response.headers
