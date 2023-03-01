@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Selenium {
@@ -24,9 +25,7 @@ public class Selenium {
         //LOGIN
         loginPlayer();
         //loginModerator();
-        //moderatorFlipCard();
-        //moderatorClearVotes();
-        //moderatorFinishVoting();
+
 
         //HEADER
         //clickUserIcon();
@@ -39,6 +38,14 @@ public class Selenium {
         //clickFooterTermsLink();
         //clickFooterCloudLink();
 
+        //MODERATOR_CARD_SETTINGS
+        //flipCard();
+        //clearVotes();
+        //finishVoting();
+        //clickModeratorSettings();
+        //checkUseAllCardsBox();
+        selectCards();
+        unselectCards();
     }
 
 
@@ -228,73 +235,104 @@ public class Selenium {
         useAllCardsButton.click();
 
 //click save button
-        WebElement savebutton = browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div[2]/button[1]/h6"));
-        savebutton.click();
+        WebElement saveButton = browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div[2]/button[1]/h6"));
+        saveButton.click();
     }
 
     public static void selectCards() {
+
+        List<WebElement> cardBoxOptions = browser.findElements(By.className("form-check-input")); //cardBox - pavadinimas visu card boxu
+        System.out.println("Total card box options: " + cardBoxOptions.size());
+
+        for (WebElement cardBoxOption : cardBoxOptions) {
+            // issitraukiame elementa pgala reiksme (value)
+            if (cardBoxOption.getAttribute("Value").equals("1")) { //paselectina Coffe, nes tik jis turi Value, devai uzdes ant kitu Value irgi
+                cardBoxOption.click();
+                // kad kitu nebetikrintu, jeigu jau rado korteles 1 box'a
+                // break - iseina is ciklo
+                // continue - toliau tesia
+                break;
+            }
+        }
+    }
+        public static void unselectCards() {
+            List<WebElement> cardBoxOptions2 = browser.findElements(By.className("form-check-input")); //cardBox - pavadinimas visu card boxu
+            System.out.println("Total card box options: " + cardBoxOptions2.size());
+
+            for (WebElement cardBoxOption2 : cardBoxOptions2) {
+                // issitraukiame elementa pgala reiksme (value)
+                if (cardBoxOption2.getAttribute("Value").equals("1")) {
+                    cardBoxOption2.click();
+                    // kad kitu nebetikrintu, jeigu jau rado korteles 1 box'a
+                    // break - iseina is ciklo
+                    // continue - toliau tesia
+                    break;
+                }
+            }
+    }
+   /*public static void selectCards() { //funkcija kuri turi cikla, parametras kelintas elementas indeksa findelements, grazinti sarasa elementu tickboxu, paleisti cikla
 //check card 0 box
-        WebElement card0Box = browser.findElement(By.xpath (""));
+        WebElement card0Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 0 box is inactive and/or invisible", card0Box.isEnabled() && card0Box.isDisplayed());
         card0Box.click();
 
 //check card 1/2 box
-        WebElement cardHalfBox = browser.findElement(By.xpath (""));
+        WebElement cardHalfBox = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 1/2 box is inactive and/or invisible", cardHalfBox.isEnabled() && cardHalfBox.isDisplayed());
         cardHalfBox.click();
 
 //check card 1 box
-        WebElement card1Box = browser.findElement(By.xpath (""));
+        WebElement card1Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 1 box is inactive and/or invisible", card1Box.isEnabled() && card1Box.isDisplayed());
         card1Box.click();
 
 //check card 2 box
-        WebElement card2Box = browser.findElement(By.xpath (""));
+        WebElement card2Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 2 box is inactive and/or invisible", card2Box.isEnabled() && card2Box.isDisplayed());
         card2Box.click();
 
 //check card 3 box
-        WebElement card3Box = browser.findElement(By.xpath (""));
+        WebElement card3Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 3 box is inactive and/or invisible", card3Box.isEnabled() && card3Box.isDisplayed());
         card3Box.click();
 
 //check card 5 box
-        WebElement card5Box = browser.findElement(By.xpath (""));
+        WebElement card5Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 5 box is inactive and/or invisible", card5Box.isEnabled() && card5Box.isDisplayed());
         card5Box.click();
 
 //check card 8 box
-        WebElement card8Box = browser.findElement(By.xpath (""));
+        WebElement card8Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 8 box is inactive and/or invisible", card8Box.isEnabled() && card8Box.isDisplayed());
         card8Box.click();
 
 //check card 13 box
-        WebElement card13Box = browser.findElement(By.xpath (""));
+        WebElement card13Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 13 box is inactive and/or invisible", card13Box.isEnabled() && card13Box.isDisplayed());
         card13Box.click();
 
 //check card 20 box
-        WebElement card20Box = browser.findElement(By.xpath (""));
+        WebElement card20Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 20 box is inactive and/or invisible", card20Box.isEnabled() && card20Box.isDisplayed());
         card20Box.click();
 
 //check card 40 box
-        WebElement card40Box = browser.findElement(By.xpath (""));
+        WebElement card40Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 40 box is inactive and/or invisible", card40Box.isEnabled() && card40Box.isDisplayed());
         card40Box.click();
 
 //check card 100 box
-        WebElement card100Box = browser.findElement(By.xpath (""));
+        WebElement card100Box = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card 100 box is inactive and/or invisible", card100Box.isEnabled() && card100Box.isDisplayed());
         card100Box.click();
 
 //check card ? box
-        WebElement cardQuestionBox = browser.findElement(By.xpath (""));
+        WebElement cardQuestionBox = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card ? box is inactive and/or invisible", cardQuestionBox.isEnabled() && cardQuestionBox.isDisplayed());
         cardQuestionBox.click();
 
 //check card Coffee box
-        WebElement cardCoffeeBox = browser.findElement(By.xpath (""));
+        WebElement cardCoffeeBox = browser.findElement(By.xpath(""));
         Assert.assertTrue("Card Coffee box is inactive and/or invisible", cardCoffeeBox.isEnabled() && cardCoffeeBox.isDisplayed());
         cardCoffeeBox.click();
 
@@ -303,35 +341,75 @@ public class Selenium {
         saveButton.click();
     }
 
-/* public static void changeCards() {
+    public static void unselectCards() {
+//uncheck card 0 box
+        WebElement card0Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 0 box is inactive and/or invisible", card0Box.isEnabled() && card0Box.isDisplayed());
+        card0Box.click();
+
+//uncheck card 1/2 box
+        WebElement cardHalfBox = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 1/2 box is inactive and/or invisible", cardHalfBox.isEnabled() && cardHalfBox.isDisplayed());
+        cardHalfBox.click();
+
+//uncheck card 1 box
+        WebElement card1Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 1 box is inactive and/or invisible", card1Box.isEnabled() && card1Box.isDisplayed());
+        card1Box.click();
+
+//uncheck card 2 box
+        WebElement card2Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 2 box is inactive and/or invisible", card2Box.isEnabled() && card2Box.isDisplayed());
+        card2Box.click();
+
+//uncheck card 3 box
+        WebElement card3Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 3 box is inactive and/or invisible", card3Box.isEnabled() && card3Box.isDisplayed());
+        card3Box.click();
+
+//uncheck card 5 box
+        WebElement card5Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 5 box is inactive and/or invisible", card5Box.isEnabled() && card5Box.isDisplayed());
+        card5Box.click();
+
+//uncheck card 8 box
+        WebElement card8Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 8 box is inactive and/or invisible", card8Box.isEnabled() && card8Box.isDisplayed());
+        card8Box.click();
+
 //uncheck card 13 box
-WebElement checkCard0 = browser.findElement(By.(""));
-checkCard0.click();
+        WebElement card13Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 13 box is inactive and/or invisible", card13Box.isEnabled() && card13Box.isDisplayed());
+        card13Box.click();
 
 //uncheck card 20 box
-WebElement checkCard0 = browser.findElement(By.(""));
-checkCard0.click();
+        WebElement card20Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 20 box is inactive and/or invisible", card20Box.isEnabled() && card20Box.isDisplayed());
+        card20Box.click();
 
 //uncheck card 40 box
-WebElement checkCard0 = browser.findElement(By.(""));
-checkCard0.click();
+        WebElement card40Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 40 box is inactive and/or invisible", card40Box.isEnabled() && card40Box.isDisplayed());
+        card40Box.click();
 
 //uncheck card 100 box
-WebElement checkCard0 = browser.findElement(By.(""));
-checkCard0.click();
+        WebElement card100Box = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card 100 box is inactive and/or invisible", card100Box.isEnabled() && card100Box.isDisplayed());
+        card100Box.click();
 
 //uncheck card ? box
-WebElement checkCard0 = browser.findElement(By.(""));
-checkCard0.click();
+        WebElement cardQuestionBox = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card ? box is inactive and/or invisible", cardQuestionBox.isEnabled() && cardQuestionBox.isDisplayed());
+        cardQuestionBox.click();
 
 //uncheck card Coffee box
-WebElement checkCard0 = browser.findElement(By.(""));
-checkCard0.click();
+        WebElement cardCoffeeBox = browser.findElement(By.xpath(""));
+        Assert.assertTrue("Card Coffee box is inactive and/or invisible", cardCoffeeBox.isEnabled() && cardCoffeeBox.isDisplayed());
+        cardCoffeeBox.click();
 
 //click save button
-WebElement savebutton = browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div[2]/button[1]/h6"));
-savebutton.click();
-}*/
-
+        WebElement saveButton = browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div[2]/button[1]/h6"));
+        saveButton.click();
+    }*/
 
 }
