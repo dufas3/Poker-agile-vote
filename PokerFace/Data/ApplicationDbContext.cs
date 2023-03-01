@@ -16,7 +16,7 @@ namespace PokerFace.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-    "Server=(localdb)\\mssqllocaldb;Database=PokerFaceDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+    "Server = tcp:pokerappusers.database.windows.net, 1433; Initial Catalog = Balandziaiusers; Persist Security Info = False; User ID = KitmBalandziai; Password =Balandis@; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30; ");
             }
         }
 
