@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/Downloads/scrumPoker/scrumPoker.iml" filepath="$USER_HOME$/Downloads/scrumPoker/scrumPoker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scrumPoker/scrumPoker.iml" filepath="$PROJECT_DIR$/scrumPoker/scrumPoker.iml" />
     </modules>
   </component>
 </project>
