@@ -23,9 +23,10 @@ const Nav = (props) => {
       <nav className="navbar navbar-expand-sm navbar-light bg-light border-bottom box-shadow mb-3 fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand">Festo Scrum Poker</a>
+          <div className="d-flex justify-content-end">
           {!userData.name ? (
             <Link to="/Login">
-              <a className="btn" id="H1">
+              <a className="btn mx-5" id="H1">
                 <i className="bi bi-person-fill" />
                 Login
               </a>
@@ -53,11 +54,11 @@ const Nav = (props) => {
           <a
             className="navbar-brand"
             href="https://www.festo.com/us/en/"
-            target="_blank"
             id="logolink"
           >
             <img src={FestoLogo} className="logo" />
           </a>
+          </div>
         </div>
       </nav>
     </header>
