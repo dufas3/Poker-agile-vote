@@ -33,7 +33,8 @@ function Join() {
             const userData = {
                 name: name,
                 roomId: roomId,
-                role: "player"
+                role: "player",
+                userId: response.id,
             };
 
             setUserData(userData)

@@ -2,8 +2,8 @@
 {
     public enum SessionState
     {
-        VoteState = 1,
-        FinilizeVoteState =  2,
-        FinishVoteState = 3
+        VoteState = 0,
+        FinilizeVoteState =  1,
+        FinishVoteState = 2
     }
 }

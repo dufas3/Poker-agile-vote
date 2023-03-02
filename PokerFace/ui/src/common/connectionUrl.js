@@ -1,10 +1,5 @@
 const ConnectionUrl = (props) => {
-  let url = new URL("");
-  props
-    ? (url = new URL("pokerfaceapp-17528.azurewebsites.net/api"))
-    : (url = new URL(
-        "pokerfaceapp-17528.azurewebsites.net/api" + props.appendix
-      ));
+    return new URL("https://localhost:5001/api" + props.appendix);
 };
 
 export default ConnectionUrl;

@@ -1,0 +1,87 @@
+.card {
+    width: 150px;
+    height: 210px;
+    background-color: white;
+    border-width: 1px;
+    border-color: #ececec;
+    border-radius: 5px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-middle {
+    border-width: 1px;
+    border-color: #cccccc;
+    border-radius: 5px;
+    border-style: solid;
+    width: 100px;
+    height: 150px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-middle .number {
+    font-family: Snell Roundhand, cursive;
+}
+
+.number-top {
+    text-align: right;
+    padding-right: 95px;
+    font-family: Snell Roundhand, cursive;
+}
+
+.number-bottom {
+    transform: rotate(180deg);
+    padding-right: 95px;
+    font-family: Snell Roundhand, cursive;
+}
+
+.number-top1 {
+    text-align: right;
+    padding-right: 115px;
+    padding-top: 10px;
+    font-family: Snell Roundhand, cursive;
+}
+
+.number-bottom1 {
+    transform: rotate(180deg);
+    padding-right: 115px;
+    font-family: Snell Roundhand, cursive;
+}
+
+/*------------------------------------------------------------------------------*/
+card-text-color-true {
+    color: black;
+}
+
+card-text-color-false {
+    color: white;
+}
+
+card-background-color-true {
+
+}
+
+card-background-color-false {
+    background-color: rgba(75, 154, 232);
+}
+
+/*------------------------------------------------------------------------------*/
+
+
+.card:hover {
+    border-width: 1px;
+    border-color: #0307fc;
+    border-style: solid;
+    border-radius: 5px;
+}
+
+.card-button {
+    border-style: none;
+    background: none;
+}

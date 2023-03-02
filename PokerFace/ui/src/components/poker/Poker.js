@@ -5,9 +5,10 @@ import VotingControls from "./VotingControls";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GetCards from "../../api/getCards";
+import getSessionState from "../../api/getSessionState";
 
 function Poker() {
-  const [userData, setUserData] = useState({ name: "", roomId: "", role: "" });
+  const [userData, setUserData] = useState({ name: "", roomId: "", role: "", userId: ""});
   const [cards, setCards] = useState([]);
   const location = useLocation();
 
@@ -17,10 +18,13 @@ function Poker() {
         name: location.state.name,
         roomId: location.state.roomId,
         role: location.state.role,
+        userId: location.state.userId,
       });
     };
 
+
     const setCardsFromApi = async () => {
+      await getSessionState({roomId: location.state.roomId})
       let response = await GetCards({
         roomId: location.state.roomId,
       });
@@ -34,12 +38,12 @@ function Poker() {
 
   return (
     <>
-      {userData ? (
+      {userData && (
         <>
           <Nav />
           <div className="poker">
             <div className="voting">
-              <VotingArea cards={cards} />
+              <VotingArea cards={{cards: cards, userId: location.state.userId}} />
               {userData.role == "moderator" ? (
                 <VotingControls cards={cards} />
               ) : (
@@ -49,8 +53,6 @@ function Poker() {
             <PlayerList userData={location.state} />
           </div>
         </>
-      ) : (
-        <h3 style={{ textAlign: "center" }}>Unauthorized Login!</h3> //redirect to login page
       )}
     </>
   );

@@ -14,7 +14,7 @@ function Login() {
     const [errors, setErrors] = useState(false);
     const [responseUser, setResponseUser] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
+    const [userData, setUserData] = useState({name: "", roomId: "", role: "", userId: ""});
     const [navig, setNavig] = useState();
 
     const navigate = useNavigate();
@@ -43,6 +43,7 @@ function Login() {
                 name: email,
                 roomId: generatedId,
                 role: "moderator",
+                userId: response.id,
             };
 
             await CreateSession({id: generatedId, moderatorId: response.id});

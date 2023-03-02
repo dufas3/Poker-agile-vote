@@ -1,6 +1,6 @@
 import ConnectionUrl from "../common/connectionUrl";
 
-const SetActiveCards = async () => {
+const SetActiveCards = async (props) => {
   if (!props) return;
 
   const requestOptions = {
