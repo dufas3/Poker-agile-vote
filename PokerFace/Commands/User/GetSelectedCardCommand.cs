@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using PokerFace.Data.Common;
+using PokerFace.Data.Entities;
 
 namespace PokerFace.Commands.User
 {
-    public class GetSelectedCardCommand : IRequest<int>
+    public class GetSelectedCardCommand : IRequest<Card>
     {
         public int UserId { get; set; }
     }
 
-    public class GetSelectedCardCommandHanlder : IRequestHandler<GetSelectedCardCommand, int>
+    public class GetSelectedCardCommandHanlder : IRequestHandler<GetSelectedCardCommand, Card>
     {
         private readonly IUserRepository userRepository;
 
@@ -17,7 +18,7 @@ namespace PokerFace.Commands.User
             this.userRepository = userRepository;
         }
 
-        public async Task<int> Handle(GetSelectedCardCommand request, CancellationToken cancellationToken)
+        public async Task<Card> Handle(GetSelectedCardCommand request, CancellationToken cancellationToken)
         {
             return await userRepository.GetSelectedCardAsync(request.UserId);
         }

@@ -56,7 +56,9 @@ namespace PokerFace.Data.Repositories
             if (user == null)
                 throw new BadHttpRequestException("no user");
 
-            user.SelectedCard = cardId;
+            var card = context.Cards.Where(x => x.Id == cardId).First();
+
+            user.SelectedCard = card;
             await context.SaveChangesAsync();
         }
     }

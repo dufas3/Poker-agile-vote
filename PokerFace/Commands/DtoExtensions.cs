@@ -18,7 +18,7 @@ namespace PokerFace.Commands
             {
                 Name = user.Name,
                 Id = user.Id,
-                CardId = user.SelectedCard != null ? user.SelectedCard.Value : 0,
+                SelectedCard = user.SelectedCard,
             };
         }
     }

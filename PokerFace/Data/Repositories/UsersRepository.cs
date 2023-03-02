@@ -50,7 +50,7 @@ namespace PokerFace.Data.Repositories
             if (user == null)
                 throw new BadHttpRequestException("There's no user with this Id!");
 
-            user.SelectedCard = cardId;
+            user.SelectedCard = await context.Cards.Where(x=>x.Id==cardId).FirstAsync();
             await context.SaveChangesAsync();
         }
 
@@ -71,9 +71,9 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<int> GetSelectedCardAsync(int userId)
+        public async Task<Card> GetSelectedCardAsync(int userId)
         {
-            return await Task.FromResult(context.Users.Where(x => x.Id == userId).FirstOrDefault().SelectedCard.Value);  
+            return await Task.FromResult(context.Users.Where(x => x.Id == userId).FirstOrDefault().SelectedCard);  
         }
     }
 }

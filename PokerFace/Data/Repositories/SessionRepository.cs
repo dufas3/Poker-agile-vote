@@ -72,10 +72,10 @@ namespace PokerFace.Data.Repositories
             foreach (var user in users)
             {
                 //not selected card
-                if (user.SelectedCard == 0)
+                if (user.SelectedCard == null)
                     continue;
 
-                var card = await context.Cards.FirstOrDefaultAsync(x => x.Id == user.SelectedCard);
+                var card = await context.Cards.FirstOrDefaultAsync(x => x.Id == user.SelectedCard.Id);
                 cards.Add(card);
             }
 
