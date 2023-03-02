@@ -20,7 +20,7 @@ namespace PokerFace.Commands.Session
 
         public async Task<List<Card>> Handle(GetUserSelectedCardsCommand request, CancellationToken cancellationToken)
         {
-            return await sessionRepository.GetUserSelectedCards(request.RoomId);
+            return await sessionRepository.GetUserSelectedCardsAsync(request.RoomId);
         }
     }
 }

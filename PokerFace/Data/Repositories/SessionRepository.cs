@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokerFace.Data.Common;
 using PokerFace.Data.Entities;
+using System.Drawing;
 
 namespace PokerFace.Data.Repositories
 {
@@ -58,11 +59,11 @@ namespace PokerFace.Data.Repositories
 
             context.Users.RemoveRange(users);
             context.Sessions.Remove(session);
-                
+
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<Card>> GetUserSelectedCards(int roomId)
+        public async Task<List<Card>> GetUserSelectedCardsAsync(int roomId)
         {
             var users = await GetSessionUsersAsync(roomId);
 
@@ -79,6 +80,28 @@ namespace PokerFace.Data.Repositories
             }
 
             return cards;
+        }
+
+        public async Task<SessionState> GetSessionStateAsync(int roomId)
+        {
+            var session = await GetByRoomIdAsync(roomId);
+
+            if (session == null)
+                throw new BadHttpRequestException("No session by that id");
+
+            return session.State;
+        }
+
+        public async Task SetSessionStateAsync(int roomId, SessionState state)
+        {
+            var session = await GetByRoomIdAsync(roomId);
+
+            if (session == null)
+                throw new BadHttpRequestException("No session by that id");
+
+            session.State = state;
+
+            context.SaveChanges();
         }
     }
 }
