@@ -1,17 +1,17 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const GetUserSelectedCard = async (props) => {
+const GetModerator = async (props) => {
+
+    if (!props) return;
+
     const requestOptions = {
         method: "Get",
         headers: {"Content-Type": "application/json"},
     };
 
-    if (!props) return;
-
-    console.log("props", props);
-
-    const url = ConnectionUrl({appendix: "/user/getSelectedCard"});
-    url.searchParams.append("id", props.id);
+    const url = ConnectionUrl({appendix: "/user/getModerator"});
+    url.searchParams.append("userEmail", props.email);
+    url.searchParams.append("userPassword", props.password);
 
     try {
         const response = await fetch(url.toString(), requestOptions);
@@ -21,8 +21,8 @@ const GetUserSelectedCard = async (props) => {
         const data = isJson && (await response.json());
         return data;
     } catch (error) {
-        console.log("Caught error", error);
+        console.log("Caugh error");
         return;
     }
-}
-export default GetUserSelectedCard
+};
+export default GetModerator;

@@ -23,7 +23,6 @@ function Join() {
             setErrors(true);
             return;
         }
-        console.log(response);
         if (!name || !roomId) {
             setErrors(true);
         } else if (name.replaceAll(" ", "").length == 0) {

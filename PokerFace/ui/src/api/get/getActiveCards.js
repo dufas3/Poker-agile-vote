@@ -1,19 +1,17 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const SetActiveUserCard = async (props) => {
+const GetActiveCards = async (props) => {
 
     if (!props) return;
 
     const requestOptions = {
-        method: "Post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            userId: props.userId,
-            cardId: props.cardId,
-        }),
+        method: "Get",
+        headers: {"Content-Type": "application/json"},
     };
 
-    const url = ConnectionUrl({ appendix: "/card/SetActiveUserCard" });
+    const url = ConnectionUrl({appendix: "/card/getActiveCards"});
+
+    url.searchParams.append("roomId", props.roomId);
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers
@@ -25,5 +23,6 @@ const SetActiveUserCard = async (props) => {
         console.log("Caught error");
         return;
     }
-}
-export default SetActiveUserCard;
+};
+
+export default GetActiveCards;

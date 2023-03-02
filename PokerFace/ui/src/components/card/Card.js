@@ -1,51 +1,69 @@
-import setActiveUserCard from "../../api/setActiveUserCard";
 import {useState} from "react";
 import './Card.css'
-import getSessionState from "../../api/getSessionState";
-import {SessionState} from "../../common/sessionState";
-import setUserSelectedCard from "../../api/setUserSelectedCard";
+import getSessionState from "../../api/get/getSessionState";
+import setUserSelectedCard from "../../api/set/setUserSelectedCard";
 
 const Card = (props) => {
 
-    const [apiResponse, setApiResponse] = useState({});
-    const [isSelected, setIsSelected] = useState(false);
+        const [apiResponse, setApiResponse] = useState({});
+        const [isSelected, setIsSelected] = useState(false);
 
-    const selectedCard = async () => {
 
-        let sessionState = await getSessionState({roomId: props.cardValue.roomId})
-        console.log("Session state: ", sessionState)
-        console.log("SessionState.VOTESTATE: ", SessionState.VOTESTATE)
-        //if (sessionState.sessionState != SessionState.VOTESTATE) return;
-        await setUserSelectedCard({userId: props.cardValue.userId, cardId: props.cardValue.cardId});
-        if (!isSelected) {
-            setIsSelected(true);
-        } else {
-            setIsSelected(false);
+        const selectedCard = async () => {
+
+            try {
+                let isSelectedBgs = document.querySelectorAll('.selected-bg-true');
+                let isSelectedTxts = document.querySelectorAll('.selected-true');
+
+                isSelectedBgs.forEach((isSelectedBg) => {
+                    isSelectedBg.classList.remove('selected-bg-true');
+                })
+                isSelectedTxts.forEach((isSelectedTxt) => {
+                    isSelectedTxt.classList.remove('selected-true');
+                })
+
+            } catch (error) {
+
+            }
+            setTimeout(function () {
+                if (!isSelected) {
+                    setIsSelected(true);
+                } else {
+                    setIsSelected(false);
+                }
+            }.bind(this), 65)
+
+            let sessionState = await getSessionState({roomId: props.cardValue.roomId})
+            console.log("Cards room ID: ", props.cardValue.roomId)
+            //if (sessionState.sessionState != SessionState.VOTESTATE) return;
+            await setUserSelectedCard({userId: props.cardValue.userId, cardId: props.cardValue.cardId});
+
+
         }
+
+
+        return (
+            <div className={!isSelected ? "card-css" : "card-css selected-bg-true"}>
+                {props.cardValue.cardValue.length > 3 ? <button className="card-button" onClick={selectedCard}>
+
+                        <h6 className={!isSelected ? "number-top" : "number-top selected-true"}>{props.cardValue.cardValue}</h6>
+
+                        <div className={!isSelected ? "card-middle" : "card-middle selected-bg-true"}>
+                            <h6 className={!isSelected ? "number" : "number selected-true"}>{props.cardValue.cardValue}</h6>
+                        </div>
+                        <h6 className={!isSelected ? "number-bottom" : "number-bottom selected-true"}>{props.cardValue.cardValue}</h6>
+                    </button> :
+
+                    <button className="card-button" onClick={selectedCard}><h5
+                        className={!isSelected ? "number-top1" : "number-top1 selected-true"}>{props.cardValue.cardValue}</h5>
+                        <div className={!isSelected ? "card-middle" : "card-middle selected-bg-true"}>
+                            <h2 className={!isSelected ? "number" : "number selected-true"}>{props.cardValue.cardValue}</h2>
+                        </div>
+                        <h5 className={!isSelected ? "number-bottom1 " : "number-bottom1 selected-true"}>{props.cardValue.cardValue}</h5>
+                    </button>}
+            </div>
+        );
     }
-
-
-
-return (
-    <div className={!isSelected? "card selected-true" : "card selected-false"}>
-        {props.cardValue.cardValue.length > 3 ? <button className="card-button" onClick={selectedCard}>
-
-                <h6 className={!isSelected? "number-top selected-true": "number-top selected-false"}>{props.cardValue.cardValue}</h6>
-
-                <div className={!isSelected? "card-middle selected-true selected-bg-true" : "card-middle selected-false"}>
-                    <h6 className={!isSelected? "number selected-true" : "number selected-false"}>{props.cardValue.cardValue}</h6>
-                </div>
-                <h6 className={!isSelected? "number-bottom selected-true" : "number-bottom selected-false"}>{props.cardValue.cardValue}</h6></button> :
-
-            <button className="card-button" onClick={selectedCard}><h5
-                className={!isSelected? "number-top1 selected-true" : "number-top1 selected-false"}>{props.cardValue.cardValue}</h5>
-                <div className={!isSelected? "card-middle selected-true selected-bg-true" : "card-middle selected-false"}>
-                    <h2 className={!isSelected? "number selected-true" : "number selected-false"}>{props.cardValue.cardValue}</h2>
-                </div>
-                <h5 className={!isSelected? "number-bottom1 selected-true" : "number-bottom1 selected-false"}>{props.cardValue.cardValue}</h5></button>}
-    </div>
-);
-}
 ;
 
 export default Card;

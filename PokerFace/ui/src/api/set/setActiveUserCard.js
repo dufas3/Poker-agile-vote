@@ -1,18 +1,19 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const SetSessionState = async (props) =>{
+const SetActiveUserCard = async (props) => {
+
     if (!props) return;
 
     const requestOptions = {
         method: "Post",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            roomId: props.roomId,
-            state: props.state,
+            userId: props.userId,
+            cardId: props.cardId,
         }),
     };
 
-    const url = ConnectionUrl({ appendix: "/session/SetSessionState" });
+    const url = ConnectionUrl({appendix: "/card/SetActiveUserCard"});
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers
@@ -25,4 +26,4 @@ const SetSessionState = async (props) =>{
         return;
     }
 }
-export default SetSessionState;
+export default SetActiveUserCard;

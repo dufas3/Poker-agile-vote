@@ -1,32 +1,28 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const SetUserSelectedCard = async (props) =>{
+const SetActiveCards = async (props) => {
 
     if (!props) return;
 
-    console.log(props)
-
     const requestOptions = {
         method: "Post",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            userId: props.userId,
-            cardId: props.cardId,
+            roomId: props.roomId,
+            cards: props.cards,
         }),
     };
 
-    const url = ConnectionUrl({ appendix: "/user/SetSelectedCard" });
+    const url = ConnectionUrl({appendix: "/card/SetActiveCards"});
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers
             .get("content-type")
             ?.includes("application/json");
         const data = isJson && (await response.json());
-        console.log("SetUserSelCard: ", response);
         return data;
     } catch (error) {
         console.log("Caught error");
         return;
     }
-}
-export default SetUserSelectedCard;
+};

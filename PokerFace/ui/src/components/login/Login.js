@@ -2,7 +2,7 @@ import "./Login.css";
 import {Link, useNavigate} from "react-router-dom";
 import Nav from "../header/Nav";
 import {useCallback, useEffect, useState} from "react";
-import GetModerator from "../../api/getModerator";
+import GetModerator from "../../api/get/getModerator";
 import CreateSession from "../../api/createSession";
 
 function Login() {
@@ -48,10 +48,9 @@ function Login() {
 
             await CreateSession({id: generatedId, moderatorId: response.id});
             setUserData(userData);
-            console.log("userdata in login", userData);
             setIsLoading(false);
             setEnter(true);
-            setNavig(navigate("/Poker", { replace: true, state: userData }));
+            setNavig(navigate("/Poker", {replace: true, state: userData}));
 
             handleOnClick();
 

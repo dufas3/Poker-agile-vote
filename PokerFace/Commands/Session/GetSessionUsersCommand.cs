@@ -29,7 +29,10 @@ namespace PokerFace.Commands.Session
             foreach (var userDto in userDtos)
             {
                 var user = users.Where(x => x.Id == userDto.Id).FirstOrDefault();
-                userDto.SelectedCard = await cardsRepository.GetAsync(user.SelectedCardId.Value);
+
+                if (user.SelectedCardId != null) {
+                    userDto.SelectedCard = await cardsRepository.GetAsync(user.SelectedCardId.Value);
+                }
             }
 
             return userDtos;

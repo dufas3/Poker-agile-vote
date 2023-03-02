@@ -1,9 +1,8 @@
-.card {
+.card-css {
     width: 150px;
     height: 210px;
-    background-color: white;
     border-width: 1px;
-    border-color: #ececec;
+    border-color: #cccccc;
     border-radius: 5px;
     border-style: solid;
     display: flex;
@@ -55,10 +54,6 @@
 }
 
 /*------------------------------------------------------------------------------*/
-.selected-false {
-    color: black;
-}
-
 .selected-true {
     color: white;
 
@@ -71,7 +66,7 @@
 /*------------------------------------------------------------------------------*/
 
 
-.card:hover {
+.card-css:hover {
     border-width: 1px;
     border-color: #0307fc;
     border-style: solid;
