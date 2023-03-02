@@ -61,5 +61,10 @@ namespace PokerFace.Data.Repositories
             user.SelectedCardId = card.Id;
             await context.SaveChangesAsync();
         }
+
+        public async Task<Card> GetAsync(int cardId)
+        {
+            return await context.Cards.Where(x => x.Id == cardId).FirstOrDefaultAsync();
+        }
     }
 }

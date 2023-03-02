@@ -51,7 +51,7 @@ namespace PokerFace.Data.Repositories
                 throw new BadHttpRequestException("There's no user with this Id!");
 
             user.SelectedCardId = context.Cards.Where(x=>x.Id==cardId).First().Id;
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync();   
         }
 
         public async Task LogoutUserAsync(int userId, int roomId)
