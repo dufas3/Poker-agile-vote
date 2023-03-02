@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PokerFace.Data.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace PokerFace.Data.Entities
 {
@@ -10,5 +11,6 @@ namespace PokerFace.Data.Entities
         public int ModeratorId { get; set; }
         public List<int> UserIds { get; } = new List<int>();
         public List<int> CardIds { get; } = new List<int>();
+        public SessionState State { get; set; }
     }
 }
