@@ -55,21 +55,18 @@
 }
 
 /*------------------------------------------------------------------------------*/
-card-text-color-true {
+.selected-false {
     color: black;
 }
 
-card-text-color-false {
+.selected-true {
     color: white;
-}
-
-card-background-color-true {
 
 }
-
-card-background-color-false {
-    background-color: rgba(75, 154, 232);
+.selected-bg-true{
+    background: rgba(75, 154, 232);
 }
+
 
 /*------------------------------------------------------------------------------*/
 

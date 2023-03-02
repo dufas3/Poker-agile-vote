@@ -43,9 +43,9 @@ function Poker() {
           <Nav />
           <div className="poker">
             <div className="voting">
-              <VotingArea cards={{cards: cards, userId: location.state.userId}} />
+              <VotingArea cards={{cards: cards, userId: location.state.userId, roomId: location.state.roomId}} />
               {userData.role == "moderator" ? (
-                <VotingControls cards={cards} />
+                <VotingControls cards={{cards: cards, roomId: location.state.roomId}} />
               ) : (
                 ""
               )}

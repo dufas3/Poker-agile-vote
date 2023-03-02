@@ -1,9 +1,32 @@
 import "./Poker.css";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import ControllSetting from "./controllSetting";
+import getSessionState from "../../api/getSessionState";
+import {SessionState} from "../../common/sessionState";
+import setSessionState from "../../api/setSessionState";
 
 function VotingControls(props) {
   const [inSettings, setInSettings] = useState(false);
+  const [session, setSession] = useState(0)
+
+  useEffect(() =>{
+    const getData = async () =>{
+      let response = await getSessionState(props.cards.roomId);
+      setSession(response.sessionState)
+      console.log("Session: ", session);
+
+    }
+    getData();
+  },[])
+  const handleFlipCards = async () =>{
+    await setSessionState({roomId: props.cards.roomId, state: SessionState.FINILIZESTATE})
+  }
+  const handleFinish= async () =>{
+    await setSessionState({roomId: props.cards.roomId, state: SessionState.FINISHSTATE})
+  }
+  const handleResetCards= async () =>{
+    await setSessionState({roomId: props.cards.roomId, state: SessionState.VOTESTATE})
+  }
 
   const test = () => {
     if (inSettings) {
@@ -23,18 +46,19 @@ function VotingControls(props) {
           <div className="center-contents">
             <div className="voting-buttons">
               <div className="row-top">
-                <button className="flip-cards btn btn-outline-primary">
+
+                <button className="flip-cards btn btn-outline-primary" onClick={handleFlipCards}>
                   <h6 className="center-text">Flip Cards</h6>
                 </button>
 
-                <button className="clear-votes btn btn-outline-primary">
+                <button className="clear-votes btn btn-outline-primary" onClick={handleResetCards}>
                   <h6 className="center-text">Clear Votes</h6>
                 </button>
               </div>
 
-              <button className="finish-voting btn btn-primary">
+              {session !=SessionState.VOTESTATE?<button className="finish-voting btn btn-primary" onClick={handleFinish}>
                 <h6 className="center-text">Finish Voting</h6>
-              </button>
+              </button> : ""}
             </div>
           </div>
         </div>
@@ -52,7 +76,7 @@ function VotingControls(props) {
                 Use all cards
               </label>
             </div>
-            {props.cards.map((card) => (
+            {props.cards.cards.map((card) => (
               <ControllSetting value={card.value} />
             ))}
           </div>

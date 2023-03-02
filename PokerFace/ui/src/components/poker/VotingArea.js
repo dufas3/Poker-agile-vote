@@ -12,12 +12,12 @@ const VotingArea = (props) => {
       <div className="voting-area">
         <div className="row-1">
           {props.cards.cards.map((card) => (
-            card.id < 8 ? <Card cardValue={{cardValue: card.value, cardId: card.id, userId: props.cards.userId}} /> : " "
+            card.id < 8 ? <Card cardValue={{cardValue: card.value, cardId: card.id, userId: props.cards.userId, roomId: props.cards.roomId}} /> : " "
           ))}
         </div>
           <div className="row-2">
               {props.cards.cards.map((card) => (
-                  card.id > 7 ? <Card cardValue={{cardValue: card.value, cardId: card.id, userId: props.cards.userId}} /> : " "
+                  card.id > 7 ? <Card cardValue={{cardValue: card.value, cardId: card.id, userId: props.cards.userId, roomId: props.cards.roomId}} /> : " "
               ))}
           </div>
       </div>

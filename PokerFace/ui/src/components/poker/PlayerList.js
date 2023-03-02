@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import GetSessionUsers from "../../api/getSessionUsers";
 import VoteIcon from '../../imgs/vote-icon.png';
 import poker from "./Poker";
+import getSessionState from "../../api/getSessionState";
 
 const PlayerList = (props) => {
     const [users, setUsers] = useState([]);
@@ -15,11 +16,14 @@ const PlayerList = (props) => {
         setUserData(props.userData);
         console.log("User data props: ", props);
         const GetData = async () => {
+
             let response = await GetSessionUsers({
                 id: props.userData.roomId,
             });
+
+
             if (response) {
-                console.log(response);
+                console.log("Player list response; ",response);
                 setUsers(response);
             }
         };
@@ -39,7 +43,7 @@ const PlayerList = (props) => {
                             <img src={UserIcon} className="user-icon"/>
                         </div>
                         <h6>{user.name} {user.cardId != "0" ? user.name.includes("@gmail.com") ? "" :
-                            <i className="fa-regular fa-circle-check text-primary"></i> : ""}</h6>
+                            user.selectedCard && <i className="fa-regular fa-circle-check text-primary"></i> : ""}</h6>
                     </div>
                     {user.name.includes("@gmail.com") ? "" : <img src={VoteIcon} className="vote-icon"/>}
 
