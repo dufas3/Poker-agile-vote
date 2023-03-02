@@ -1,4 +1,5 @@
-﻿using PokerFace.Data.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using PokerFace.Data.Common;
 using PokerFace.Data.Entities;
 
 namespace PokerFace.Data.Repositories
@@ -59,6 +60,25 @@ namespace PokerFace.Data.Repositories
             context.Sessions.Remove(session);
                 
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Card>> GetUserSelectedCards(int roomId)
+        {
+            var users = await GetSessionUsersAsync(roomId);
+
+            var cards = new List<Card>();
+
+            foreach (var user in users)
+            {
+                //not selected card
+                if (user.SelectedCard == 0)
+                    continue;
+
+                var card = await context.Cards.FirstOrDefaultAsync(x => x.Id == user.SelectedCard);
+                cards.Add(card);
+            }
+
+            return cards;
         }
     }
 }
