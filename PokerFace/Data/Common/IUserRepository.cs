@@ -8,6 +8,7 @@ namespace PokerFace.Data.Common
         Task UpdateAsync(User user);
         Task AddUserToSessionAsync(User user, int roomId);
         Task SetSelectedCardAsync(int userId, int cardId);
+        Task<int> GetSelectedCardAsync(int userId);
         Task LogoutUserAsync(int userId,int roomId);
     }
 }

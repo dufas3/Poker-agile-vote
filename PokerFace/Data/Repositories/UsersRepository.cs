@@ -70,5 +70,10 @@ namespace PokerFace.Data.Repositories
             context.Remove(user);
             await context.SaveChangesAsync();
         }
+
+        public async Task<int> GetSelectedCardAsync(int userId)
+        {
+            return await Task.FromResult(context.Users.Where(x => x.Id == userId).FirstOrDefault().SelectedCard.Value);  
+        }
     }
 }

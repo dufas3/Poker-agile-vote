@@ -14,5 +14,11 @@ namespace PokerFace.Controllers
 
         [HttpGet]
         public async Task<ActionResult> LogoutUser([FromQuery] LogoutUserCommand command) => await SendMessage(command);
+
+        [HttpGet]
+        public async Task<ActionResult> GetSelectedCard([FromQuery] GetSelectedCardCommand command) => await SendMessage(command);
+
+        [HttpPost]
+        public async Task<ActionResult> SetSelectedCard([FromBody] SetSelectedCardCommand command) => await SendMessage(command);
     }
 }
