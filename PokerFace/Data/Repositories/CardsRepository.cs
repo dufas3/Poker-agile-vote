@@ -58,7 +58,7 @@ namespace PokerFace.Data.Repositories
 
             var card = context.Cards.Where(x => x.Id == cardId).First();
 
-            user.SelectedCard = card;
+            user.SelectedCardId = card.Id;
             await context.SaveChangesAsync();
         }
     }
