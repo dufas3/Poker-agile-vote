@@ -1,29 +1,30 @@
 import ConnectionUrl from "../common/connectionUrl";
 
 const GetSessionState = async (props) => {
-    if (!props) return;
+  if (!props) return;
 
-    const requestOptions = {
-        method: "Get",
-        headers: { "Content-Type": "application/json" },
-    };
+  const requestOptions = {
+    method: "Get",
+    headers: { "Content-Type": "application/json" },
+  };
 
-    const url = ConnectionUrl({ appendix: "/card/GetSessionState" });
-    
-    url.searchParams.append("roomId", props.roomId);
+  const url = ConnectionUrl({ appendix: "/session/GetSessionState" });
 
-    try {
-        const response = await fetch(url.toString(), requestOptions);
-        console.log("getSessionState: ",response);
-        const isJson = response.headers
-            .get("content-type")
-            ?.includes("application/json");
-        const data = isJson && (await response.json());
-        return data;
-    } catch (error) {
-        console.log("Caught error");
-        return;
-    }
-}
+  url.searchParams.append("roomId", props.roomId);
+
+  try {
+    const response = await fetch(url.toString(), requestOptions);
+
+    const isJson = response.headers
+      .get("content-type")
+      ?.includes("application/json");
+    const data = isJson && (await response.json());
+    console.log("getSessionState: ", data);
+    return data;
+  } catch (error) {
+    console.log("Caught error");
+    return;
+  }
+};
 
 export default GetSessionState;
