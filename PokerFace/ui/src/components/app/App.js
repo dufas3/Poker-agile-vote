@@ -5,8 +5,6 @@ import Login from "../login/Login";
 import Poker from "../poker/Poker";
 import './App.css';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import Nav from "../header/Nav";
-import {useEffect, useState} from "react";
 
 function App() {
 

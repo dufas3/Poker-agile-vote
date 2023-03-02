@@ -1,17 +1,19 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const LogoutSession = async (props) => {
+const SetSessionState = async (props) => {
 
     if (!props) return;
 
     const requestOptions = {
-        method: "Get",
+        method: "Post",
         headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            roomId: props.roomId,
+            state: props.state,
+        }),
     };
 
-    const url = ConnectionUrl({appendix: "/session/logoutsesion"});
-    url.searchParams.append("roomId", props.roomId);
-
+    const url = ConnectionUrl({appendix: "/session/SetSessionState"});
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers
@@ -23,6 +25,5 @@ const LogoutSession = async (props) => {
         console.log("Caught error");
         return;
     }
-};
-
-export default LogoutSession;
+}
+export default SetSessionState;

@@ -10,5 +10,8 @@ namespace PokerFace.Data.Common
         Task<List<User>> GetSessionUsersAsync(int roomId);
         Task<Session> GetByRoomIdAsync(int id);
         Task LogoutSessionAsync(int roomId);
+        Task<List<Card>> GetUserSelectedCardsAsync(int roomId);
+        Task<SessionState> GetSessionStateAsync(int roomId);
+        Task SetSessionStateAsync(int roomId, SessionState state);
     }
 }

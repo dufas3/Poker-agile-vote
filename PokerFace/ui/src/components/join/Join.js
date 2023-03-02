@@ -23,7 +23,6 @@ function Join() {
             setErrors(true);
             return;
         }
-        console.log(response);
         if (!name || !roomId) {
             setErrors(true);
         } else if (name.replaceAll(" ", "").length == 0) {
@@ -33,7 +32,8 @@ function Join() {
             const userData = {
                 name: name,
                 roomId: roomId,
-                role: "player"
+                role: "player",
+                userId: response.id,
             };
 
             setUserData(userData)

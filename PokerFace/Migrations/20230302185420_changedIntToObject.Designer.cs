@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokerFace.Data;
 
@@ -11,9 +12,10 @@ using PokerFace.Data;
 namespace PokerFace.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230302185420_changedIntToObject")]
+    partial class changedIntToObject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,18 @@ namespace PokerFace.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SelectedCardId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PokerFace.Data.Entities.User", b =>
+                {
+                    b.HasOne("PokerFace.Data.Entities.Card", "SelectedCard")
+                        .WithMany()
+                        .HasForeignKey("SelectedCardId");
+
+                    b.Navigation("SelectedCard");
                 });
 #pragma warning restore 612, 618
         }

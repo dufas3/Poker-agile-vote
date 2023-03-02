@@ -1,6 +1,6 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const LogoutSession = async (props) => {
+const GetActiveCards = async (props) => {
 
     if (!props) return;
 
@@ -9,9 +9,9 @@ const LogoutSession = async (props) => {
         headers: {"Content-Type": "application/json"},
     };
 
-    const url = ConnectionUrl({appendix: "/session/logoutsesion"});
-    url.searchParams.append("roomId", props.roomId);
+    const url = ConnectionUrl({appendix: "/card/getActiveCards"});
 
+    url.searchParams.append("roomId", props.roomId);
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers
@@ -25,4 +25,4 @@ const LogoutSession = async (props) => {
     }
 };
 
-export default LogoutSession;
+export default GetActiveCards;
