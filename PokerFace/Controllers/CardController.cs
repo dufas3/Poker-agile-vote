@@ -14,5 +14,8 @@ namespace PokerFace.Controllers
 
         [HttpPost]
         public async Task<ActionResult> SetActiveCards([FromBody] SetActiveCardsCommand command) => await SendMessage(command);
+
+        [HttpPost]
+        public async Task<ActionResult> SetActiveUserCard([FromBody] SetActiveUserCardCommand command) => await SendMessage(command);
     }
 }
