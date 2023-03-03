@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Selenium {
     private static WebDriver browser;
-    public static final String POKER_URL = "https://pokerfaceapp-17528.azurewebsites.net/";
+    public static final String POKER_URL = "https://pokerfaceapptest.azurewebsites.net";
     public static final String FIELD_NAME = "Antanukas";
     public static final String EMAIL = "testemail@gmail.com";
     public static final String PASSWORD = "testpassword123";
@@ -23,20 +23,23 @@ public class Selenium {
         System.out.println("Scrum Poker");
         setup(POKER_URL);
         //LOGIN
-        loginPlayer();
+        //loginPlayer();
         //loginModerator();
 
 
-        //HEADER
+        //HEADER ---VEIKIA
         //clickUserIcon();
         //clickFestoLogo();
 
-        //FOOTER
+        //FOOTER ---VEIKIA
         //clickFooterImprintLink();
         //acceptFestoCookies();
         //clickFooterPrivacyLink();
+        //acceptFestoCookies();
         //clickFooterTermsLink();
-        //clickFooterCloudLink();
+        //acceptFestoCookies();
+        clickFooterCloudLink();
+        acceptFestoCookies();
 
         //MODERATOR_CARD_SETTINGS
         //flipCard();
@@ -44,8 +47,10 @@ public class Selenium {
         //finishVoting();
         //clickModeratorSettings();
         //checkUseAllCardsBox();
-        selectCards();
-        unselectCards();
+        //selectCards(1);
+        //selectCards(5);
+        //selectCards(8);
+        //unselectCards();
     }
 
 
@@ -67,20 +72,20 @@ public class Selenium {
         browser.get(url);
 
         //simuliacija pascrollinti zemyn puslapi
-        JavascriptExecutor js = (JavascriptExecutor) browser;
-        js.executeScript("window.scrollBy(0,4500)");
+        //JavascriptExecutor js = (JavascriptExecutor) browser;
+        //js.executeScript("window.scrollBy(0,4500)");
 
 
-        browser.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        //browser.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
     }
 
     //---------------------------------------------HEADER--------------------------------------------------------------
     public static void clickUserIcon() {
 
-        WebElement userIcon = browser.findElement(By.className("black"));
+        WebElement userIcon = browser.findElement(By.id("H1"));
         userIcon.click();
 
-        browser.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     }
 
     public static void clickFestoLogo() {
@@ -102,7 +107,7 @@ public class Selenium {
     }
 
     public static String getHeaderIconResults() {
-        WebElement getHeaderResults = browser.findElement(By.cssSelector("body > div > div.info > h2"));
+        WebElement getHeaderResults = browser.findElement(By.cssSelector("#root > div.App > div > div > div.info > h2"));
         String resultsHeading2Text = getHeaderResults.getText();
         return resultsHeading2Text;
     }
@@ -115,42 +120,55 @@ public class Selenium {
 
     //----------------------------------------------FOOTER-------------------------------------------------------------
     public static void clickFooterImprintLink() {
-        WebElement footerImprintLink = browser.findElement(By.xpath("//*[@id=\"root\"]/div[2]/footer/ul/li[1]/a"));
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("document.getElementById('F1').scrollIntoView()");
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        WebElement footerImprintLink = browser.findElement(By.id("F1"));
         Assert.assertTrue("Festo Imprint link is inactive and/or invisible", footerImprintLink.isEnabled() && footerImprintLink.isDisplayed());
-        footerImprintLink.click();
+        js.executeScript("document.getElementById('F1').click()");
+        //footerPrivacyLink.click();
     }
 
     public static void clickFooterPrivacyLink() {
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("document.getElementById('F2').scrollIntoView()");
+        new WebDriverWait(browser, Duration.ofSeconds(3));
         WebElement footerPrivacyLink = browser.findElement(By.id("F2"));
         Assert.assertTrue("Festo Data Privacy link is inactive and/or invisible", footerPrivacyLink.isEnabled() && footerPrivacyLink.isDisplayed());
-        browser.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        footerPrivacyLink.click();
+        js.executeScript("document.getElementById('F2').click()");
+        //footerPrivacyLink.click();
     }
 
     public static void clickFooterTermsLink() {
-        WebElement footerTermsLink = browser.findElement(By.xpath("//*[@id=\"root\"]/div[2]/footer/ul/li[3]/a"));
-        Assert.assertTrue("Festo Imprint link is inactive and/or invisible", footerTermsLink.isEnabled() && footerTermsLink.isDisplayed());
-        footerTermsLink.click();
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("document.getElementById('F3').scrollIntoView()");
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        WebElement footerTermsLink = browser.findElement(By.id("F3"));
+        Assert.assertTrue("Festo Terms and Conditions of Sale link is inactive and/or invisible", footerTermsLink.isEnabled() && footerTermsLink.isDisplayed());
+        js.executeScript("document.getElementById('F3').click()");
+        //footerPrivacyLink.click();
     }
 
     public static void clickFooterCloudLink() {
-        WebElement footerCloudLink = browser.findElement(By.xpath("//*[@id=\"root\"]/div[2]/footer/ul/li[4]/a"));
-        Assert.assertTrue("Festo Imprint link is inactive and/or invisible", footerCloudLink.isEnabled() && footerCloudLink.isDisplayed());
-        footerCloudLink.click();
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("document.getElementById('F4').scrollIntoView()");
+        new WebDriverWait(browser, Duration.ofSeconds(3));
+        WebElement footerCloudLink = browser.findElement(By.id("F4"));
+        Assert.assertTrue("Festo Terms and Conditions of Sale link is inactive and/or invisible", footerCloudLink.isEnabled() && footerCloudLink.isDisplayed());
+        js.executeScript("document.getElementById('F4').click()");
+        //footerPrivacyLink.click();
     }
 
     public static void acceptFestoCookies() {
-
-
         //Accept Cookies
-        WebElement cookiePolicy = browser.findElement(By.cssSelector("body > dialog > div > div > menu > button._Button_primary__d121ae37._Button_medium__d121ae37.accept-button--g96zu"));
-        cookiePolicy.click();
+        By buttonSelector = By.xpath("//button[contains(text(),'Accept All Cookies')]");
+        new WebDriverWait(browser, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(buttonSelector));
+        browser.findElement(buttonSelector).click();
 
-        //simuliacija pascrollinti zemyn puslapi
-        JavascriptExecutor js = (JavascriptExecutor) browser;
-        js.executeScript("window.scrollBy(0,4500)");
-
-        browser.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
     }
 
     public static String getFooterLinkResults() {
@@ -239,15 +257,33 @@ public class Selenium {
         saveButton.click();
     }
 
-    public static void selectCards() {
+    public static void selectCards(int index) {
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("document.getElementById('flexCheckDefault').scrollIntoView()");
+        new WebDriverWait(browser, Duration.ofSeconds(3));
 
-        List<WebElement> cardBoxOptions = browser.findElements(By.className("form-check-input")); //cardBox - pavadinimas visu card boxu
-        System.out.println("Total card box options: " + cardBoxOptions.size());
 
-        for (WebElement cardBoxOption : cardBoxOptions) {
+        List<WebElement> checkbox = browser.findElements(By.id("flexCheckDefault"));
+        int Size = checkbox.size();
+        Assert.assertTrue("Index out of range", Size > index);
+        for (int i = 0; i < Size; i++) {
+            if (i == index) {
+                checkbox.get(index).click();
+                break;
+            }
+        }
+        Assert.assertTrue("Card box is not selected", checkbox.get(index).isSelected());
+    }
+
+
+    public static void unselectCards() {
+        List<WebElement> cardBoxOptions2 = browser.findElements(By.className("form-check-input")); //cardBox - pavadinimas visu card boxu
+        System.out.println("Total card box options: " + cardBoxOptions2.size());
+
+        for (WebElement cardBoxOption2 : cardBoxOptions2) {
             // issitraukiame elementa pgala reiksme (value)
-            if (cardBoxOption.getAttribute("Value").equals("1")) { //paselectina Coffe, nes tik jis turi Value, devai uzdes ant kitu Value irgi
-                cardBoxOption.click();
+            if (cardBoxOption2.getAttribute("Value").equals("1")) { //paselectina Coffe, nes tik jis turi Value, devai uzdes ant kitu Value irgi
+                cardBoxOption2.click();
                 // kad kitu nebetikrintu, jeigu jau rado korteles 1 box'a
                 // break - iseina is ciklo
                 // continue - toliau tesia
@@ -255,161 +291,4 @@ public class Selenium {
             }
         }
     }
-        public static void unselectCards() {
-            List<WebElement> cardBoxOptions2 = browser.findElements(By.className("form-check-input")); //cardBox - pavadinimas visu card boxu
-            System.out.println("Total card box options: " + cardBoxOptions2.size());
-
-            for (WebElement cardBoxOption2 : cardBoxOptions2) {
-                // issitraukiame elementa pgala reiksme (value)
-                if (cardBoxOption2.getAttribute("Value").equals("1")) {
-                    cardBoxOption2.click();
-                    // kad kitu nebetikrintu, jeigu jau rado korteles 1 box'a
-                    // break - iseina is ciklo
-                    // continue - toliau tesia
-                    break;
-                }
-            }
-    }
-   /*public static void selectCards() { //funkcija kuri turi cikla, parametras kelintas elementas indeksa findelements, grazinti sarasa elementu tickboxu, paleisti cikla
-//check card 0 box
-        WebElement card0Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 0 box is inactive and/or invisible", card0Box.isEnabled() && card0Box.isDisplayed());
-        card0Box.click();
-
-//check card 1/2 box
-        WebElement cardHalfBox = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 1/2 box is inactive and/or invisible", cardHalfBox.isEnabled() && cardHalfBox.isDisplayed());
-        cardHalfBox.click();
-
-//check card 1 box
-        WebElement card1Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 1 box is inactive and/or invisible", card1Box.isEnabled() && card1Box.isDisplayed());
-        card1Box.click();
-
-//check card 2 box
-        WebElement card2Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 2 box is inactive and/or invisible", card2Box.isEnabled() && card2Box.isDisplayed());
-        card2Box.click();
-
-//check card 3 box
-        WebElement card3Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 3 box is inactive and/or invisible", card3Box.isEnabled() && card3Box.isDisplayed());
-        card3Box.click();
-
-//check card 5 box
-        WebElement card5Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 5 box is inactive and/or invisible", card5Box.isEnabled() && card5Box.isDisplayed());
-        card5Box.click();
-
-//check card 8 box
-        WebElement card8Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 8 box is inactive and/or invisible", card8Box.isEnabled() && card8Box.isDisplayed());
-        card8Box.click();
-
-//check card 13 box
-        WebElement card13Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 13 box is inactive and/or invisible", card13Box.isEnabled() && card13Box.isDisplayed());
-        card13Box.click();
-
-//check card 20 box
-        WebElement card20Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 20 box is inactive and/or invisible", card20Box.isEnabled() && card20Box.isDisplayed());
-        card20Box.click();
-
-//check card 40 box
-        WebElement card40Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 40 box is inactive and/or invisible", card40Box.isEnabled() && card40Box.isDisplayed());
-        card40Box.click();
-
-//check card 100 box
-        WebElement card100Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 100 box is inactive and/or invisible", card100Box.isEnabled() && card100Box.isDisplayed());
-        card100Box.click();
-
-//check card ? box
-        WebElement cardQuestionBox = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card ? box is inactive and/or invisible", cardQuestionBox.isEnabled() && cardQuestionBox.isDisplayed());
-        cardQuestionBox.click();
-
-//check card Coffee box
-        WebElement cardCoffeeBox = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card Coffee box is inactive and/or invisible", cardCoffeeBox.isEnabled() && cardCoffeeBox.isDisplayed());
-        cardCoffeeBox.click();
-
-//click save button
-        WebElement saveButton = browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div[2]/button[1]/h6"));
-        saveButton.click();
-    }
-
-    public static void unselectCards() {
-//uncheck card 0 box
-        WebElement card0Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 0 box is inactive and/or invisible", card0Box.isEnabled() && card0Box.isDisplayed());
-        card0Box.click();
-
-//uncheck card 1/2 box
-        WebElement cardHalfBox = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 1/2 box is inactive and/or invisible", cardHalfBox.isEnabled() && cardHalfBox.isDisplayed());
-        cardHalfBox.click();
-
-//uncheck card 1 box
-        WebElement card1Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 1 box is inactive and/or invisible", card1Box.isEnabled() && card1Box.isDisplayed());
-        card1Box.click();
-
-//uncheck card 2 box
-        WebElement card2Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 2 box is inactive and/or invisible", card2Box.isEnabled() && card2Box.isDisplayed());
-        card2Box.click();
-
-//uncheck card 3 box
-        WebElement card3Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 3 box is inactive and/or invisible", card3Box.isEnabled() && card3Box.isDisplayed());
-        card3Box.click();
-
-//uncheck card 5 box
-        WebElement card5Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 5 box is inactive and/or invisible", card5Box.isEnabled() && card5Box.isDisplayed());
-        card5Box.click();
-
-//uncheck card 8 box
-        WebElement card8Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 8 box is inactive and/or invisible", card8Box.isEnabled() && card8Box.isDisplayed());
-        card8Box.click();
-
-//uncheck card 13 box
-        WebElement card13Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 13 box is inactive and/or invisible", card13Box.isEnabled() && card13Box.isDisplayed());
-        card13Box.click();
-
-//uncheck card 20 box
-        WebElement card20Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 20 box is inactive and/or invisible", card20Box.isEnabled() && card20Box.isDisplayed());
-        card20Box.click();
-
-//uncheck card 40 box
-        WebElement card40Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 40 box is inactive and/or invisible", card40Box.isEnabled() && card40Box.isDisplayed());
-        card40Box.click();
-
-//uncheck card 100 box
-        WebElement card100Box = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card 100 box is inactive and/or invisible", card100Box.isEnabled() && card100Box.isDisplayed());
-        card100Box.click();
-
-//uncheck card ? box
-        WebElement cardQuestionBox = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card ? box is inactive and/or invisible", cardQuestionBox.isEnabled() && cardQuestionBox.isDisplayed());
-        cardQuestionBox.click();
-
-//uncheck card Coffee box
-        WebElement cardCoffeeBox = browser.findElement(By.xpath(""));
-        Assert.assertTrue("Card Coffee box is inactive and/or invisible", cardCoffeeBox.isEnabled() && cardCoffeeBox.isDisplayed());
-        cardCoffeeBox.click();
-
-//click save button
-        WebElement saveButton = browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div[2]/button[1]/h6"));
-        saveButton.click();
-    }*/
-
 }
