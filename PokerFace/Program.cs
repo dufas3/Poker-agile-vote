@@ -22,7 +22,7 @@ namespace PokerFace.Web
             builder.Services.AddScoped<ICardsRepository, CardsRepository>();
             
             //for adding static data 
-            builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
+            //builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
 
             builder.Services.AddCors(options =>
             {
