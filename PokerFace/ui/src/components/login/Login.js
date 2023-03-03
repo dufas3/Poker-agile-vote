@@ -2,7 +2,7 @@ import "./Login.css";
 import {Link, useNavigate} from "react-router-dom";
 import Nav from "../header/Nav";
 import {useCallback, useEffect, useState} from "react";
-import GetModerator from "../../api/getModerator";
+import GetModerator from "../../api/get/getModerator";
 import CreateSession from "../../api/createSession";
 
 function Login() {
@@ -14,7 +14,7 @@ function Login() {
     const [errors, setErrors] = useState(false);
     const [responseUser, setResponseUser] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
+    const [userData, setUserData] = useState({name: "", roomId: "", role: "", userId: ""});
     const [navig, setNavig] = useState();
 
     const navigate = useNavigate();
@@ -43,14 +43,14 @@ function Login() {
                 name: email,
                 roomId: generatedId,
                 role: "moderator",
+                userId: response.id,
             };
 
             await CreateSession({id: generatedId, moderatorId: response.id});
             setUserData(userData);
-            console.log("userdata in login", userData);
             setIsLoading(false);
             setEnter(true);
-            setNavig(navigate("/Poker", { replace: true, state: userData }));
+            setNavig(navigate("/Poker", {replace: true, state: userData}));
 
             handleOnClick();
 

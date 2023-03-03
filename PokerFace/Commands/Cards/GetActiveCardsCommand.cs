@@ -4,6 +4,7 @@ using PokerFace.Data.Entities;
 
 namespace PokerFace.Commands.Cards
 {
+    //active session cards
     public class GetActiveCardsCommand : IRequest<List<Card>>
     {
         public int RoomId { get; set; }

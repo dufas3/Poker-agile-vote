@@ -1,16 +1,16 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const LogoutSession = async (props) => {
-
-    if (!props) return;
+const GetSessionUsers = async (props) => {
 
     const requestOptions = {
         method: "Get",
         headers: {"Content-Type": "application/json"},
     };
 
-    const url = ConnectionUrl({appendix: "/session/logoutsesion"});
-    url.searchParams.append("roomId", props.roomId);
+    if (!props) return;
+
+    const url = ConnectionUrl({appendix: "/session/getSessionUsers"});
+    url.searchParams.append("id", props.id);
 
     try {
         const response = await fetch(url.toString(), requestOptions);
@@ -20,9 +20,8 @@ const LogoutSession = async (props) => {
         const data = isJson && (await response.json());
         return data;
     } catch (error) {
-        console.log("Caught error");
+        console.log("Caught error", error);
         return;
     }
 };
-
-export default LogoutSession;
+export default GetSessionUsers;

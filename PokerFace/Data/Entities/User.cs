@@ -9,6 +9,6 @@ namespace PokerFace.Data.Entities
         public int? RoomId { get; set; }
         public string Name { get; set; }
         public string? Password { get; set; }
-        public int? SelectedCard { get; set; }
+        public int? SelectedCardId { get; set; }
     }
 }
