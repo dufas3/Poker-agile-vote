@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using PokerFace.Data.Common;
+using PokerFace.Data.Hubs;
 
 namespace PokerFace.Commands.User
 {
@@ -8,28 +9,31 @@ namespace PokerFace.Commands.User
     {
         public string Name { get; set; }
         public int RoomId { get; set; }
+        public string SocketId { get; set; }
     }
 
     public class AddToSessionCommandHandler : IRequestHandler<AddToSessionCommand, UserDto>
     {
-        ISessionRepository sessionRepository { get; set; }
-        IUserRepository userRepository { get; set; }
+        private readonly IUserRepository userRepository;
+        private readonly ISignalRService signalRService;
 
-        public AddToSessionCommandHandler(ISessionRepository sessionRepository, IUserRepository userRepository)
+        public AddToSessionCommandHandler(IUserRepository userRepository, ISignalRService signalRService)
         {
             this.userRepository = userRepository;
-            this.sessionRepository = sessionRepository;
+            this.signalRService = signalRService;
         }
+
         public async Task<UserDto> Handle(AddToSessionCommand request, CancellationToken cancellationToken)
         {
-            //check if session existing
-            var session = await sessionRepository.GetByRoomIdAsync(request.RoomId);
-            if (session == null)
-                throw new BadHttpRequestException("Session not found!");
-
-            var user = new Data.Entities.User { Name = request.Name, RoomId = request.RoomId };
+            var user = await userRepository.GetAsync(request.SocketId);
+            if (user == null)
+                throw new BadHttpRequestException("no socket by that id");
+            user.Name = request.Name;
+            user.RoomId = request.RoomId;
 
             await userRepository.AddUserToSessionAsync(user, request.RoomId);
+
+            await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, request.RoomId);
 
             return user.ToUserDto();
         }

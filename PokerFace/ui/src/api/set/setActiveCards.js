@@ -9,11 +9,11 @@ const SetActiveCards = async (props) => {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
             roomId: props.roomId,
-            cards: props.cards,
+            cardIds: props.cards,
         }),
     };
 
-    const url = ConnectionUrl({appendix: "/card/SetActiveCards"});
+    const url = ConnectionUrl({appendix: "/session/SetActiveCards"});
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers
@@ -26,3 +26,4 @@ const SetActiveCards = async (props) => {
         return;
     }
 };
+export default SetActiveCards;

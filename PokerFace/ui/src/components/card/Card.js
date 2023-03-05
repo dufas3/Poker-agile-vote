@@ -5,11 +5,11 @@ import setUserSelectedCard from "../../api/set/setUserSelectedCard";
 
 const Card = (props) => {
 
-        const [apiResponse, setApiResponse] = useState({});
         const [isSelected, setIsSelected] = useState(false);
 
-
         const selectedCard = async () => {
+            let sessionState = await getSessionState({roomId: props.cardValue.roomId})
+            if (sessionState == 1) return;
 
             try {
                 let isSelectedBgs = document.querySelectorAll('.selected-bg-true');
@@ -21,10 +21,9 @@ const Card = (props) => {
                 isSelectedTxts.forEach((isSelectedTxt) => {
                     isSelectedTxt.classList.remove('selected-true');
                 })
-
             } catch (error) {
-
             }
+
             setTimeout(function () {
                 if (!isSelected) {
                     setIsSelected(true);
@@ -33,14 +32,8 @@ const Card = (props) => {
                 }
             }.bind(this), 65)
 
-            let sessionState = await getSessionState({roomId: props.cardValue.roomId})
-            console.log("Cards room ID: ", props.cardValue.roomId)
-            //if (sessionState.sessionState != SessionState.VOTESTATE) return;
             await setUserSelectedCard({userId: props.cardValue.userId, cardId: props.cardValue.cardId});
-
-
         }
-
 
         return (
             <div className={!isSelected ? "card-css" : "card-css selected-bg-true"}>
@@ -53,7 +46,6 @@ const Card = (props) => {
                         </div>
                         <h6 className={!isSelected ? "number-bottom" : "number-bottom selected-true"}>{props.cardValue.cardValue}</h6>
                     </button> :
-
                     <button className="card-button" onClick={selectedCard}><h5
                         className={!isSelected ? "number-top1" : "number-top1 selected-true"}>{props.cardValue.cardValue}</h5>
                         <div className={!isSelected ? "card-middle" : "card-middle selected-bg-true"}>

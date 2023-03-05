@@ -50,6 +50,10 @@ namespace PokerFace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CardIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ModeratorId")
                         .HasColumnType("int");
 
@@ -76,8 +80,11 @@ namespace PokerFace.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ConnectionId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")

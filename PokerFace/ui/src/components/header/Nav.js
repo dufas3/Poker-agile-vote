@@ -3,8 +3,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import {Link, useLocation} from "react-router-dom";
 import "./Nav.css";
 import {useEffect, useState} from "react";
-import LogoutSession from "../../api/logoutSession";
 import {useNavigate} from "react-router-dom";
+import LogoutUser from "../../api/logoutUser";
 
 const Nav = (props) => {
     const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
@@ -24,8 +24,8 @@ const Nav = (props) => {
     }, []);
 
     const HandleLogout = async () => {
-        await LogoutSession({roomId: userData.roomId});
-        navigate("/", {replace: true});
+         await LogoutUser({roomId: userData.roomId, userId: location.state.userId})
+         navigate("/", {replace: true});
     };
 
     return (
@@ -42,7 +42,7 @@ const Nav = (props) => {
                                 </a>
                             </Link>
                         ) : (
-                            <div className="component">
+                            <div className="component m-lg-1">
                                 <Dropdown>
                                     <Dropdown.Toggle variant="btn-secondary" id="dropdown-basic">
                                         <i className="bi bi-person-fill"/> {userData.name}
@@ -59,7 +59,7 @@ const Nav = (props) => {
                                         <Dropdown.Item>
                                             <Link to="/" style={{textDecoration: "none"}}>
                                                 <a
-                                                    onClick={() => HandleLogout}
+                                                    onClick={HandleLogout}
                                                     className="btn"
                                                     id="logoutbutton"
                                                 >

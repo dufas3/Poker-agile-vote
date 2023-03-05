@@ -2,7 +2,7 @@
 using PokerFace.Data.Common;
 using PokerFace.Data.Entities;
 
-namespace PokerFace.Commands.Cards
+namespace PokerFace.Commands.Session
 {
     //active session cards
     public class GetActiveCardsCommand : IRequest<List<Card>>
@@ -12,16 +12,16 @@ namespace PokerFace.Commands.Cards
 
     public class GetActiveCardsCommandHandler : IRequestHandler<GetActiveCardsCommand, List<Card>>
     {
-        private readonly ICardsRepository cardsRepository;
+        private readonly ISessionRepository sessionRepository;
 
-        public GetActiveCardsCommandHandler(ICardsRepository cardsRepository)
+        public GetActiveCardsCommandHandler(ISessionRepository sessionRepository)
         {
-            this.cardsRepository = cardsRepository;
+            this.sessionRepository = sessionRepository;
         }
 
         public async Task<List<Card>> Handle(GetActiveCardsCommand request, CancellationToken cancellationToken)
         {
-            return await cardsRepository.GetActiveCardsAsync(request.RoomId);
+            return await sessionRepository.GetActiveCardsAsync(request.RoomId);
         }
     }
 }
