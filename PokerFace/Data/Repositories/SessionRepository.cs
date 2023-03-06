@@ -18,7 +18,7 @@ namespace PokerFace.Data.Repositories
             return await Task.FromResult(context.Sessions.ToList());
         }
 
-        public async Task<List<User>> GetSessionUsersAsync(int roomId)
+        public async Task<List<User>> GetSessionUsersAsync(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
             if (session == null)
@@ -36,7 +36,7 @@ namespace PokerFace.Data.Repositories
             return await Task.FromResult(context.Sessions.Where(x => x.Id == id).First());
         }
 
-        public async Task<Session> GetByRoomIdAsync(int id)
+        public async Task<Session> GetByRoomIdAsync(string id)
         {
             return await Task.FromResult(context.Sessions.Where(x => x.RoomId == id).First());
         }
@@ -47,7 +47,7 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task LogoutSessionAsync(int roomId)
+        public async Task LogoutSessionAsync(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
 
@@ -62,7 +62,7 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<Card>> GetUserSelectedCardsAsync(int roomId)
+        public async Task<List<Card>> GetUserSelectedCardsAsync(string roomId)
         {
             var users = await GetSessionUsersAsync(roomId);
 
@@ -81,7 +81,7 @@ namespace PokerFace.Data.Repositories
             return cards;
         }
 
-        public async Task<SessionState> GetSessionStateAsync(int roomId)
+        public async Task<SessionState> GetSessionStateAsync(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
 
@@ -91,7 +91,7 @@ namespace PokerFace.Data.Repositories
             return session.State;
         }
 
-        public async Task SetSessionStateAsync(int roomId, SessionState state)
+        public async Task SetSessionStateAsync(string roomId, SessionState state)
         {
             var session = await GetByRoomIdAsync(roomId);
 
@@ -103,7 +103,7 @@ namespace PokerFace.Data.Repositories
             context.SaveChanges();
         }
 
-        public async Task ClearVotes(int roomId)
+        public async Task ClearVotes(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
 
@@ -125,7 +125,7 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task SetActiveCardsAsync(int roomId, List<int> cardIds)
+        public async Task SetActiveCardsAsync(string roomId, List<int> cardIds)
         {
             var session = await GetByRoomIdAsync(roomId);
 
@@ -139,7 +139,7 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<Card>> GetActiveCardsAsync(int roomId)
+        public async Task<List<Card>> GetActiveCardsAsync(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
 
@@ -158,7 +158,7 @@ namespace PokerFace.Data.Repositories
             return activeCards;
         }
 
-        public async Task LogoutUserAsync(int userId, int roomId)
+        public async Task LogoutUserAsync(int userId, string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
             if (session == null)
@@ -175,7 +175,7 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<int> GetModeratorId(int roomId)
+        public async Task<int> GetModeratorId(string roomId)
         {
             return context.Sessions.FirstOrDefault(x => x.RoomId == roomId).ModeratorId;
         }

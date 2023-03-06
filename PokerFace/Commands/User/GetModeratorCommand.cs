@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using PokerFace.Data;
+using PokerFace.Data.Common;
 
 namespace PokerFace.Commands.User
 {
@@ -11,16 +11,21 @@ namespace PokerFace.Commands.User
 
     public class GetModeratorCommandHandler : IRequestHandler<GetModeratorCommand, ModeratorDto>
     {
-        private readonly ApplicationDbContext context;
-        public GetModeratorCommandHandler(ApplicationDbContext context)
+        private readonly IUserRepository userRepository;
+        private readonly ISessionService sessionService;
+        public GetModeratorCommandHandler(IUserRepository userRepository, ISessionService sessionService)
         {
-            this.context = context;
+            this.userRepository = userRepository;
+            this.sessionService = sessionService;
         }
         public async Task<ModeratorDto> Handle(GetModeratorCommand request, CancellationToken cancellationToken)
         {
-            var user = context.Users.First(x => x.Name == request.UserEmail);
-            if (user == null || user.Password != request.UserPassword)
-                return null;
+            //create new session if in session table doesnt exist moderator id, otherwise do nothign
+            var user = await userRepository.GetModerator(request.UserEmail, request.UserPassword);
+
+            if (user.RoomId == null)
+                await sessionService.CreateSession(user.Id);
+
             return user.ToModeratorDto();
         }
     }

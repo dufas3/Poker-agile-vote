@@ -2,6 +2,6 @@
 {
     public interface ISignalRService
     {
-        Task SendMessage(string methodName, int roomId);
+        Task SendMessage(string methodName, string roomId);
     }
 }

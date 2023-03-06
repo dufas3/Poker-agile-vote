@@ -15,7 +15,7 @@ namespace PokerFace.Services
             this.hubContext = hubContext;
         }
 
-        public async Task SendMessage(string methodName, int roomId)
+        public async Task SendMessage(string methodName, string roomId)
         {
             var users = await sessionRepository.GetSessionUsersAsync(roomId);
 

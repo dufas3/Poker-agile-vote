@@ -18,9 +18,6 @@ namespace PokerFace.Web
             builder.Services.AddSignalRCore();
             builder.Services.AddSignalR();
 
-            //services
-            builder.Services.AddScoped<ISignalRService, SignalRService>();
-
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
@@ -33,6 +30,10 @@ namespace PokerFace.Web
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ICardsRepository, CardsRepository>();
 
+            //services
+            builder.Services.AddScoped<ISignalRService, SignalRService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
+
             //for adding static data 
             //builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
 
@@ -42,7 +43,7 @@ namespace PokerFace.Web
                                   policy =>
                                   {
                                       policy
-                                      .WithOrigins("https://pokerfaceapp-dev.azurewebsites.net")
+                                      .WithOrigins("http://localhost:3000")
                                       .AllowCredentials()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();

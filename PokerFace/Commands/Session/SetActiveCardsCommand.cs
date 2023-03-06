@@ -6,7 +6,7 @@ namespace PokerFace.Commands.Session
 {
     public class SetActiveCardsCommand : IRequest
     {
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
         public List<int> CardIds { get; set; }
     }
 

@@ -8,7 +8,7 @@ namespace PokerFace.Commands.User
     public class AddToSessionCommand : IRequest<UserDto>
     {
         public string Name { get; set; }
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
         public string SocketId { get; set; }
     }
 

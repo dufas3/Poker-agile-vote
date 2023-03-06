@@ -6,7 +6,7 @@ namespace PokerFace.Commands.Session
 {
     public class ClearSessionVotesCommand : IRequest
     {
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class ClearVotesCommandHandler : IRequestHandler<ClearSessionVotesCommand>

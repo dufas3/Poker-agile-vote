@@ -6,7 +6,7 @@ namespace PokerFace.Commands.Session
     //moderators log's out or inactivity period reaches, session is deleted
     public class LogoutSessionCommand : IRequest
     {
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class LogoutSessionCommandHandler : IRequestHandler<LogoutSessionCommand>

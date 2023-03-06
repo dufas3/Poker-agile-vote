@@ -6,7 +6,7 @@ namespace PokerFace.Commands.Session
 {
     public class GetSessionUsersCommand : IRequest<List<UserDto>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
     }
 
     public class GetSessionUsersCommandHandler : IRequestHandler<GetSessionUsersCommand, List<UserDto>>
