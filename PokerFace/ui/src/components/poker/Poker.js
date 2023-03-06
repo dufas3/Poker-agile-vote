@@ -71,7 +71,7 @@ const Poker = () => {
   useEffect(() => {
     const getData = async () => {
       signalRConnection.on(MethodNames.SessionStateUpdate, () => {
-        setSessionState();
+        setSessionStateFromApi();
       });
     };
     getData();

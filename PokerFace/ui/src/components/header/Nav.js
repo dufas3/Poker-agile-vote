@@ -5,6 +5,7 @@ import "./Nav.css";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import LogoutUser from "../../api/logoutUser";
+import {signalRConnection} from "../../api/signalR/signalRHub";
 
 const Nav = (props) => {
     const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
@@ -24,8 +25,9 @@ const Nav = (props) => {
     }, []);
 
     const HandleLogout = async () => {
-         await LogoutUser({roomId: userData.roomId, userId: location.state.userId})
-         navigate("/", {replace: true});
+        await LogoutUser({roomId: userData.roomId, userId: location.state.userId})
+        signalRConnection.stop();
+        navigate("/", {replace: true});
     };
 
     return (
