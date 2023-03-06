@@ -26,15 +26,11 @@ namespace PokerFace.Commands
 
         public static SessionDto ToDto(this Data.Entities.Session session)
         {
-            var sessionDto = new SessionDto()
+            return new SessionDto()
             {
                 RoomId = session.RoomId,
-                State = session.State              
+                State = session.State
             };
-            sessionDto.CardIds.AddRange(session.CardIds);
-            sessionDto.UserIds.AddRange(session.UserIds);
-
-            return sessionDto;
         }
     }
 }

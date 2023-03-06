@@ -12,6 +12,7 @@ namespace PokerFace.Services
         public SessionService(ISessionRepository sessionRepository, IUserRepository userRepository)
         {
             this.sessionRepository = sessionRepository;
+            this.userRepository = userRepository;
         }
 
         public async Task CreateSession(int moderatorId) 
@@ -25,6 +26,7 @@ namespace PokerFace.Services
             };
             var user = await userRepository.GetAsync(moderatorId);
             user.RoomId = roomId.ToString();
+
             await sessionRepository.AddAsync(session);
             await userRepository.UpdateAsync(user);
         }
