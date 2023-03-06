@@ -92,18 +92,6 @@ const Join = () => {
                     length
                     id="loginname"
                 ></input>
-                <input
-                    onChange={(e) => {
-                        setId(e.currentTarget.value);
-                    }}
-                    type="number"
-                    placeholder="   Enter room ID"
-                    className={errors ? "border-danger" : ""}
-                    minLength="2"
-                    maxLength="4"
-                    length
-                    id="loginid"
-                ></input>
 
                 <div className="error">
                     {errors && (

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Nav from "../header/Nav";
 import { useCallback, useState } from "react";
 import GetModerator from "../../api/get/getModerator";
-import CreateSession from "../../api/createSession";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
@@ -15,58 +14,39 @@ const Login = () => {
   //make it so the useState will have default state as error object array: [{isActiveError: boolean, errorType: string}] //error types will be: networkError, wrongLoginError
   const [errors, setErrors] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userData, setUserData] = useState({
-    name: "",
-    roomId: "",
-    role: "",
-    userId: "",
-  });
   const [navig, setNavig] = useState();
 
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
 
   const validation = async () => {
+
     setIsLoading(true);
+
     let response = await GetModerator({ email: email, password: password });
     console.log("response bad", !response);
+
     if (!response) {
       setEnter(false);
       setErrors(true);
       setIsLoading(false);
       return;
+
     } else {
+
       console.log("response data", response);
       setErrors(false);
       setIsLoading(true);
-
-      let generatedId = (Math.floor(Math.random() * 10000) + 10000)
-        .toString()
-        .substring(1);
-      if (generatedId[0] == "0") generatedId = "1" + generatedId.slice(1);
-
-      const userData = {
-        name: email,
-        roomId: generatedId,
-        role: "moderator",
-        userId: response.id,
-      };
 
       await signalRConnection.start();
       await signalRConnection.invoke(
         MethodNames.ReceiveConnectSockets,
         response.id.toString()
       );
-
-      await CreateSession({
-        id: generatedId,
-        moderatorId: response.id,
-        connectionId: signalRConnection.connectionId,
-      });
-      setUserData(userData);
       setIsLoading(false);
       setEnter(true);
-      setNavig(navigate("/Poker", { replace: true, state: userData }));
+      localStorage.setItem("userId", response.id)
+      setNavig(navigate("/Poker?roomId="+response.roomId, { replace: true}));
 
       handleOnClick();
     }
@@ -120,11 +100,6 @@ const Login = () => {
             {enter ? (
               <Link
                 to="/Poker"
-                state={{
-                  name: userData.name,
-                  roomId: userData.roomId,
-                  role: userData.role,
-                }}
                 style={{ textDecoration: "none" }}
               >
                 <h3 className="login-button">

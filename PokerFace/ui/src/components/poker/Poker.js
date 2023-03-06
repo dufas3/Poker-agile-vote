@@ -10,35 +10,39 @@ import GetActiveCards from "../../api/get/getActiveCards";
 import GetSessionUsers from "../../api/get/getSessionUsers";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
+import getSession from "../../api/get/getSession";
+import {useSearchParams} from "react-router-dom";
+import GetSession from "../../api/get/getSession";
 
 const Poker = () => {
-  const [userData, setUserData] = useState({
-    name: "",
+  const [sessionData, setSessionData] = useState({
     roomId: "",
-    role: "",
-    userId: "",
+    users: [],
+    cards: [],
+    sessionState: "",
   });
   const [cards, setCards] = useState([]);
   const [users, setUsers] = useState([]);
   const [sessionState, setSessionState] = useState(0);
   const [activeCards, setActiveCards] = useState([]);
-  const location = useLocation();
+
+  const [searchParams] = useSearchParams();
 
   const setUserList = async () => {
     let response = await GetSessionUsers({
-      id: location.state.roomId,
+      id: sessionData.roomId, //this
     });
     if (response) setUsers(response);
   };
 
   const setSessionStateFromApi = async () => {
-    let response = await getSessionState({ roomId: location.state.roomId });
+    let response = await getSessionState({ roomId: sessionData.roomId });
     setSessionState(response);
   };
 
   const getCards = async () => {
     let response = await GetCards({
-      roomId: location.state.roomId,
+      roomId: sessionData.roomId,
     });
     if (response) {
       setCards(response);
@@ -47,7 +51,7 @@ const Poker = () => {
 
   const getActiveCards = async () => {
     let activeCardsResponse = await GetActiveCards({
-      roomId: location.state.roomId,
+      roomId: sessionData.roomId,
     });
     if (activeCardsResponse) {
       setActiveCards(activeCardsResponse);
@@ -87,18 +91,19 @@ const Poker = () => {
   }, [activeCards]);
 
   useEffect(() => {
+    console.log("searchParams ",searchParams.get("roomId"))
     const setData = async () => {
       if (!signalRConnection) await signalRConnection.start();
-      await getCards();
-      await getActiveCards();
-      await setUserList();
-      await setSessionStateFromApi();
 
-      setUserData({
-        name: location.state.name,
-        roomId: location.state.roomId,
-        role: location.state.role,
-        userId: location.state.userId,
+      let response = await GetSession(searchParams.get("roomId"));
+      console.log("responseresponseresponse: ",response)
+
+
+      setSessionData({
+        roomId: searchParams.get("roomId"),
+        users: response.users,
+        cards: response.cards,
+        sessionState: response.state,
       });
     };
     setData();
@@ -106,30 +111,30 @@ const Poker = () => {
 
   return (
     <>
-      {userData && (
+      {sessionData && (
         <>
           <Nav />
           <div className="poker">
             <div className="voting">
               <VotingArea
-                cards={activeCards}
-                userId={location.state.userId}
-                roomId={location.state.roomId}
-                sessionState={sessionState}
-                userList={users}
+                cards={sessionData.cards}
+                userId={localStorage.getItem("userId")}
+                roomId={sessionData.roomId}
+                sessionState={sessionData.sessionState}
+                userList={sessionData.users}
               />
-              {userData.role == "moderator" ? (
+              {sessionData.role == "moderator" ? (
                 <VotingControls
-                  cards={cards}
-                  roomId={location.state.roomId}
-                  activeCards={activeCards}
-                  session={sessionState}
+                  cards={sessionData.cards}
+                  roomId={sessionData.roomId}
+                  activeCards={sessionData.cards}
+                  session={sessionData.sessionState}
                 />
               ) : (
                 ""
               )}
             </div>
-            <PlayerList sessionState={sessionState} userList={users} />
+            <PlayerList sessionState={sessionData.sessionState} userList={sessionData.users} />
           </div>
         </>
       )}
