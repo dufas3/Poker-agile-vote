@@ -6,9 +6,10 @@ namespace PokerFace.Services
 {
     public class SessionService : ISessionService
     {
-        private readonly ISessionRepository sessionRepository ;
+        private readonly ISessionRepository sessionRepository;
+        private readonly IUserRepository userRepository;
        
-        public SessionService(ISessionRepository sessionRepository)
+        public SessionService(ISessionRepository sessionRepository, IUserRepository userRepository)
         {
             this.sessionRepository = sessionRepository;
         }
@@ -22,8 +23,10 @@ namespace PokerFace.Services
                 ModeratorId = moderatorId,
                 RoomId = roomId.ToString()
             };
-
+            var user = await userRepository.GetAsync(moderatorId);
+            user.RoomId = roomId.ToString();
             await sessionRepository.AddAsync(session);
+            await userRepository.UpdateAsync(user);
         }
     }
 }
