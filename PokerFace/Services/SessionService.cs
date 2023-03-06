@@ -22,6 +22,8 @@ namespace PokerFace.Services
                 ModeratorId = moderatorId,
                 RoomId = roomId.ToString()
             };
+
+            await sessionRepository.AddAsync(session);
         }
     }
 }
