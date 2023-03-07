@@ -2,144 +2,152 @@ import Nav from "../header/Nav";
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {useLocation} from "react-router-dom";
+import {useEffect, useState} from "react";
 import GetCards from "../../api/get/getCards";
 import getSessionState from "../../api/get/getSessionState";
 import GetActiveCards from "../../api/get/getActiveCards";
 import GetSessionUsers from "../../api/get/getSessionUsers";
-import { MethodNames } from "../../common/methodNames";
-import { signalRConnection } from "../../api/signalR/signalRHub";
+import {MethodNames} from "../../common/methodNames";
+import {signalRConnection} from "../../api/signalR/signalRHub";
 import getSession from "../../api/get/getSession";
 import {useSearchParams} from "react-router-dom";
 import GetSession from "../../api/get/getSession";
 
 const Poker = () => {
-  const [sessionData, setSessionData] = useState({
-    roomId: "",
-    users: [],
-    cards: [],
-    sessionState: "",
-  });
-  const [cards, setCards] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [sessionState, setSessionState] = useState(0);
-  const [activeCards, setActiveCards] = useState([]);
 
-  const [searchParams] = useSearchParams();
+    const [cards, setCards] = useState([]);
+    const [role, setRole] = useState("");
+    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState({name: "", role: ""});
+    const [sessionState, setSessionState] = useState(0);
+    const [activeCards, setActiveCards] = useState([]);
+    const [roomId, setRoomId] = useState("")
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
 
-  const setUserList = async () => {
-    let response = await GetSessionUsers({
-      id: sessionData.roomId, //this
-    });
-    if (response) setUsers(response);
-  };
+    useEffect(() => {
+        const setData = () => {
+            if (location.state)
+                setUser({
+                    name: location.state.name,
+                    role: location.state.role,
+                });
+        };
+        setData();
+    }, []);
 
-  const setSessionStateFromApi = async () => {
-    let response = await getSessionState({ roomId: sessionData.roomId });
-    setSessionState(response);
-  };
+    useEffect(() => {
+        console.log("searchParams ", searchParams.get("room"))
+        const setData = async () => {
+            if (!signalRConnection) await signalRConnection.start();
 
-  const getCards = async () => {
-    let response = await GetCards({
-      roomId: sessionData.roomId,
-    });
-    if (response) {
-      setCards(response);
-    }
-  };
+            let response = await GetSession({roomId: searchParams.get("room")});
+            console.log("responseresponseresponse: ", response)
+            setCards(response.cards);
+            setRoomId(response.roomId)
+            setSessionState(response.state)
+            await getCards();
 
-  const getActiveCards = async () => {
-    let activeCardsResponse = await GetActiveCards({
-      roomId: sessionData.roomId,
-    });
-    if (activeCardsResponse) {
-      setActiveCards(activeCardsResponse);
-    }
-  };
+        };
+        setData();
+    }, []);
+    useEffect(() => {
+        setRoomId(searchParams.get("room"))
+    }, [roomId])
 
-  useEffect(() => {
-    console.log("setting users");
-    setUserList();
-  }, []);
+    const setUserList = async () => {
+        let response = await GetSessionUsers({
+            id: searchParams.get("room"),
+        });
+        if (response) setUsers(response);
+    };
 
-  useEffect(() => {
-    const getData = async () => {
-      signalRConnection.on(MethodNames.PlayerListUpdate, () => {
+    const setSessionStateFromApi = async () => {
+        let response = await getSessionState({roomId: searchParams.get("room")});
+        setSessionState(response);
+    };
+
+    const getCards = async () => {
+        let response = await GetCards({
+            roomId: searchParams.get("room"),
+        });
+        if (response) {
+            setCards(response);
+        }
+    };
+
+    const getActiveCards = async () => {
+        let activeCardsResponse = await GetActiveCards({
+            roomId: searchParams.get("room"),
+        });
+        if (activeCardsResponse) {
+            setActiveCards(activeCardsResponse);
+        }
+    };
+
+    useEffect(() => {
+        console.log("setting users");
         setUserList();
-      });
-    };
-    getData();
-  }, [users]);
+    }, []);
 
-  useEffect(() => {
-    const getData = async () => {
-      signalRConnection.on(MethodNames.SessionStateUpdate, () => {
-        setSessionStateFromApi();
-      });
-    };
-    getData();
-  }, [sessionState]);
+    useEffect(() => {
+        const getData = async () => {
+            signalRConnection.on(MethodNames.PlayerListUpdate, () => {
+                setUserList();
+            });
+        };
+        getData();
+    }, [users]);
 
-  useEffect(() => {
-    const getData = async () => {
-      signalRConnection.on(MethodNames.ActiveCardsUpdate, () => {
-        getActiveCards();
-      });
-    };
-    getData();
-  }, [activeCards]);
+    useEffect(() => {
+        const getData = async () => {
+            signalRConnection.on(MethodNames.SessionStateUpdate, () => {
+                setSessionStateFromApi();
+            });
+        };
+        getData();
+    }, [sessionState]);
 
-  useEffect(() => {
-    console.log("searchParams ",searchParams.get("roomId"))
-    const setData = async () => {
-      if (!signalRConnection) await signalRConnection.start();
-
-      let response = await GetSession(searchParams.get("roomId"));
-      console.log("responseresponseresponse: ",response)
+    useEffect(() => {
+        const getData = async () => {
+            signalRConnection.on(MethodNames.ActiveCardsUpdate, () => {
+                getActiveCards();
+            });
+        };
+        getData();
+    }, [activeCards]);
 
 
-      setSessionData({
-        roomId: searchParams.get("roomId"),
-        users: response.users,
-        cards: response.cards,
-        sessionState: response.state,
-      });
-    };
-    setData();
-  }, []);
-
-  return (
-    <>
-      {sessionData && (
+    return (
         <>
-          <Nav />
-          <div className="poker">
-            <div className="voting">
-              <VotingArea
-                cards={sessionData.cards}
-                userId={localStorage.getItem("userId")}
-                roomId={sessionData.roomId}
-                sessionState={sessionData.sessionState}
-                userList={sessionData.users}
-              />
-              {sessionData.role == "moderator" ? (
-                <VotingControls
-                  cards={sessionData.cards}
-                  roomId={sessionData.roomId}
-                  activeCards={sessionData.cards}
-                  session={sessionData.sessionState}
-                />
-              ) : (
-                ""
-              )}
-            </div>
-            <PlayerList sessionState={sessionData.sessionState} userList={sessionData.users} />
-          </div>
+            {roomId && (
+                <>
+                    <Nav/>
+                    <div className="poker">
+                        <div className="voting">
+                            <VotingArea
+                                cards={activeCards}
+
+                                userId={localStorage.getItem("userId")}
+                                roomId={searchParams.get("room")}
+                                sessionState={sessionState}
+                                userList={users}
+                            />
+                            {user.role == "moderator"? <VotingControls
+                                cards={cards}
+                                roomId={searchParams.get("room")}
+                                activeCards={activeCards}
+                                session={sessionState}
+                            /> :
+                            ""}
+                        </div>
+                        <PlayerList sessionState={sessionState} userList={users}/>
+                    </div>
+                </>
+            )}
         </>
-      )}
-    </>
-  );
+    );
 };
 
 export default Poker;

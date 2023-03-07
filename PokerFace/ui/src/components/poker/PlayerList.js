@@ -7,15 +7,15 @@ import Notifications from "../notifications/Notifications";
 
 const PlayerList = ({ sessionState, userList }) => {
   const [users, setUsers] = useState([]);
-  const [state, setState] = useState(0);
+  const [state, setSessionState] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [listText, setListText] = useState("");
 
   const setUserList = async () => {
-    setUserCount(users.length + 1);
+    setUserCount(userList.length - 1);
   };
 
-  const setSessionState = async () => {
+  useEffect(()=>{
     if (state == 0) {
       setListText("Waiting on " + userCount + " players to vote");
     } else if (state == 2) {
@@ -23,12 +23,12 @@ const PlayerList = ({ sessionState, userList }) => {
     } else if (state == 1) {
       setListText("Waiting for moderator to finalise votes");
     }
-  };
+  },[state])
 
   useEffect(() => {
     console.log("setting users");
     setUserList();
-    setSessionState();
+    setSessionState(sessionState);
   }, [userList]);
 
   return (

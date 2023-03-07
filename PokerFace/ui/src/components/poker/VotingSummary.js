@@ -2,6 +2,8 @@ const VotingSummary = (props) => {
   const cards = [];
   let totalVotes = 0;
 
+  console.log(props)
+
   props.data.users.forEach((user) => {
     if (!user.name.includes("@gmail.com")) {
       if (user.selectedCard != null) {

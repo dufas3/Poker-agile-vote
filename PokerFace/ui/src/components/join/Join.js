@@ -1,6 +1,6 @@
 import "./Join.css";
-import {Link, useNavigate} from "react-router-dom";
-import {useCallback, useState} from "react";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {useCallback, useEffect, useState} from "react";
 import Nav from "../header/Nav";
 import addToSession from "../../api/addToSession";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
@@ -16,13 +16,23 @@ const Join = () => {
     const [errors, setErrors] = useState(false);
     const [userData, setUserData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
-
     const [navig, setNavig] = useState();
     const navigate = useNavigate();
     const handleOnClick = useCallback(() => navig, [navigate]);
 
+    const [searchParams] = useSearchParams();
+
+
+    useEffect(()=>{
+        if(searchParams.get("room") == undefined){
+            setNavig(navigate("/Login", {replace: true}));
+        } else {
+            setId(searchParams.get("room"))
+        }
+    },[])
+
     const validation = async () => {
-        if (!name || !roomId) {
+        if (!name) {
             setErrors(true);
         } else if (name.replaceAll(" ", "").length == 0) {
             setErrors(true);
@@ -58,13 +68,12 @@ const Join = () => {
 
             const userData = {
                 name: name,
-                roomId: roomId,
                 role: "player",
                 userId: response.id,
             };
 
             setUserData(userData);
-            setNavig(navigate("/Poker", {replace: true, state: userData}));
+            setNavig(navigate("/Poker?" + searchParams, {replace: true, state: userData}));
             setEnter(true);
             handleOnClick();
         }
@@ -73,7 +82,6 @@ const Join = () => {
     return (
         <>
             {isLoading ? <LoadingScreen/> : ""}
-            <Nav/>
             <body className="center">
             <div className="register">
                 <div className="info">
@@ -89,7 +97,6 @@ const Join = () => {
                     className={errors ? "border-danger" : ""}
                     minLength="2"
                     maxLength="25"
-                    length
                     id="loginname"
                 ></input>
 

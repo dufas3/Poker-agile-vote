@@ -1,16 +1,16 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const GetSessionUsers = async (props) => {
+const GetSessionUsers = async ({id}) => {
 
     const requestOptions = {
         method: "Get",
         headers: {"Content-Type": "application/json"},
     };
 
-    if (!props) return;
+    if (!id) return;
 
     const url = ConnectionUrl({appendix: "/session/getSessionUsers"});
-    url.searchParams.append("id", props.id);
+    url.searchParams.append("id", id);
 
     try {
         const response = await fetch(url.toString(), requestOptions);

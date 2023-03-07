@@ -15,6 +15,7 @@ const Login = () => {
   const [errors, setErrors] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [navig, setNavig] = useState();
+  const [userData, setUserData] = useState({});
 
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
@@ -46,14 +47,19 @@ const Login = () => {
       setIsLoading(false);
       setEnter(true);
       localStorage.setItem("userId", response.id)
-      setNavig(navigate("/Poker?roomId="+response.roomId, { replace: true}));
+      const userData = {
+        name: email,
+        role: "moderator",
+        userId: response.id,
+      };
+      setUserData(userData);
+      setNavig(navigate("/Poker?room="+response.roomId, { replace: true, state: userData}));
 
       handleOnClick();
     }
   };
   return (
     <>
-      <Nav />
       <div className="center">
         {isLoading ? <LoadingScreen /> : ""}
         <div className="login">
@@ -118,9 +124,6 @@ const Login = () => {
             <a href="#" className="button" id="forgotpasswordbutton">
               <h4 className="reset-button">Forgotten password?</h4>
             </a>
-            <Link to="/" className="button" id="registerbutton">
-              <h4 className="reset-button">Don't have an account?</h4>
-            </Link>
           </div>
         </div>
       </div>

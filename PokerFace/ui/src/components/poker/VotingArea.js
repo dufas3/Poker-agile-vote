@@ -2,7 +2,7 @@ import "./Poker.css";
 import Card from "../card/Card";
 import VotingSummary from "./VotingSummary";
 
-const VotingArea = ({ sessionState, roomId, cards, userId, userList }) => {
+const VotingArea = ({ sessionState, roomId, cards, userId, userList}) => {
   return (
     <div className="voting-area border rounded bg-light">
       {sessionState != 1 ? (

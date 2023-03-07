@@ -1,6 +1,6 @@
 import FestoLogo from "../../imgs/festo.png";
 import Dropdown from "react-bootstrap/Dropdown";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useSearchParams} from "react-router-dom";
 import "./Nav.css";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -11,6 +11,7 @@ const Nav = (props) => {
     const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
     const location = useLocation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const setData = () => {
@@ -27,7 +28,7 @@ const Nav = (props) => {
     const HandleLogout = async () => {
         await LogoutUser({roomId: userData.roomId, userId: location.state.userId})
         signalRConnection.stop();
-        navigate("/", {replace: true});
+        navigate("/Join?room=" + searchParams.get("room"), {replace: true});
     };
 
     return (
@@ -53,13 +54,13 @@ const Nav = (props) => {
                                     <Dropdown.Menu>
                                         <Dropdown.Item
                                             onClick={() => {
-                                                navigator.clipboard.writeText(userData.roomId);
+                                                navigator.clipboard.writeText("http://localhost:3000/Join?room=" + searchParams.get("room"));
                                             }}
                                         >
-                                            <h6>Room ID: {userData.roomId}</h6>
+                                            <h6>Room link</h6>
                                         </Dropdown.Item>
                                         <Dropdown.Item>
-                                            <Link to="/" style={{textDecoration: "none"}}>
+                                            <Link to="/Join" style={{textDecoration: "none"}}>
                                                 <a
                                                     onClick={HandleLogout}
                                                     className="btn"
