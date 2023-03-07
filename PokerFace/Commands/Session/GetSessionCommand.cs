@@ -3,44 +3,25 @@ using PokerFace.Data.Common;
 
 namespace PokerFace.Commands.Session
 {
-    public class GetSessionCommand : IRequest<SessionDto>
+    public class GetSessionCommand : IRequest
     {
         public string RoomId { get; set; }
     }
 
-    public class GetSessionCommandHandler : IRequestHandler<GetSessionCommand, SessionDto>
+    public class GetSessionCommandHandler : IRequestHandler<GetSessionCommand>
     {
         private readonly ISessionRepository sessionRepository;
-        private readonly ICardsRepository cardsRepository;
-        private readonly IUserRepository userRepository;
 
-        public GetSessionCommandHandler(ISessionRepository sessionRepository, IUserRepository userRepository, ICardsRepository cardsRepository)
+        public GetSessionCommandHandler(ISessionRepository sessionRepository)
         {
             this.sessionRepository = sessionRepository;
-            this.cardsRepository = cardsRepository;
-            this.userRepository = userRepository;
         }
 
-        public async Task<SessionDto> Handle(GetSessionCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(GetSessionCommand request, CancellationToken cancellationToken)
         {
-            var session = await sessionRepository.GetByRoomIdAsync(request.RoomId);
-            var dto = session.ToDto();
-
-            foreach (var cardId in session.CardIds)
-            {
-                var card = await cardsRepository.GetAsync(cardId);
-                if (card != null)
-                    dto.Cards.Add(card);
-            }
-
-            foreach (var userId in session.UserIds)
-            {
-                var user = await userRepository.GetAsync(userId);
-                if (user != null)
-                    dto.Users.Add(user);
-            }
-
-            return dto;
+             if(await sessionRepository.GetByRoomIdAsync(request.RoomId) != null )
+                return Unit.Value;
+            throw new BadHttpRequestException("No room by that Id");
         }
     }
 }

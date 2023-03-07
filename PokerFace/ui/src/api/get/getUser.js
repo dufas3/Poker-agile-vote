@@ -1,22 +1,20 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const SetActiveCards = async ({ cardIds, roomId }) => {
-  if (!cardIds || !roomId) {
-    return;
-  }
+const GetUser = async ({ userId }) => {
+  if (!userId) return;
 
   const requestOptions = {
-    method: "Post",
+    method: "Get",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      roomId: roomId,
-      cardIds: cardIds,
-    }),
   };
 
-  const url = ConnectionUrl({ appendix: "/session/setActiveCards" });
+  const url = ConnectionUrl({ appendix: "/user/getUser" });
+
+  url.searchParams.append("id", userId);
+
   try {
     const response = await fetch(url.toString(), requestOptions);
+
     const isJson = response.headers
       .get("content-type")
       ?.includes("application/json");
@@ -27,4 +25,5 @@ const SetActiveCards = async ({ cardIds, roomId }) => {
     return;
   }
 };
-export default SetActiveCards;
+
+export default GetUser;

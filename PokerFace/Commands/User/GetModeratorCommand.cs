@@ -23,7 +23,7 @@ namespace PokerFace.Commands.User
             //create new session if in session table doesnt exist moderator id, otherwise do nothign
             var user = await userRepository.GetModerator(request.UserEmail, request.UserPassword);
 
-            if (user.RoomId == null)
+            if (String.IsNullOrEmpty(user.RoomId))
                 await sessionService.CreateSession(user.Id);
 
             return user.ToModeratorDto();

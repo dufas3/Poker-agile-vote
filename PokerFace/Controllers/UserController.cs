@@ -7,6 +7,9 @@ namespace PokerFace.Controllers
     public class UserController : ApiController
     {
         [HttpGet]
+        public async Task<ActionResult> GetUser([FromQuery] GetUserCommand command) => await SendMessage(command);
+
+        [HttpGet]
         public async Task<ActionResult> GetModerator([FromQuery] GetModeratorCommand command) => await SendMessage(command);
 
         [HttpPost]

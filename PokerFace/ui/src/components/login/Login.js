@@ -21,7 +21,6 @@ const Login = () => {
   const handleOnClick = useCallback(() => navig, [navigate]);
 
   const validation = async () => {
-
     setIsLoading(true);
 
     let response = await GetModerator({ email: email, password: password });
@@ -32,9 +31,7 @@ const Login = () => {
       setErrors(true);
       setIsLoading(false);
       return;
-
     } else {
-
       console.log("response data", response);
       setErrors(false);
       setIsLoading(true);
@@ -46,14 +43,20 @@ const Login = () => {
       );
       setIsLoading(false);
       setEnter(true);
-      localStorage.setItem("userId", response.id)
+      localStorage.removeItem("userId", response.id);
+      localStorage.setItem("userId", response.id);
       const userData = {
         name: email,
         role: "moderator",
         userId: response.id,
       };
       setUserData(userData);
-      setNavig(navigate("/Poker?room="+response.roomId, { replace: true, state: userData}));
+      setNavig(
+        navigate("/Poker?room=" + response.roomId, {
+          replace: true,
+          state: userData,
+        })
+      );
 
       handleOnClick();
     }
@@ -104,10 +107,7 @@ const Login = () => {
             id="loginbutton"
           >
             {enter ? (
-              <Link
-                to="/Poker"
-                style={{ textDecoration: "none" }}
-              >
+              <Link to="/Poker" style={{ textDecoration: "none" }}>
                 <h3 className="login-button">
                   {isLoading ? "Loading" : "Login"}
                 </h3>

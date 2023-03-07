@@ -6,6 +6,7 @@ namespace PokerFace.Data.Common
     {
         Task<User> GetAsync(int id);
         Task<User> GetAsync(string socketId);
+        Task DeleteAsync(User user);
         Task<User> GetModerator(string email, string password);
         Task UpdateAsync(User user);
         Task AddUserToSessionAsync(User user, string roomId);

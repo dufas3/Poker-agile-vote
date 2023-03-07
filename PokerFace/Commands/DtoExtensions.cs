@@ -28,7 +28,6 @@ namespace PokerFace.Commands
         {
             return new SessionDto()
             {
-                RoomId = session.RoomId,
                 State = session.State
             };
         }
