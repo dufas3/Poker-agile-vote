@@ -75,7 +75,7 @@ const Join = () => {
       localStorage.setItem("userId", response.id);
 
       setUserData(userData);
-      setNavig(navigate("/Poker?" + searchParams, { replace: true }));
+      setNavig(navigate("/Poker?" + searchParams, { replace: true, state: userData,}));
       setIsLoading(true);
       setEnter(true);
       handleOnClick();
