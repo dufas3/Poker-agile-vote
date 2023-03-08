@@ -54,7 +54,7 @@ const Nav = (props) => {
                                     <Dropdown.Menu>
                                         <Dropdown.Item
                                             onClick={() => {
-                                                navigator.clipboard.writeText("http://localhost:3000/Join?room=" + searchParams.get("room"));
+                                                navigator.clipboard.writeText("https://pokerfaceapp-dev.azurewebsites.net/Join?room=" + searchParams.get("room"));
                                             }}
                                         >
                                             <h6>Room link</h6>
