@@ -21,7 +21,6 @@ const GetUser = async ({ userId }) => {
     const data = isJson && (await response.json());
     return data;
   } catch (error) {
-    console.log("Caught error");
     return;
   }
 };

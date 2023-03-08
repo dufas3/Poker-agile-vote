@@ -12,7 +12,6 @@ import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
 import GetUser from "../../api/get/getUser";
-import { atom } from "jotai";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
@@ -30,7 +29,6 @@ const Poker = () => {
       if (!signalRConnection) await signalRConnection.start();
 
       let respone = await GetUser({ userId: localStorage.getItem("userId") });
-      console.log("response ", respone);
       setUser(respone);
       respone.name.includes("@") ? setRole("moderator") : setRole("user");
 
@@ -65,7 +63,6 @@ const Poker = () => {
     });
     if (response) {
       setCards(response);
-      console.log("setting cards", cards);
     }
   };
 
@@ -99,7 +96,6 @@ const Poker = () => {
 
   useEffect(() => {
     const getData = async () => {
-      console.log("updated cards");
       signalRConnection.on(MethodNames.ActiveCardsUpdate, () => {
         getActiveCards();
       });

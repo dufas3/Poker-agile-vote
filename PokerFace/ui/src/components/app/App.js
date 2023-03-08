@@ -16,8 +16,8 @@ function App() {
                     <Route path="/Poker" element={<Poker/>}/>
                     <Route path="/Join" element={<Join/>}/>
                     <Route path="/Login" element={<Login/>}/>
+                    <Route path="/" element={<RouteManager/>}/>
                 </Routes>
-                <RouteManager/>
             </div>
             <Footer/>
         </>

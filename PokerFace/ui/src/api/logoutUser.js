@@ -2,8 +2,6 @@ import ConnectionUrl from "../common/connectionUrl";
 
 const LogoutUser = async (props) => {
 
-    console.log("Logout", props)
-
     const requestOptions = {
         method: "Get",
         headers: {"Content-Type": "application/json"},
@@ -24,7 +22,6 @@ const LogoutUser = async (props) => {
         const data = isJson && (await response.json());
         return data;
     } catch (error) {
-        console.log("Caught error", error);
         return;
     }
 }

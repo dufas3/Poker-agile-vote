@@ -15,6 +15,11 @@ const PlayerList = ({ sessionState, userList }) => {
     setUserCount(userList.length - 1);
   };
 
+  useEffect(() => {
+    setUserList();
+    setSessionState(sessionState);
+  }, [userList, sessionState]);
+
   useEffect(()=>{
     if (state == 0) {
       setListText("Waiting on " + userCount + " players to vote");
@@ -23,20 +28,16 @@ const PlayerList = ({ sessionState, userList }) => {
     } else if (state == 1) {
       setListText("Waiting for moderator to finalise votes");
     }
-  },[state])
+    setUsers(userList)
+  },[state, userList])
 
-  useEffect(() => {
-    console.log("setting users");
-    setUserList();
-    setSessionState(sessionState);
-  }, [userList]);
 
   return (
     <div className="player-list border rounded bg-light">
       <h6 className="bg-primary border border-primary rounded-top w-100 p-4 text-center text-white">
         {listText}
       </h6>
-      {userList.map((user) => (
+      {users.map((user) => (
         <div className="mt-2  border-top border-bottom user align-center-between">
           <div className="align-center-start">
             <div className="icon m-lg-1 align-center">

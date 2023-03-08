@@ -42,7 +42,6 @@ const Join = () => {
       var roomExist = await GetRoom({ roomId: roomId });
 
       if (!roomExist) {
-        console.log("roomExist data", roomExist);
         setIsLoading(false);
         setErrors(true);
         return;

@@ -24,7 +24,6 @@ const Login = () => {
     setIsLoading(true);
 
     let response = await GetModerator({ email: email, password: password });
-    console.log("response bad", !response);
 
     if (!response) {
       setEnter(false);
@@ -32,7 +31,6 @@ const Login = () => {
       setIsLoading(false);
       return;
     } else {
-      console.log("response data", response);
       setErrors(false);
       setIsLoading(true);
 
