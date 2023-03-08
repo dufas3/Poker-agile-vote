@@ -1,5 +1,5 @@
 import "./Poker.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SessionState } from "../../common/sessionState";
 import setSessionState from "../../api/set/setSessionState";
 import ClearSessionVotes from "../../api/clearSessionVotes";
@@ -7,8 +7,6 @@ import SetActiveCards from "../../api/set/setActiveCards";
 
 const VotingControls = ({ cards, activeCards, roomId }) => {
   const [inSettings, setInSettings] = useState(false);
-  const inputValuesObjs = [];
-  const [cardsToActivate, setCardsToActivate] = useState([activeCards]); //to hold selected cards ids
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   useEffect(() => {
@@ -44,23 +42,29 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     await ClearSessionVotes({ roomId: roomId });
   };
 
-  const handleCheckboxChange = (event) => {
-    console.log("event", event);
-    const value = event.target.value;
-    console.log("event target", event.target);
-    const checked = event.target.checked;
-    if (checked) {
-      setSelectedCheckboxes([...selectedCheckboxes, value]);
+  const handleCheckboxChange = (event, id) => {
+    if (event) {
+      const value = event.target.value;
+      const checked = event.target.checked;
+      if (checked) {
+        setSelectedCheckboxes([...selectedCheckboxes, value]);
+      } else {
+        setSelectedCheckboxes(
+          selectedCheckboxes.filter((item) => item !== value)
+        );
+      }
     } else {
-      setSelectedCheckboxes(
-        selectedCheckboxes.filter((item) => item !== value)
-      );
+      let checked = !(selectedCheckboxes.filter((x) => x == id).length > 0);
+      if (checked) {
+        setSelectedCheckboxes([...selectedCheckboxes, id]);
+      } else {
+        setSelectedCheckboxes(selectedCheckboxes.filter((item) => item !== id));
+      }
     }
   };
 
   const handleChangeCardsSave = async () => {
     let ids = [];
-    console.log("selectedCheckboxes", selectedCheckboxes);
     selectedCheckboxes.map((cb) => {
       if (!ids.includes(cb)) ids.push(cb);
     });
@@ -87,13 +91,9 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
 
   //sets up all cards
   const setUpAlreadyActiveCards = async () => {
-    setCardsToActivate(activeCards);
     activeCards?.map((card) => {
-      handleCheckboxChange({
-        target: { value: card.id.toString(), checked: true },
-      });
+      handleCheckboxChange(undefined, card.id.toString());
     });
-    //await waitToReset(1000);
   };
 
   return (
