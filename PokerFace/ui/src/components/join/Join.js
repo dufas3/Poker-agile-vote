@@ -22,6 +22,15 @@ const Join = () => {
 
   const [searchParams] = useSearchParams();
 
+  useEffect(()=>{
+    try{
+      localStorage.removeItem("userId");
+    }
+    catch (error){
+
+    }
+  },[])
+
   useEffect(() => {
     if (searchParams.get("room") == undefined) {
       setNavig(navigate("/Login", { replace: true }));
@@ -69,8 +78,6 @@ const Join = () => {
         role: "user",
         userId: response.id,
       };
-
-      localStorage.removeItem("userId", response.id);
       localStorage.setItem("userId", response.id);
 
       setUserData(userData);

@@ -1,7 +1,7 @@
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "../header/Nav";
-import { useCallback, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 import GetModerator from "../../api/get/getModerator";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import { MethodNames } from "../../common/methodNames";
@@ -19,6 +19,15 @@ const Login = () => {
 
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
+
+  useEffect(()=>{
+    try{
+      localStorage.removeItem("userId");
+    }
+    catch (error){
+
+    }
+  },[])
 
   const validation = async () => {
     setIsLoading(true);
@@ -41,7 +50,7 @@ const Login = () => {
       );
       setIsLoading(false);
       setEnter(true);
-      localStorage.removeItem("userId", response.id);
+
       localStorage.setItem("userId", response.id);
       const userData = {
         name: email,

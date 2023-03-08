@@ -2,7 +2,7 @@ import Nav from "../header/Nav";
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
 import GetCards from "../../api/get/getCards";
 import getSessionState from "../../api/get/getSessionState";
@@ -22,6 +22,9 @@ const Poker = () => {
   const [activeCards, setActiveCards] = useState([]);
   const [roomId, setRoomId] = useState("");
   const [searchParams] = useSearchParams();
+  const [navig, setNavig] = useState();
+  const navigate = useNavigate();
+  const location = useLocation();
   //const [activeCardsAtom,setActiveCardsAtom] = atom([])
 
   useEffect(() => {
@@ -44,6 +47,15 @@ const Poker = () => {
   useEffect(() => {
     setRoomId(searchParams.get("room"));
   }, [roomId]);
+  useEffect(()=>{
+    if(location.state == null){
+      if (searchParams.get("room") == undefined) {
+        setNavig(navigate("/Login", {replace: true}));
+      } else {
+        setNavig(navigate("/Join?room=" + searchParams.get("room"), {replace: true}));
+      }
+    }
+  },[])
 
   const setUserList = async () => {
     let response = await GetSessionUsers({
