@@ -1,29 +1,29 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const SetActiveCards = async (props) => {
+const SetActiveCards = async ({ cardIds, roomId }) => {
+  if (!cardIds || !roomId) {
+    return;
+  }
 
-    if (!props) return;
+  const requestOptions = {
+    method: "Post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      roomId: roomId,
+      cardIds: cardIds,
+    }),
+  };
 
-    const requestOptions = {
-        method: "Post",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            roomId: props.roomId,
-            cardIds: props.cards,
-        }),
-    };
-
-    const url = ConnectionUrl({appendix: "/session/SetActiveCards"});
-    try {
-        const response = await fetch(url.toString(), requestOptions);
-        const isJson = response.headers
-            .get("content-type")
-            ?.includes("application/json");
-        const data = isJson && (await response.json());
-        return data;
-    } catch (error) {
-        console.log("Caught error");
-        return;
-    }
+  const url = ConnectionUrl({ appendix: "/session/setActiveCards" });
+  try {
+    const response = await fetch(url.toString(), requestOptions);
+    const isJson = response.headers
+      .get("content-type")
+      ?.includes("application/json");
+    const data = isJson && (await response.json());
+    return data;
+  } catch (error) {
+    return;
+  }
 };
 export default SetActiveCards;

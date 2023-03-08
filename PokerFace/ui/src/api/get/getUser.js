@@ -1,22 +1,20 @@
-import ConnectionUrl from "../common/connectionUrl";
+import ConnectionUrl from "../../common/connectionUrl";
 
-const AddToSession = async ({ name, roomId, socketId }) => {
-  if (!name) return;
+const GetUser = async ({ userId }) => {
+  if (!userId) return;
 
   const requestOptions = {
-    method: "Post",
+    method: "Get",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: name,
-      roomId: roomId,
-      socketId: socketId,
-    }),
   };
 
-  const url = ConnectionUrl({ appendix: "/user/addToSession" });
+  const url = ConnectionUrl({ appendix: "/user/getUser" });
+
+  url.searchParams.append("id", userId);
 
   try {
     const response = await fetch(url.toString(), requestOptions);
+
     const isJson = response.headers
       .get("content-type")
       ?.includes("application/json");
@@ -26,4 +24,5 @@ const AddToSession = async ({ name, roomId, socketId }) => {
     return;
   }
 };
-export default AddToSession;
+
+export default GetUser;

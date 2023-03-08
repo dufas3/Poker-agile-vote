@@ -7,7 +7,7 @@ namespace PokerFace.Commands.Session
     public class LogoutUserCommand : IRequest
     {
         public int UserId { get; set; }
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommand>

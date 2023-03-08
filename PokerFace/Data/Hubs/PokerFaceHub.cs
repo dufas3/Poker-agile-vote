@@ -6,10 +6,12 @@ namespace PokerFace.Data.Hubs
     public class PokerFaceHub : Hub
     {
         private readonly IUserRepository userRepository;
+        private readonly ISignalRService signalRService;
 
-        public PokerFaceHub(IUserRepository userRepository)
+        public PokerFaceHub(IUserRepository userRepository, ISignalRService signalRService)
         {
             this.userRepository = userRepository;
+            this.signalRService = signalRService;
         }
 
         [HubMethodName("ReceiveConnectSockets")]
@@ -27,6 +29,17 @@ namespace PokerFace.Data.Hubs
             {
                 throw new BadHttpRequestException("");
             }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            var user = await userRepository.GetAsync(Context.ConnectionId);
+            if (!user.Name.Contains("@"))
+            {
+                await userRepository.DeleteAsync(user);
+                await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, user.RoomId);
+            }
+            //else handle moderator log out
         }
 
         [HubMethodName("PlayerListUpdate")]

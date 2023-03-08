@@ -21,7 +21,6 @@ const GetModerator = async (props) => {
         const data = isJson && (await response.json());
         return data;
     } catch (error) {
-        console.log("Caugh error");
         return;
     }
 };

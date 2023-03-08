@@ -3,23 +3,21 @@ import { useEffect, useState } from "react";
 import { SessionState } from "../../common/sessionState";
 import setSessionState from "../../api/set/setSessionState";
 import ClearSessionVotes from "../../api/clearSessionVotes";
-import setActiveCards from "../../api/set/setActiveCards";
+import SetActiveCards from "../../api/set/setActiveCards";
 
-function VotingControls({ cards, activeCards, roomId }) {
+const VotingControls = ({ cards, activeCards, roomId }) => {
   const [inSettings, setInSettings] = useState(false);
-  let sessionActiveCards = [];
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
 
   useEffect(() => {
-    sessionActiveCards = activeCards;
+    setUpAlreadyActiveCards();
+  }, [activeCards]);
+
+  useEffect(() => {
+    setUpAlreadyActiveCards();
   }, []);
 
-  const handleSetAllCards = () => {
-    sessionActiveCards = [];
-
-    cards.forEach((card) => {
-      sessionActiveCards.push(card.id);
-    });
-  };
+  const handleSetAllCards = () => {};
 
   const handleFlipCards = async () => {
     await setSessionState({
@@ -27,6 +25,7 @@ function VotingControls({ cards, activeCards, roomId }) {
       state: SessionState.FINILIZESTATE,
     });
   };
+
   const handleFinish = async () => {
     await setSessionState({
       roomId: roomId,
@@ -34,7 +33,8 @@ function VotingControls({ cards, activeCards, roomId }) {
     });
     await ClearSessionVotes({ roomId: roomId });
   };
-  const handleResetCards = async () => {
+
+  const handleClearVotes = async () => {
     await setSessionState({
       roomId: roomId,
       state: SessionState.VOTESTATE,
@@ -42,25 +42,60 @@ function VotingControls({ cards, activeCards, roomId }) {
     await ClearSessionVotes({ roomId: roomId });
   };
 
-  const handleChangeCardsSave = async () => {
-    if (inSettings) {
-      setInSettings(false);
-      await setActiveCards({
-        roomId: roomId,
-        cards: sessionActiveCards,
-      });
-      await ClearSessionVotes({ roomId: roomId });
+  const handleCheckboxChange = (event, id) => {
+    if (event) {
+      const value = event.target.value;
+      const checked = event.target.checked;
+      if (checked) {
+        setSelectedCheckboxes([...selectedCheckboxes, value]);
+      } else {
+        setSelectedCheckboxes(
+          selectedCheckboxes.filter((item) => item !== value)
+        );
+      }
     } else {
-      setInSettings(true);
+      let checked = !(selectedCheckboxes.filter((x) => x == id).length > 0);
+      if (checked) {
+        setSelectedCheckboxes([...selectedCheckboxes, id]);
+      } else {
+        setSelectedCheckboxes(selectedCheckboxes.filter((item) => item !== id));
+      }
     }
   };
+
+  const handleChangeCardsSave = async () => {
+    let ids = [];
+    selectedCheckboxes.map((cb) => {
+      if (!ids.includes(cb)) ids.push(cb);
+    });
+    setInSettings(false);
+
+    //if (ids.length == 0) return; //toast error
+    await SetActiveCards({
+      roomId: roomId,
+      cardIds: ids,
+    });
+
+    await ClearSessionVotes({ roomId: roomId });
+    setUpAlreadyActiveCards();
+  };
+
   const handleChangeCardsCancel = async () => {
     if (inSettings) {
       setInSettings(false);
     } else {
       setInSettings(true);
     }
+    setUpAlreadyActiveCards();
   };
+
+  //sets up all cards
+  const setUpAlreadyActiveCards = async () => {
+    activeCards?.map((card) => {
+      handleCheckboxChange(undefined, card.id.toString());
+    });
+  };
+
   return (
     <>
       {!inSettings ? (
@@ -82,7 +117,7 @@ function VotingControls({ cards, activeCards, roomId }) {
                 </button>
                 <button
                   className="clear-votes btn btn-outline-primary"
-                  onClick={handleResetCards}
+                  onClick={handleClearVotes}
                 >
                   <h6 className="center-text">Clear Votes</h6>
                 </button>
@@ -114,20 +149,12 @@ function VotingControls({ cards, activeCards, roomId }) {
             {cards.map((card) => (
               <div className="form-check border rounded bg-light">
                 <input
-                  onClick={() => {
-                    if (sessionActiveCards.includes(card.id)) {
-                      sessionActiveCards.splice(
-                        sessionActiveCards.findIndex((id) => id === card.id)
-                      );
-                    } else {
-                      sessionActiveCards.push(card.id);
-                    }
-                  }}
+                  onChange={handleCheckboxChange}
+                  value={card.id.toString()}
                   className="form-check-input"
                   type="checkbox"
-                  value="true"
+                  checked={selectedCheckboxes.includes(card.id.toString())}
                   id="flexCheckDefault"
-                  onChange={() => {}}
                 />
                 <label className="form-check-label" htmlFor="flexCheckDefault">
                   {card.value}
@@ -153,6 +180,6 @@ function VotingControls({ cards, activeCards, roomId }) {
       )}
     </>
   );
-}
+};
 
 export default VotingControls;

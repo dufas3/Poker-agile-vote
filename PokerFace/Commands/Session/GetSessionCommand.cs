@@ -3,13 +3,12 @@ using PokerFace.Data.Common;
 
 namespace PokerFace.Commands.Session
 {
-    //active session cards
-    public class GetSessionCommand : IRequest<Data.Entities.Session>
+    public class GetSessionCommand : IRequest
     {
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
     }
 
-    public class GetSessionCommandHandler : IRequestHandler<GetSessionCommand, Data.Entities.Session>
+    public class GetSessionCommandHandler : IRequestHandler<GetSessionCommand>
     {
         private readonly ISessionRepository sessionRepository;
 
@@ -18,9 +17,11 @@ namespace PokerFace.Commands.Session
             this.sessionRepository = sessionRepository;
         }
 
-        public async Task<Data.Entities.Session> Handle(GetSessionCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(GetSessionCommand request, CancellationToken cancellationToken)
         {
-            return await sessionRepository.GetByRoomIdAsync(request.RoomId);
+             if(await sessionRepository.GetByRoomIdAsync(request.RoomId) != null )
+                return Unit.Value;
+            throw new BadHttpRequestException("No room by that Id");
         }
     }
 }

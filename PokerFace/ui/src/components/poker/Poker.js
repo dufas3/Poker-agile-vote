@@ -2,7 +2,7 @@ import Nav from "../header/Nav";
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
 import GetCards from "../../api/get/getCards";
 import getSessionState from "../../api/get/getSessionState";
@@ -10,35 +10,68 @@ import GetActiveCards from "../../api/get/getActiveCards";
 import GetSessionUsers from "../../api/get/getSessionUsers";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
+import { useSearchParams } from "react-router-dom";
+import GetUser from "../../api/get/getUser";
 
 const Poker = () => {
-  const [userData, setUserData] = useState({
-    name: "",
-    roomId: "",
-    role: "",
-    userId: "",
-  });
   const [cards, setCards] = useState([]);
+  const [role, setRole] = useState("");
   const [users, setUsers] = useState([]);
+  const [user, setUser] = useState({ name: "", role: "" });
   const [sessionState, setSessionState] = useState(0);
   const [activeCards, setActiveCards] = useState([]);
+  const [roomId, setRoomId] = useState("");
+  const [searchParams] = useSearchParams();
+  const [navig, setNavig] = useState();
+  const navigate = useNavigate();
   const location = useLocation();
+  //const [activeCardsAtom,setActiveCardsAtom] = atom([])
+
+  useEffect(() => {
+    const setData = async () => {
+      if (!signalRConnection) await signalRConnection.start();
+
+      let respone = await GetUser({ userId: localStorage.getItem("userId") });
+      setUser(respone);
+      respone.name.includes("@") ? setRole("moderator") : setRole("user");
+
+      //api calls
+      await getCards();
+      await setUserList();
+      await setSessionStateFromApi();
+      await getActiveCards();
+    };
+    setData();
+  }, []);
+
+  useEffect(() => {
+    setRoomId(searchParams.get("room"));
+  }, [roomId]);
+  useEffect(()=>{
+    if(location.state == null){
+      if (searchParams.get("room") == undefined) {
+        setNavig(navigate("/Login", {replace: true}));
+      } else {
+        setNavig(navigate("/Join?room=" + searchParams.get("room"), {replace: true}));
+      }
+    }
+  },[])
 
   const setUserList = async () => {
     let response = await GetSessionUsers({
-      id: location.state.roomId,
+      id: searchParams.get("room"),
     });
     if (response) setUsers(response);
   };
 
   const setSessionStateFromApi = async () => {
-    let response = await getSessionState({ roomId: location.state.roomId });
+    let response = await getSessionState({ roomId: searchParams.get("room") });
     setSessionState(response);
   };
 
   const getCards = async () => {
     let response = await GetCards({
-      roomId: location.state.roomId,
+      roomId: searchParams.get("room"),
     });
     if (response) {
       setCards(response);
@@ -47,18 +80,14 @@ const Poker = () => {
 
   const getActiveCards = async () => {
     let activeCardsResponse = await GetActiveCards({
-      roomId: location.state.roomId,
+      roomId: searchParams.get("room"),
     });
     if (activeCardsResponse) {
       setActiveCards(activeCardsResponse);
     }
   };
 
-  useEffect(() => {
-    console.log("setting users");
-    setUserList();
-  }, []);
-
+  //-----------------Event Listeners--------------------------------------
   useEffect(() => {
     const getData = async () => {
       signalRConnection.on(MethodNames.PlayerListUpdate, () => {
@@ -66,16 +95,16 @@ const Poker = () => {
       });
     };
     getData();
-  }, [users]);
+  }, []);
 
   useEffect(() => {
     const getData = async () => {
       signalRConnection.on(MethodNames.SessionStateUpdate, () => {
-        setSessionState();
+        setSessionStateFromApi();
       });
     };
     getData();
-  }, [sessionState]);
+  }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -84,46 +113,29 @@ const Poker = () => {
       });
     };
     getData();
-  }, [activeCards]);
-
-  useEffect(() => {
-    const setData = async () => {
-      if (!signalRConnection) await signalRConnection.start();
-      await getCards();
-      await getActiveCards();
-      await setUserList();
-      await setSessionStateFromApi();
-
-      setUserData({
-        name: location.state.name,
-        roomId: location.state.roomId,
-        role: location.state.role,
-        userId: location.state.userId,
-      });
-    };
-    setData();
   }, []);
 
   return (
     <>
-      {userData && (
+      {roomId && (
         <>
           <Nav />
           <div className="poker">
             <div className="voting">
               <VotingArea
                 cards={activeCards}
-                userId={location.state.userId}
-                roomId={location.state.roomId}
+                userId={localStorage.getItem("userId")}
+                roomId={searchParams.get("room")}
                 sessionState={sessionState}
                 userList={users}
               />
-              {userData.role == "moderator" ? (
+              {role == "moderator" ? (
                 <VotingControls
                   cards={cards}
-                  roomId={location.state.roomId}
+                  roomId={searchParams.get("room")}
                   activeCards={activeCards}
                   session={sessionState}
+                  key={activeCards.join(",")}
                 />
               ) : (
                 ""

@@ -1,12 +1,13 @@
 import "./Join.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useCallback, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import Nav from "../header/Nav";
 import addToSession from "../../api/addToSession";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import GetRoom from "../../api/get/getRoom";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
+import * as signalR from "@microsoft/signalr";
 
 const Join = () => {
   const [name, setName] = useState("");
@@ -15,14 +16,31 @@ const Join = () => {
   const [errors, setErrors] = useState(false);
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
   const [navig, setNavig] = useState();
-
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
 
+  const [searchParams] = useSearchParams();
+
+  useEffect(()=>{
+    try{
+      localStorage.removeItem("userId");
+    }
+    catch (error){
+
+    }
+  },[])
+
+  useEffect(() => {
+    if (searchParams.get("room") == undefined) {
+      setNavig(navigate("/Login", { replace: true }));
+    } else {
+      setId(searchParams.get("room"));
+    }
+  }, []);
+
   const validation = async () => {
-    if (!name || !roomId) {
+    if (!name) {
       setErrors(true);
     } else if (name.replaceAll(" ", "").length == 0) {
       setErrors(true);
@@ -33,9 +51,13 @@ const Join = () => {
       var roomExist = await GetRoom({ roomId: roomId });
 
       if (!roomExist) {
-        console.log("roomExist data", roomExist);
+        setIsLoading(false);
         setErrors(true);
         return;
+      }
+
+      if (signalRConnection.state === signalR.HubConnectionState.Connected) {
+        await signalRConnection.stop();
       }
       await signalRConnection.start();
       await signalRConnection.invoke(MethodNames.ReceiveConnectSockets, "");
@@ -53,13 +75,14 @@ const Join = () => {
 
       const userData = {
         name: name,
-        roomId: roomId,
-        role: "player",
+        role: "user",
         userId: response.id,
       };
+      localStorage.setItem("userId", response.id);
 
       setUserData(userData);
-      setNavig(navigate("/Poker", { replace: true, state: userData }));
+      setNavig(navigate("/Poker?" + searchParams, { replace: true, state: userData,}));
+      setIsLoading(true);
       setEnter(true);
       handleOnClick();
     }
@@ -68,7 +91,6 @@ const Join = () => {
   return (
     <>
       {isLoading ? <LoadingScreen /> : ""}
-      <Nav />
       <body className="center">
         <div className="register">
           <div className="info">
@@ -84,20 +106,7 @@ const Join = () => {
             className={errors ? "border-danger" : ""}
             minLength="2"
             maxLength="25"
-            length
             id="loginname"
-          ></input>
-          <input
-            onChange={(e) => {
-              setId(e.currentTarget.value);
-            }}
-            type="number"
-            placeholder="   Enter room ID"
-            className={errors ? "border-danger" : ""}
-            minLength="2"
-            maxLength="4"
-            length
-            id="loginid"
           ></input>
 
           <div className="error">

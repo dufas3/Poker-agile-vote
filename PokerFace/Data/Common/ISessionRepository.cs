@@ -7,16 +7,16 @@ namespace PokerFace.Data.Common
         Task<Session> GetAsync(int id);
         Task<List<Session>> GetAllAsync();
         Task AddAsync(Session session);
-        Task<List<User>> GetSessionUsersAsync(int roomId);
-        Task<Session> GetByRoomIdAsync(int id);
-        Task LogoutSessionAsync(int roomId);
-        Task LogoutUserAsync(int userId,int roomId);      
-        Task<List<Card>> GetUserSelectedCardsAsync(int roomId);
-        Task<SessionState> GetSessionStateAsync(int roomId);
-        Task SetSessionStateAsync(int roomId, SessionState state);
-        Task ClearVotes(int roomId);
-        Task SetActiveCardsAsync(int roomId, List<int> cardIds);
-        Task<List<Card>> GetActiveCardsAsync(int roomId);
-        Task<int> GetModeratorId(int roomId);
+        Task<List<User>> GetSessionUsersAsync(string roomId);
+        Task<Session> GetByRoomIdAsync(string roomId);
+        Task LogoutSessionAsync(string roomId);
+        Task LogoutUserAsync(int userId, string roomId);      
+        Task<List<Card>> GetUserSelectedCardsAsync(string roomId);
+        Task<SessionState> GetSessionStateAsync(string roomId);
+        Task SetSessionStateAsync(string roomId, SessionState state);
+        Task ClearVotes(string roomId);
+        Task SetActiveCardsAsync(string roomId, List<int> cardIds);
+        Task<List<Card>> GetActiveCardsAsync(string roomId);
+        Task<int> GetModeratorId(string roomId);
     }
 }

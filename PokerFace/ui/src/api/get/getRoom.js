@@ -18,7 +18,6 @@ const GetRoom = async ({ roomId }) => {
     const data = isJson && (await response.json());
     return data;
   } catch (error) {
-    console.log("Caught error");
     return;
   }
 };

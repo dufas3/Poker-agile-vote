@@ -2,10 +2,12 @@ import {useState} from "react";
 import './Card.css'
 import getSessionState from "../../api/get/getSessionState";
 import setUserSelectedCard from "../../api/set/setUserSelectedCard";
+import {useLocation} from "react-router-dom";
 
 const Card = (props) => {
 
         const [isSelected, setIsSelected] = useState(false);
+        const location = useLocation();
 
         const selectedCard = async () => {
             let sessionState = await getSessionState({roomId: props.cardValue.roomId})
@@ -32,7 +34,7 @@ const Card = (props) => {
                 }
             }.bind(this), 65)
 
-            await setUserSelectedCard({userId: props.cardValue.userId, cardId: props.cardValue.cardId});
+            await setUserSelectedCard({userId: location.state.userId, cardId: props.cardValue.cardId});
         }
 
         return (

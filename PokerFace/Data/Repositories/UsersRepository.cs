@@ -29,7 +29,7 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task AddUserToSessionAsync(User user, int roomId)
+        public async Task AddUserToSessionAsync(User user, string roomId)
         {
             var session = await Task.FromResult(context.Sessions.Where(x => x.RoomId == roomId).First());
 
@@ -61,14 +61,14 @@ namespace PokerFace.Data.Repositories
             return await context.Cards.Where(x => x.Id == user.SelectedCardId).FirstOrDefaultAsync();
         }
 
-        public async Task<int> GetRoomId(int userId)
+        public async Task<string> GetRoomId(int userId)
         {
-            return context.Users.FirstOrDefault(x => x.Id == userId).RoomId.Value;
+            return context.Users.FirstOrDefault(x => x.Id == userId).RoomId;
         }
 
         public async Task SetSocketId(string socketId, int userId)
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.Id==userId);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             bool isNew = user == null;
 
             if (isNew)
@@ -87,6 +87,20 @@ namespace PokerFace.Data.Repositories
         public async Task<User> GetAsync(string ConnectionId)
         {
             return await context.Users.FirstOrDefaultAsync(x => x.ConnectionId == ConnectionId);
+        }
+
+        public async Task<User> GetModerator(string email, string password)
+        {
+            var user = await context.Users.Where(x => x.Name == email && x.Password == password).FirstOrDefaultAsync();
+            if (user == null)
+                throw new BadHttpRequestException("No moderator by those credentials");
+            return user;
+        }
+
+        public async Task DeleteAsync(User user)
+        {
+            context.Remove(user);
+            await context.SaveChangesAsync();
         }
     }
 }

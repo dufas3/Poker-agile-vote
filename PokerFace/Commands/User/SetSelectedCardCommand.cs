@@ -25,7 +25,7 @@ namespace PokerFace.Commands.User
             await userRepository.SetSelectedCardAsync(request.UserId, request.CardId);
 
             var roomId = await userRepository.GetRoomId(request.UserId);
-            await signalRService.SendMessage(StaticHubMethodNames.SendUserCardSelectionUpdate, roomId);
+            await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, roomId);
 
             return Unit.Value;
         }
