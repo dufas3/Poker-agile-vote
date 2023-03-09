@@ -15,7 +15,6 @@ const Login = () => {
   const [errors, setErrors] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [navig, setNavig] = useState();
-  const [userData, setUserData] = useState({});
 
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
@@ -52,16 +51,9 @@ const Login = () => {
       setEnter(true);
 
       localStorage.setItem("userId", response.id);
-      const userData = {
-        name: email,
-        role: "moderator",
-        userId: response.id,
-      };
-      setUserData(userData);
       setNavig(
         navigate("/Poker?room=" + response.roomId, {
           replace: true,
-          state: userData,
         })
       );
 

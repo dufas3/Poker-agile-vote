@@ -7,26 +7,12 @@ import {useNavigate} from "react-router-dom";
 import LogoutUser from "../../api/logoutUser";
 import {signalRConnection} from "../../api/signalR/signalRHub";
 
-const Nav = (props) => {
-    const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
-    const location = useLocation();
+const Nav = ({user}) => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    useEffect(() => {
-        const setData = () => {
-            if (location.state)
-                setUserData({
-                    name: location.state.name,
-                    roomId: location.state.roomId,
-                    role: location.state.role,
-                });
-        };
-        setData();
-    }, []);
-
     const HandleLogout = async () => {
-        await LogoutUser({roomId: userData.roomId, userId: location.state.userId})
+        await LogoutUser({roomId: searchParams.get("room"), userId: user.id})
         signalRConnection.stop();
         navigate("/Join?room=" + searchParams.get("room"), {replace: true});
     };
@@ -37,7 +23,7 @@ const Nav = (props) => {
                 <div className="container-fluid">
                     <a className="navbar-brand">Festo Scrum Poker</a>
                     <div className="d-flex justify-content-end">
-                        {!userData.name ? (
+                        {!user.name ? (
                             <Link to="/Login">
                                 <a className="btn mx-5" id="H1">
                                     <i className="bi bi-person-fill"/>
@@ -48,7 +34,7 @@ const Nav = (props) => {
                             <div className="component m-lg-1">
                                 <Dropdown>
                                     <Dropdown.Toggle variant="btn-secondary" id="dropdown-basic">
-                                        <i className="bi bi-person-fill"/> {userData.name}
+                                        <i className="bi bi-person-fill"/> {user.name}
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
