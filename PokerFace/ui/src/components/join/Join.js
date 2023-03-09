@@ -14,7 +14,6 @@ const Join = () => {
   const [roomId, setId] = useState("");
   const [enter, setEnter] = useState(false);
   const [errors, setErrors] = useState(false);
-  const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [navig, setNavig] = useState();
   const navigate = useNavigate();
@@ -72,16 +71,9 @@ const Join = () => {
         setIsLoading(false);
         setErrors(true);
       }
-
-      const userData = {
-        name: name,
-        role: "user",
-        userId: response.id,
-      };
       localStorage.setItem("userId", response.id);
 
-      setUserData(userData);
-      setNavig(navigate("/Poker?" + searchParams, { replace: true, state: userData,}));
+      setNavig(navigate("/Poker?" + searchParams, { replace: true,}));
       setIsLoading(true);
       setEnter(true);
       handleOnClick();
@@ -122,15 +114,9 @@ const Join = () => {
             className="join-button"
             id="joinbutton"
           >
-            {enter ? (
               <Link to="/Poker" style={{ textDecoration: "none" }}>
                 <h3>Enter</h3>
               </Link>
-            ) : (
-              <Link to="/" style={{ textDecoration: "none" }}>
-                <h3>Enter</h3>
-              </Link>
-            )}
           </button>
 
           <div className="login-text">

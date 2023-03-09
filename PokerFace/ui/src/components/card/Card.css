@@ -1,6 +1,6 @@
 .card-css {
     width: 150px;
-    height: 210px;
+    height: 220px;
     border-width: 1px;
     border-color: #cccccc;
     border-radius: 5px;
@@ -16,7 +16,7 @@
     border-radius: 5px;
     border-style: solid;
     width: 100px;
-    height: 150px;
+    height: 155px;
     margin: auto;
 
     display: flex;
@@ -32,25 +32,28 @@
     text-align: right;
     padding-right: 95px;
     font-family: Segoe UI;
+    margin: 0 auto;
 }
 
 .number-bottom {
     transform: rotate(180deg);
     padding-right: 95px;
     font-family: Segoe UI;
+    margin: 0 auto;
 }
 
 .number-top1 {
     text-align: right;
     padding-right: 115px;
-    padding-top: 10px;
     font-family: Segoe UI;
+    margin: 0 auto;
 }
 
 .number-bottom1 {
     transform: rotate(180deg);
     padding-right: 115px;
     font-family: Segoe UI;
+    margin: 0 auto;
 }
 
 /*------------------------------------------------------------------------------*/

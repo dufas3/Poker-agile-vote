@@ -1,9 +1,10 @@
-import "./Poker.css";
-import UserIcon from "../../imgs/user.png";
-import {useEffect, useState} from "react";
-import VoteIcon from "../../imgs/vote-icon.png";
+import './PlayerList.css'
+import '../GlobalCSS.css'
 import "react-toastify/dist/ReactToastify.css";
+import UserIcon from "../../imgs/user.png";
+import VoteIcon from "../../imgs/vote-icon.png";
 import Notifications from "../notifications/Notifications";
+import {useEffect, useState} from "react";
 
 const PlayerList = ({sessionState, userList}) => {
     const [users, setUsers] = useState([]);
@@ -36,6 +37,26 @@ const PlayerList = ({sessionState, userList}) => {
         setUsers(userList)
     }, [state, userList])
 
+    useEffect(() => {
+        let allVoted = true;
+
+        if (userList.length > 1) {
+            userList.map((user) => {
+                if (!user.name.includes("@gmail.com")) {
+                    if (user.selectedCard == null) {
+                        allVoted = false;
+
+                    }
+                }
+            })
+        } else {
+            allVoted = false
+        }
+        if (allVoted) {
+            //  To Do (change state to SessionState.FINILIZESTATE cuz all voted)
+        }
+    }, [userList])
+
 
     return (
         <div className="player-list border rounded bg-light">
@@ -46,7 +67,11 @@ const PlayerList = ({sessionState, userList}) => {
                 <div className="mt-2  border-top border-bottom user align-center-between">
                     <div className="align-center-start">
                         <div className="icon m-lg-1 align-center">
-                            <img src={UserIcon} className="user-icon"/>
+                            {user.name.includes("@gmail.com")
+                                ? <><img src={UserIcon} className="user-icon"/><i
+                                    className="fa-solid fa-circle moderator-indicator"></i></> :
+                                <><img src={UserIcon} className="user-icon"/><i
+                                    className="fa-solid fa-circle user-indicator"></i></>}
                         </div>
                         <h6>
                             {user.name}

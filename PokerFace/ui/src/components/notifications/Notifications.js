@@ -19,11 +19,11 @@ const Notifications = (props) => {
     useEffect(() => {
         if (firstLoad >= 1) {
             if(props.data.state == 0){
-                message = "Moderator cleared votes!"
+                message = "Votes are cleared by the moderator. Voting re-started"
             } else if(props.data.state == 1){
-                message = "Moderator revealed votes!"
+                message = "Moderator flipped the cards. Voting stopped."
             } else if(props.data.state == 2){
-                message = "Moderator finished voting!"
+                message = "Voting finished."
             }
             notify({message: message})
         } else {

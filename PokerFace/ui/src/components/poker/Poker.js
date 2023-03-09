@@ -1,8 +1,9 @@
 import Nav from "../header/Nav";
+import '../GlobalCSS.css'
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import { useEffect, useState } from "react";
 import GetCards from "../../api/get/getCards";
 import getSessionState from "../../api/get/getSessionState";
@@ -11,31 +12,25 @@ import GetSessionUsers from "../../api/get/getSessionUsers";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
-import GetUser from "../../api/get/getUser";
+import getUser from "../../api/get/getUser";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
-  const [role, setRole] = useState("");
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState({ name: "", role: "" });
+  const [user, setUser] = useState([]);
   const [sessionState, setSessionState] = useState(0);
   const [activeCards, setActiveCards] = useState([]);
   const [roomId, setRoomId] = useState("");
   const [searchParams] = useSearchParams();
   const [navig, setNavig] = useState();
   const navigate = useNavigate();
-  const location = useLocation();
-  //const [activeCardsAtom,setActiveCardsAtom] = atom([])
 
   useEffect(() => {
     const setData = async () => {
       if (!signalRConnection) await signalRConnection.start();
 
-      let respone = await GetUser({ userId: localStorage.getItem("userId") });
-      setUser(respone);
-      respone.name.includes("@") ? setRole("moderator") : setRole("user");
-
       //api calls
+      await setUpUser();
       await getCards();
       await setUserList();
       await setSessionStateFromApi();
@@ -48,7 +43,7 @@ const Poker = () => {
     setRoomId(searchParams.get("room"));
   }, [roomId]);
   useEffect(()=>{
-    if(location.state == null){
+    if(localStorage.getItem("userId") == null){
       if (searchParams.get("room") == undefined) {
         setNavig(navigate("/Login", {replace: true}));
       } else {
@@ -67,6 +62,10 @@ const Poker = () => {
   const setSessionStateFromApi = async () => {
     let response = await getSessionState({ roomId: searchParams.get("room") });
     setSessionState(response);
+  };
+  const setUpUser = async () => {
+    let response = await getUser({userId: localStorage.getItem("userId")});
+    setUser(response)
   };
 
   const getCards = async () => {
@@ -119,7 +118,7 @@ const Poker = () => {
     <>
       {roomId && (
         <>
-          <Nav />
+          <Nav user = {user}/>
           <div className="poker">
             <div className="voting">
               <VotingArea
@@ -129,7 +128,7 @@ const Poker = () => {
                 sessionState={sessionState}
                 userList={users}
               />
-              {role == "moderator" ? (
+              {user.role == "moderator" ? (
                 <VotingControls
                   cards={cards}
                   roomId={searchParams.get("room")}

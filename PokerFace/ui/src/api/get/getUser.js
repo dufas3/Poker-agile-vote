@@ -1,25 +1,31 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
 const GetUser = async ({ userId }) => {
-  if (!userId) return;
+  let user;
 
+  if (!userId) return;
   const requestOptions = {
     method: "Get",
     headers: { "Content-Type": "application/json" },
   };
 
   const url = ConnectionUrl({ appendix: "/user/getUser" });
-
   url.searchParams.append("id", userId);
 
   try {
     const response = await fetch(url.toString(), requestOptions);
-
     const isJson = response.headers
-      .get("content-type")
-      ?.includes("application/json");
+        .get("content-type")
+        ?.includes("application/json");
     const data = isJson && (await response.json());
-    return data;
+    user = {
+      id: data.id,
+      name: data.name,
+      role: data.name.includes("@") ? "moderator" : "user",
+      selectedCard: data.selectedCard
+
+    }
+    return user;
   } catch (error) {
     return;
   }

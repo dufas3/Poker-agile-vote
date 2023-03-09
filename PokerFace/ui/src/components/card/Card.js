@@ -1,13 +1,24 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import './Card.css'
 import getSessionState from "../../api/get/getSessionState";
 import setUserSelectedCard from "../../api/set/setUserSelectedCard";
 import {useLocation} from "react-router-dom";
+import getUser from "../../api/get/getUser";
 
 const Card = (props) => {
 
         const [isSelected, setIsSelected] = useState(false);
-        const location = useLocation();
+        const [user, setUser] = useState({})
+
+    useEffect(()=>{
+        const setUpUser = async ()=>{
+            let response = await getUser({userId: localStorage.getItem("userId")})
+            setUser(response)
+        }
+        setUpUser();
+    },[])
+
+
 
         const selectedCard = async () => {
             let sessionState = await getSessionState({roomId: props.cardValue.roomId})
@@ -32,9 +43,9 @@ const Card = (props) => {
                 } else {
                     setIsSelected(false);
                 }
-            }.bind(this), 65)
+            }.bind(this), 55)
 
-            await setUserSelectedCard({userId: location.state.userId, cardId: props.cardValue.cardId});
+            await setUserSelectedCard({userId: user.id, cardId: props.cardValue.cardId});
         }
 
         return (
