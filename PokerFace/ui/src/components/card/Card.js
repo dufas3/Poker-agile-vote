@@ -32,14 +32,14 @@ const Card = (props) => {
                 } else {
                     setIsSelected(false);
                 }
-            }.bind(this), 65)
+            }.bind(this), 55)
 
             await setUserSelectedCard({userId: location.state.userId, cardId: props.cardValue.cardId});
         }
 
         return (
             <div className={!isSelected ? "card-css" : "card-css selected-bg-true"}>
-                {props.cardValue.cardValue.length > 3 ? <button className="card-button" onClick={selectedCard}>
+                {props.cardValue.cardValue.length > 3 ? <button className="card-button" onClick={selectedCard} value={props.cardValue.cardValue}>
 
                         <h6 className={!isSelected ? "number-top" : "number-top selected-true"}>{props.cardValue.cardValue}</h6>
 

@@ -1,0 +1,15 @@
+.voting-area {
+    height: 547px;
+}
+.row-1{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.row-2{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

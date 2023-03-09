@@ -122,15 +122,9 @@ const Join = () => {
             className="join-button"
             id="joinbutton"
           >
-            {enter ? (
               <Link to="/Poker" style={{ textDecoration: "none" }}>
                 <h3>Enter</h3>
               </Link>
-            ) : (
-              <Link to="/" style={{ textDecoration: "none" }}>
-                <h3>Enter</h3>
-              </Link>
-            )}
           </button>
 
           <div className="login-text">

@@ -1,4 +1,5 @@
 import Nav from "../header/Nav";
+import '../GlobalCSS.css'
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
@@ -11,13 +12,10 @@ import GetSessionUsers from "../../api/get/getSessionUsers";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
-import GetUser from "../../api/get/getUser";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
-  const [role, setRole] = useState("");
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState({ name: "", role: "" });
   const [sessionState, setSessionState] = useState(0);
   const [activeCards, setActiveCards] = useState([]);
   const [roomId, setRoomId] = useState("");
@@ -25,15 +23,10 @@ const Poker = () => {
   const [navig, setNavig] = useState();
   const navigate = useNavigate();
   const location = useLocation();
-  //const [activeCardsAtom,setActiveCardsAtom] = atom([])
 
   useEffect(() => {
     const setData = async () => {
       if (!signalRConnection) await signalRConnection.start();
-
-      let respone = await GetUser({ userId: localStorage.getItem("userId") });
-      setUser(respone);
-      respone.name.includes("@") ? setRole("moderator") : setRole("user");
 
       //api calls
       await getCards();
@@ -129,7 +122,7 @@ const Poker = () => {
                 sessionState={sessionState}
                 userList={users}
               />
-              {role == "moderator" ? (
+              {location.state.role == "moderator" ? (
                 <VotingControls
                   cards={cards}
                   roomId={searchParams.get("room")}

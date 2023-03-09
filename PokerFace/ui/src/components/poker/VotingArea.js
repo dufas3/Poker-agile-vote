@@ -1,6 +1,8 @@
 import "./Poker.css";
 import Card from "../card/Card";
 import VotingSummary from "./VotingSummary";
+import './VotingArea.css'
+import '../GlobalCSS.css'
 
 const VotingArea = ({ sessionState, roomId, cards, userId, userList }) => {
   return (

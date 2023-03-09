@@ -1,4 +1,5 @@
-import "./Poker.css";
+import './VotingControls.css';
+import '../GlobalCSS.css'
 import { useEffect, useState } from "react";
 import { SessionState } from "../../common/sessionState";
 import setSessionState from "../../api/set/setSessionState";
@@ -17,7 +18,9 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     setUpAlreadyActiveCards();
   }, []);
 
-  const handleSetAllCards = () => {};
+  const handleSetAllCards = () => {
+    //  To Do (set all cards for players to vote)
+  };
 
   const handleFlipCards = async () => {
     await setSessionState({
