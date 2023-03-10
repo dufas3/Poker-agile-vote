@@ -5,7 +5,7 @@ namespace PokerFace.Commands.Session
 {
     public class GetSessionStateCommand : IRequest<SessionState>
     {
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class GetSessionStateCommandHanlder : IRequestHandler<GetSessionStateCommand, SessionState>

@@ -1,7 +1,10 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PokerFace.Data;
 using PokerFace.Data.Common;
+using PokerFace.Data.Hubs;
 using PokerFace.Data.Repositories;
+using PokerFace.Services;
 
 namespace PokerFace.Web
 {
@@ -12,15 +15,25 @@ namespace PokerFace.Web
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddMediatR(typeof(Program));
+            builder.Services.AddSignalRCore();
+            builder.Services.AddSignalR();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
-            builder.Services.AddDbContext<ApplicationDbContext>();
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Services.BuildServiceProvider().GetService<IConfiguration>().GetConnectionString("PokerFaceDb")),
+                ServiceLifetime.Scoped
+                );
+
+            //repos
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ICardsRepository, CardsRepository>();
-            
+
+            //services
+            builder.Services.AddScoped<ISignalRService, SignalRService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
+
             //for adding static data 
             //builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
 
@@ -29,9 +42,11 @@ namespace PokerFace.Web
                 options.AddPolicy(name: "MyCors",
                                   policy =>
                                   {
-                                      policy.AllowAnyOrigin();
-                                      policy.AllowAnyHeader();
-                                      policy.AllowAnyMethod();
+                                      policy
+                                      .WithOrigins("https://pokerfaceapp-dev.azurewebsites.net")
+                                      .AllowCredentials()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
                                   });
             });
 
@@ -39,11 +54,18 @@ namespace PokerFace.Web
 
             app.UseCors("MyCors");
 
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<PokerFaceHub>("/api/pokerFaceHub");
+            });
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            app.MapControllers();
 
             app.Run();
         }

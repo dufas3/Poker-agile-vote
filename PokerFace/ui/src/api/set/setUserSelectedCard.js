@@ -20,10 +20,8 @@ const SetUserSelectedCard = async (props) => {
             .get("content-type")
             ?.includes("application/json");
         const data = isJson && (await response.json());
-        console.log("SetUserSelCard: ", response);
         return data;
     } catch (error) {
-        console.log("Caught error");
         return;
     }
 }

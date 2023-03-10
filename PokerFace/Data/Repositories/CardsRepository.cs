@@ -17,38 +17,7 @@ namespace PokerFace.Data.Repositories
         {
             return await context.Cards.ToListAsync();
 
-        }
-
-        public async Task<List<Card>> GetActiveCardsAsync(int roomId)
-        {
-            var session = await context.Sessions.FirstOrDefaultAsync(x => x.RoomId == roomId);
-
-            if (session == null)
-                throw new BadHttpRequestException("There's no session with this Id!");
-
-            var activeCards = new List<Card>();
-
-            foreach (var id in session.CardIds)
-            {
-                activeCards.Add(context.Cards.FirstOrDefault(x => x.Id == id));
-            }
-
-            return activeCards;
-        }
-
-        public async Task SetActiveCardsAsync(int roomId, List<int> cardIds)
-        {
-            var session = await context.Sessions.FirstOrDefaultAsync(x => x.RoomId == roomId);
-
-            if (session == null)
-                throw new BadHttpRequestException("There's no session with this Id!");
-
-            session.CardIds.Clear();
-            session.CardIds.AddRange(cardIds);
-
-            context.Sessions.Update(session);
-            await context.SaveChangesAsync();
-        }
+        } 
 
         public async Task SetActiveUserCardAsync(int cardId, int userId)
         {

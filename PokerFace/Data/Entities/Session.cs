@@ -7,7 +7,7 @@ namespace PokerFace.Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
         public int ModeratorId { get; set; }
         public List<int> UserIds { get; } = new List<int>();
         public List<int> CardIds { get; } = new List<int>();

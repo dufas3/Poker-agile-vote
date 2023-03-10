@@ -1,29 +1,29 @@
 import ConnectionUrl from "../common/connectionUrl";
 
-const AddToSession = async (props) => {
-    const requestOptions = {
-        method: "Post",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            name: props.name,
-            roomId: props.roomId,
-        }),
-    };
+const AddToSession = async ({ name, roomId, socketId }) => {
+  if (!name) return;
 
-    if (!props) return;
+  const requestOptions = {
+    method: "Post",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name,
+      roomId: roomId,
+      socketId: socketId,
+    }),
+  };
 
-    const url = ConnectionUrl({appendix: "/user/addToSession"});
+  const url = ConnectionUrl({ appendix: "/user/addToSession" });
 
-    try {
-        const response = await fetch(url.toString(), requestOptions);
-        const isJson = response.headers
-            .get("content-type")
-            ?.includes("application/json");
-        const data = isJson && (await response.json());
-        return data;
-    } catch (error) {
-        console.log("Caught error", error);
-        return;
-    }
+  try {
+    const response = await fetch(url.toString(), requestOptions);
+    const isJson = response.headers
+      .get("content-type")
+      ?.includes("application/json");
+    const data = isJson && (await response.json());
+    return data;
+  } catch (error) {
+    return;
+  }
 };
 export default AddToSession;

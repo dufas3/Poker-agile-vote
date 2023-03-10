@@ -1,7 +1,7 @@
-const ConnectionUrl = (props) => {
-  return new URL(
-    "https://pokerfaceapp-backend.azurewebsites.net/api" + props.appendix
-  );
+const ConnectionUrl = ({appendix}) => {
+    return new URL(
+        "https://pokerfaceapp-backend.azurewebsites.net/api" + appendix
+    );
 };
 
 export default ConnectionUrl;

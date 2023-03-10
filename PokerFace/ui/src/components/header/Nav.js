@@ -1,31 +1,20 @@
 import FestoLogo from "../../imgs/festo.png";
 import Dropdown from "react-bootstrap/Dropdown";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useSearchParams} from "react-router-dom";
 import "./Nav.css";
 import {useEffect, useState} from "react";
-import LogoutSession from "../../api/logoutSession";
 import {useNavigate} from "react-router-dom";
+import LogoutUser from "../../api/logoutUser";
+import {signalRConnection} from "../../api/signalR/signalRHub";
 
-const Nav = (props) => {
-    const [userData, setUserData] = useState({name: "", roomId: "", role: ""});
-    const location = useLocation();
+const Nav = ({user}) => {
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const setData = () => {
-            if (location.state)
-                setUserData({
-                    name: location.state.name,
-                    roomId: location.state.roomId,
-                    role: location.state.role,
-                });
-        };
-        setData();
-    }, []);
+    const [searchParams] = useSearchParams();
 
     const HandleLogout = async () => {
-        await LogoutSession({roomId: userData.roomId});
-        navigate("/", {replace: true});
+        await LogoutUser({roomId: searchParams.get("room"), userId: user.id})
+        signalRConnection.stop();
+        navigate("/Join?room=" + searchParams.get("room"), {replace: true});
     };
 
     return (
@@ -34,7 +23,7 @@ const Nav = (props) => {
                 <div className="container-fluid">
                     <a className="navbar-brand">Festo Scrum Poker</a>
                     <div className="d-flex justify-content-end">
-                        {!userData.name ? (
+                        {!user.name ? (
                             <Link to="/Login">
                                 <a className="btn mx-5" id="H1">
                                     <i className="bi bi-person-fill"/>
@@ -42,24 +31,24 @@ const Nav = (props) => {
                                 </a>
                             </Link>
                         ) : (
-                            <div className="component">
+                            <div className="component m-lg-1">
                                 <Dropdown>
                                     <Dropdown.Toggle variant="btn-secondary" id="dropdown-basic">
-                                        <i className="bi bi-person-fill"/> {userData.name}
+                                        <i className="bi bi-person-fill"/> {user.name}
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
                                         <Dropdown.Item
                                             onClick={() => {
-                                                navigator.clipboard.writeText(userData.roomId);
+                                                navigator.clipboard.writeText("https://pokerfaceapp-dev.azurewebsites.net/?room=" + searchParams.get("room"));
                                             }}
                                         >
-                                            <h6>Room ID: {userData.roomId}</h6>
+                                            <h6>Room link</h6>
                                         </Dropdown.Item>
                                         <Dropdown.Item>
-                                            <Link to="/" style={{textDecoration: "none"}}>
+                                            <Link to="/Join" style={{textDecoration: "none"}}>
                                                 <a
-                                                    onClick={() => HandleLogout}
+                                                    onClick={HandleLogout}
                                                     className="btn"
                                                     id="logoutbutton"
                                                 >

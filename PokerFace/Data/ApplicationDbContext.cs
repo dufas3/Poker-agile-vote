@@ -11,18 +11,18 @@ namespace PokerFace.Data
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
+                IConfigurationRoot configuration = new ConfigurationBuilder()   
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json")
                     .Build();
-                
+
                 optionsBuilder.UseSqlServer(configuration.GetConnectionString("PokerFaceDb"));
             }
-        }
+        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,12 @@ namespace PokerFace.Data
 
             modelBuilder.Entity<Session>()
                 .Property(s => s.UserIds)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList());
+
+            modelBuilder.Entity<Session>()
+                .Property(s => s.CardIds)
                 .HasConversion(
                     v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList());

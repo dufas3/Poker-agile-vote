@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PokerFace.Commands.Cards;
+using PokerFace.Commands.Session;
 using PokerFace.Web.Controllers;
 
 namespace PokerFace.Controllers

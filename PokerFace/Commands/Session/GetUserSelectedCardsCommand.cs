@@ -6,7 +6,7 @@ namespace PokerFace.Commands.Session
 {
     public class GetUserSelectedCardsCommand : IRequest<List<Card>>
     {
-        public int RoomId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class GetUserSelectedCardsHandler : IRequestHandler<GetUserSelectedCardsCommand, List<Card>>

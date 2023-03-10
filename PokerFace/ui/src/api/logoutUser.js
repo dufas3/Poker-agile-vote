@@ -1,19 +1,18 @@
 import ConnectionUrl from "../common/connectionUrl";
 
-const CreateSession = async (props) => {
+const LogoutUser = async (props) => {
+
+    const requestOptions = {
+        method: "Get",
+        headers: {"Content-Type": "application/json"},
+    };
 
     if (!props) return;
 
-    const requestOptions = {
-        method: "Post",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            id: props.id,
-            moderatorId: props.moderatorId,
-        }),
-    };
+    const url = ConnectionUrl({appendix: "/session/LogoutUser"});
+    url.searchParams.append("roomId", props.roomId);
+    url.searchParams.append("userId", props.userId);
 
-    const url = ConnectionUrl({appendix: "/session/createSession"});
 
     try {
         const response = await fetch(url.toString(), requestOptions);
@@ -23,9 +22,7 @@ const CreateSession = async (props) => {
         const data = isJson && (await response.json());
         return data;
     } catch (error) {
-        console.log("Caught error");
         return;
     }
-};
-
-export default CreateSession;
+}
+export default LogoutUser

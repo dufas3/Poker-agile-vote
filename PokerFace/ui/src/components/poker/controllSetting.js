@@ -8,7 +8,7 @@ const ControllSetting = (props) => {
                 id="flexCheckDefault"
             />
             <label className="form-check-label" htmlFor="flexCheckDefault">
-                {props.value}
+                {props.data.cardValue}
             </label>
         </div>
     );

@@ -1,8 +1,8 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const GetSessionState = async (props) => {
+const GetSessionState = async ({roomId}) => {
 
-    if (!props) return;
+    if (!roomId) return;
 
     const requestOptions = {
         method: "Get",
@@ -11,7 +11,7 @@ const GetSessionState = async (props) => {
 
     const url = ConnectionUrl({appendix: "/session/GetSessionState"});
 
-    url.searchParams.append("roomId", props.roomId);
+    url.searchParams.append("roomId", roomId);
 
     try {
         const response = await fetch(url.toString(), requestOptions);
@@ -22,7 +22,6 @@ const GetSessionState = async (props) => {
         const data = isJson && (await response.json());
         return data;
     } catch (error) {
-        console.log("Caught error");
         return;
     }
 };
