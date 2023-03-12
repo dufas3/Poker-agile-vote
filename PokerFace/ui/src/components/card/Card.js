@@ -4,6 +4,7 @@ import getSessionState from "../../api/get/getSessionState";
 import setUserSelectedCard from "../../api/set/setUserSelectedCard";
 import {useLocation} from "react-router-dom";
 import getUser from "../../api/get/getUser";
+import {getUserId} from "../../common/UserId";
 
 const Card = (props) => {
 
@@ -12,7 +13,7 @@ const Card = (props) => {
 
     useEffect(()=>{
         const setUpUser = async ()=>{
-            let response = await getUser({userId: localStorage.getItem("userId")})
+            let response = await getUser({userId: getUserId()})
             setUser(response)
         }
         setUpUser();
