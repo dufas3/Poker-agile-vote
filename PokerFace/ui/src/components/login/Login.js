@@ -6,6 +6,7 @@ import GetModerator from "../../api/get/getModerator";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
+import {setUserId} from "../../common/UserId";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -50,7 +51,7 @@ const Login = () => {
       setIsLoading(false);
       setEnter(true);
 
-      localStorage.setItem("userId", response.id);
+      setUserId(response.id);
       setNavig(
         navigate("/Poker?room=" + response.roomId, {
           replace: true,

@@ -8,6 +8,7 @@ import GetRoom from "../../api/get/getRoom";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import * as signalR from "@microsoft/signalr";
+import {setUserId} from "../../common/UserId";
 
 const Join = () => {
   const [name, setName] = useState("");
@@ -39,18 +40,19 @@ const Join = () => {
   }, []);
 
   const validation = async () => {
+    setIsLoading(true)
     if (!name) {
       setErrors(true);
+      setIsLoading(false)
     } else if (name.replaceAll(" ", "").length == 0) {
       setErrors(true);
+      setIsLoading(false)
     } else {
       setErrors(false);
-      setIsLoading(true);
 
       var roomExist = await GetRoom({ roomId: roomId });
 
       if (!roomExist) {
-        setIsLoading(false);
         setErrors(true);
         return;
       }
@@ -68,13 +70,11 @@ const Join = () => {
       });
 
       if (!response) {
-        setIsLoading(false);
         setErrors(true);
       }
-      localStorage.setItem("userId", response.id);
-
+      setUserId(response.id);
+      setIsLoading(false)
       setNavig(navigate("/Poker?" + searchParams, { replace: true,}));
-      setIsLoading(true);
       setEnter(true);
       handleOnClick();
     }

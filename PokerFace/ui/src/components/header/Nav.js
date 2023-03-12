@@ -1,6 +1,6 @@
 import FestoLogo from "../../imgs/festo.png";
 import Dropdown from "react-bootstrap/Dropdown";
-import {Link, useLocation, useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import "./Nav.css";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";

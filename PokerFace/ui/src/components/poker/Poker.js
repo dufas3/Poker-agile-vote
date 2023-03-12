@@ -13,6 +13,7 @@ import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
 import getUser from "../../api/get/getUser";
+import {getUserId} from "../../common/UserId";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
@@ -43,8 +44,8 @@ const Poker = () => {
     setRoomId(searchParams.get("room"));
   }, [roomId]);
   useEffect(()=>{
-    if(localStorage.getItem("userId") == null){
-      if (searchParams.get("room") == undefined) {
+    if(getUserId() == null){
+      if (searchParams.get("room") === undefined) {
         setNavig(navigate("/Login", {replace: true}));
       } else {
         setNavig(navigate("/Join?room=" + searchParams.get("room"), {replace: true}));
@@ -64,7 +65,7 @@ const Poker = () => {
     setSessionState(response);
   };
   const setUpUser = async () => {
-    let response = await getUser({userId: localStorage.getItem("userId")});
+    let response = await getUser({userId: getUserId()});
     setUser(response)
   };
 

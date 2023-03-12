@@ -5,12 +5,16 @@ import UserIcon from "../../imgs/user.png";
 import VoteIcon from "../../imgs/vote-icon.png";
 import Notifications from "../notifications/Notifications";
 import {useEffect, useState} from "react";
+import setSessionState from "../../api/set/setSessionState";
+import {SessionState} from "../../common/sessionState";
+import {useSearchParams} from "react-router-dom";
 
 const PlayerList = ({sessionState, userList}) => {
     const [users, setUsers] = useState([]);
-    const [state, setSessionState] = useState(0);
+    const [state, setState] = useState(0);
     const [userCount, setUserCount] = useState(0);
     const [listText, setListText] = useState("");
+    const [searchParams] = useSearchParams();
 
     const setUserList = async () => {
         setUserCount(userList.length - 1);
@@ -18,7 +22,7 @@ const PlayerList = ({sessionState, userList}) => {
 
     useEffect(() => {
         setUserList();
-        setSessionState(sessionState);
+        setState(sessionState);
     }, [userList, sessionState]);
 
     useEffect(() => {
@@ -53,7 +57,13 @@ const PlayerList = ({sessionState, userList}) => {
             allVoted = false
         }
         if (allVoted) {
-            //  To Do (change state to SessionState.FINILIZESTATE cuz all voted)
+            const stateChange = async () =>{
+                await setSessionState({
+                    roomId: searchParams.get("room"),
+                    state: SessionState.FINILIZESTATE,
+                });
+            }
+            stateChange();
         }
     }, [userList])
 
