@@ -20,15 +20,6 @@ const Login = () => {
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
 
-  useEffect(()=>{
-    try{
-      localStorage.removeItem("userId");
-    }
-    catch (error){
-
-    }
-  },[])
-
   const validation = async () => {
     setIsLoading(true);
 
