@@ -1,9 +1,9 @@
 import Nav from "../header/Nav";
-import '../GlobalCSS.css'
+import "../GlobalCSS.css";
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GetCards from "../../api/get/getCards";
 import getSessionState from "../../api/get/getSessionState";
@@ -13,6 +13,7 @@ import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
 import getUser from "../../api/get/getUser";
+import { getUserId } from "../../common/UserId";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
@@ -42,15 +43,17 @@ const Poker = () => {
   useEffect(() => {
     setRoomId(searchParams.get("room"));
   }, [roomId]);
-  useEffect(()=>{
-    if(localStorage.getItem("userId") == null){
-      if (searchParams.get("room") == undefined) {
-        setNavig(navigate("/Login", {replace: true}));
+  useEffect(() => {
+    if (getUserId() == null) {
+      if (searchParams.get("room") === undefined) {
+        setNavig(navigate("/Login", { replace: true }));
       } else {
-        setNavig(navigate("/Join?room=" + searchParams.get("room"), {replace: true}));
+        setNavig(
+          navigate("/Join?room=" + searchParams.get("room"), { replace: true })
+        );
       }
     }
-  },[])
+  }, []);
 
   const setUserList = async () => {
     let response = await GetSessionUsers({
@@ -64,8 +67,8 @@ const Poker = () => {
     setSessionState(response);
   };
   const setUpUser = async () => {
-    let response = await getUser({userId: localStorage.getItem("userId")});
-    setUser(response)
+    let response = await getUser({ userId: getUserId() });
+    setUser(response);
   };
 
   const getCards = async () => {
@@ -118,7 +121,7 @@ const Poker = () => {
     <>
       {roomId && (
         <>
-          <Nav user = {user}/>
+          <Nav user={user} />
           <div className="poker">
             <div className="voting">
               <VotingArea

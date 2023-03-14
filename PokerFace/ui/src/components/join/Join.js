@@ -8,27 +8,21 @@ import GetRoom from "../../api/get/getRoom";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import * as signalR from "@microsoft/signalr";
+import { setUserId } from "../../common/UserId";
+import GetSessionUsers from "../../api/get/getSessionUsers";
 
 const Join = () => {
   const [name, setName] = useState("");
   const [roomId, setId] = useState("");
   const [enter, setEnter] = useState(false);
   const [errors, setErrors] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [navig, setNavig] = useState();
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
 
   const [searchParams] = useSearchParams();
-
-  useEffect(()=>{
-    try{
-      localStorage.removeItem("userId");
-    }
-    catch (error){
-
-    }
-  },[])
 
   useEffect(() => {
     if (searchParams.get("room") == undefined) {
@@ -39,18 +33,46 @@ const Join = () => {
   }, []);
 
   const validation = async () => {
+    let isUsernameTaken = false;
+    let sessionUserList = await GetSessionUsers({
+      id: searchParams.get("room"),
+    });
+
+    sessionUserList.map((sessionUser) => {
+      if (sessionUser.name == name) {
+        isUsernameTaken = true;
+      }
+    });
+    setIsLoading(true);
     if (!name) {
+      setErrorMessage("Please enter username!");
       setErrors(true);
+      setIsLoading(false);
     } else if (name.replaceAll(" ", "").length == 0) {
+      setErrorMessage("Please enter username!");
       setErrors(true);
+      setIsLoading(false);
+    } else if (name.includes("@")) {
+      setErrorMessage("You can't use @ in your username!");
+      setErrors(true);
+      setIsLoading(false);
+    } else if (sessionUserList.length >= 9) {
+      setErrorMessage("This room is full!");
+      setErrors(true);
+      setIsLoading(false);
+    } else if (name.length <= 2) {
+      setErrorMessage("Username is too short!");
+      setErrors(true);
+      setIsLoading(false);
+    } else if (isUsernameTaken) {
+      setErrorMessage("This username is taken!");
+      setErrors(true);
+      setIsLoading(false);
     } else {
       setErrors(false);
-      setIsLoading(true);
-
-      var roomExist = await GetRoom({ roomId: roomId });
+      let roomExist = await GetRoom({ roomId: roomId });
 
       if (!roomExist) {
-        setIsLoading(false);
         setErrors(true);
         return;
       }
@@ -68,13 +90,11 @@ const Join = () => {
       });
 
       if (!response) {
-        setIsLoading(false);
         setErrors(true);
       }
-      localStorage.setItem("userId", response.id);
-
-      setNavig(navigate("/Poker?" + searchParams, { replace: true,}));
-      setIsLoading(true);
+      setUserId(response.id);
+      setIsLoading(false);
+      setNavig(navigate("/Poker?" + searchParams, { replace: true }));
       setEnter(true);
       handleOnClick();
     }
@@ -103,7 +123,7 @@ const Join = () => {
 
           <div className="error">
             {errors && (
-              <h5 className="error-text text-danger">Please enter username!</h5>
+              <h5 className="error-text text-danger">{errorMessage}</h5>
             )}
           </div>
 
@@ -114,9 +134,21 @@ const Join = () => {
             className="join-button"
             id="joinbutton"
           >
-              <Link to="/Poker" style={{ textDecoration: "none" }}>
+            {enter ? (
+              <Link
+                to={"/Poker?room=" + searchParams.get("room")}
+                style={{ textDecoration: "none" }}
+              >
                 <h3>Enter</h3>
               </Link>
+            ) : (
+              <Link
+                to={"/Join?room=" + searchParams.get("room")}
+                style={{ textDecoration: "none" }}
+              >
+                <h3>Enter</h3>
+              </Link>
+            )}
           </button>
 
           <div className="login-text">

@@ -1,11 +1,12 @@
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "../header/Nav";
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 import GetModerator from "../../api/get/getModerator";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
+import { setUserId } from "../../common/UserId";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,15 +19,6 @@ const Login = () => {
 
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navig, [navigate]);
-
-  useEffect(()=>{
-    try{
-      localStorage.removeItem("userId");
-    }
-    catch (error){
-
-    }
-  },[])
 
   const validation = async () => {
     setIsLoading(true);
@@ -50,7 +42,7 @@ const Login = () => {
       setIsLoading(false);
       setEnter(true);
 
-      localStorage.setItem("userId", response.id);
+      setUserId(response.id);
       setNavig(
         navigate("/Poker?room=" + response.roomId, {
           replace: true,
