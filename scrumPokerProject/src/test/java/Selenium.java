@@ -16,8 +16,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Selenium {
-    private static WebDriver browser;
-    public static final String POKER_URL = "https://pokerfaceapp-test.azurewebsites.net/";
+    public static WebDriver browser;
+    public static final String POKER_URL = "pokerface-test.azurewebsites.net";
+    //"https://pokerfaceapp-dev.azurewebsites.net/?room=1ff6ae59-c5b2-4c55-bf6b-114dbc83a30b"//statinis, i interneta patalpintas linkas
     public static final String FIELD_NAME = "Antanukas";
     public static final String EMAIL = "testemail@gmail.com";
     public static final String PASSWORD = "testpassword123";
@@ -26,9 +27,10 @@ public class Selenium {
         System.out.println("Scrum Poker");
         setup(POKER_URL);
         //setupChrome(POKER_URL);
-        //LOGIN
+        //LOGIN/LOGOUT
         //loginPlayer();
         loginModerator();
+        //logoutUser();
 
 
         //HEADER ---VEIKIA
@@ -49,19 +51,25 @@ public class Selenium {
         //flipCard();
         //clearVotes();
         //finishVoting();
-        clickModeratorSettings();
-        waitForCardOptions();
-        //selectCard(1);
-        //selectCard(2);
-        //selectCard(3);
-        //selectCards(0);
-        //unselectCards(1);
-        //unselectCards(2);
-        //unselectCards(3);
-        getPossibleValuesList();
+        //clickModeratorSettings();
+        //waitForCardCheckboxOptions();
+        //selectCardCheckbox(1);
+        //selectCardCheckbox(2);
+        //selectCardCheckbox(3);
+        //selectCardCheckbox(0);
+        //unselectCardCheckbox(1);
+        //unselectCardCheckbox(2);
+        //unselectCardCheckbox(3);
+        //getPossibleCardCheckboxValuesList();
+
 
         //PLAYER_LIST_SECTION
+        //getPossiblePayerCardsList();
+        //getPossibleModeratorCardsList();
         //getPlayerListMessageResults();
+        //waitForCardVoteOptions();
+        //clickCardPlayer("20");
+        //getCheckMarkElement("Antanukas");
 
     }
 
@@ -81,6 +89,7 @@ public class Selenium {
         //Creating an Edge Driver object (requires imported libraries)
         browser = new EdgeDriver(options);
         //Atidaroma narsykle ir uzkraunamas nurodytas URL adresas
+        //Broweser is being opened and URL is being uploaded
         browser.get(url);
 
         //simuliacija pascrollinti zemyn puslapi
@@ -108,12 +117,6 @@ public class Selenium {
         //Atidaroma narsykle ir uzkraunamas nurodytas URL adresas
         browser.get(url);
 
-        //simuliacija pascrollinti zemyn puslapi
-        //JavascriptExecutor js = (JavascriptExecutor) browser;
-        //js.executeScript("window.scrollBy(0,4500)");
-
-
-        //browser.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
     }
 
@@ -216,7 +219,7 @@ public class Selenium {
         return resultsHeadingText;
     }
 
-    //-------------------------------------------------LOGIN------------------------------------------------------------
+    //-------------------------------------------------LOGIN/LOGOUT------------------------------------------------------------
     public static void loginPlayer() {
 
         //write Player name
@@ -266,6 +269,13 @@ public class Selenium {
         return messageText;
     }
 
+    public static void logoutUser(){
+        By logoutLink = By.partialLinkText("Logout");
+        new WebDriverWait(browser, Duration.ofSeconds(3)).until(ExpectedConditions.presenceOfElementLocated(logoutLink));
+        WebElement logoutButton = browser.findElement(By.partialLinkText("Logout"));
+        logoutButton.click();
+    }
+
 //-------------------------------------------------MODERATOR_CARD_SETTINGS--------------------------------------------------------------
 
     public static void flipCard() {
@@ -292,11 +302,11 @@ public class Selenium {
 
     }
 
-    public static void waitForCardOptions() {
+    public static void waitForCardCheckboxOptions() {
         new WebDriverWait(browser, Duration.ofSeconds(15)).until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className("form-check-input"), 1));
     }
 
-    public static void selectCard(int index) {
+    public static void selectCardCheckbox(int index) {
 
         List<WebElement> checkbox = browser.findElements(By.className("form-check-input"));
         int size = checkbox.size();
@@ -315,7 +325,7 @@ public class Selenium {
     }
 
 
-    public static void unselectCards(int index) {
+    public static void unselectCardCheckbox(int index) {
 
         List<WebElement> checkbox = browser.findElements(By.className("form-check-input"));
         int size = checkbox.size();
@@ -335,23 +345,13 @@ public class Selenium {
 
     }
 
-    public static Object[] getPossibleValuesList() {
+    public static ArrayList<String> getPossibleCardCheckboxValuesList() {
         ArrayList<String> actual = new ArrayList<>();
         for (WebElement element : browser.findElements(By.className("form-check-label"))) {
             actual.add(element.getText());
-            System.out.println(actual);
         }
 
-        /*List<WebElement> allValues = browser.findElements(By.className("form-check-label"));
-        for (WebElement value : allValues) {
-            System.out.println(value.getText());}
-       // ArrayList<String> resultsToText = allValues;
-        //   return resultsToText;
-
-         */
-
-
-        return actual.toArray();
+        return actual;
     }
 
 //---------------------------------------------------PLAYER_LIST_SECTION--------------------------------------------------------------
@@ -362,11 +362,64 @@ public class Selenium {
         return messageText;
     }
 
-    public static String getModeratorNumberInList() {
+   /* public static String getModeratorNumberInList() {
         List<WebElement> listElements = browser.findElements(By.xpath("//*[@id=\"root\"]/div[1]/div/div[2]/div[1]/div/h6")); //elementas kuri issitraukiam yra spalva, moderatorius yra kitokios spalvos ir pirmas
         WebElement firstListElement = listElements.get(0);
         String firstListElement = listElements.getText;
         //return firstListElement;
 
+    }*/
+
+    public static void clickCardPlayer(String cardNumber) {
+        WebElement playerCard = browser.findElement(By.className("number"));
+        //new Actions(browser).moveToElement(playerCard).build().perform();
+
+        System.out.println("" + playerCard);
+        List<WebElement> playerCards = browser.findElements(By.className("card-css"));
+        System.out.println("Total cards: " + playerCards.size());
+        //Assert.assertTrue("Player card is not displayed and/or enabled", playerCard.isDisplayed() && playerCard.isEnabled());
+        for (WebElement card : playerCards) {
+            WebElement cardTag = card.findElement(By.tagName("h2"));
+            if (cardTag.getText().equals(cardNumber)) {
+                //System.out.println("Card: " + card.getText().equals("3"));
+                card.click();
+                //card.click();
+                break;
+            }
+        }
     }
+
+
+    public static void waitForCardVoteOptions() {
+        new WebDriverWait(browser, Duration.ofSeconds(15)).until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className("card-css"), 1));
+    }
+
+
+    public static String getCheckMarkElement(String playerName) {
+        List<WebElement> playersList = browser.findElements(By.className("align-center-start"));
+        String checkMarkText = "";
+        for (WebElement player : playersList) {
+            WebElement playerTag = player.findElement(By.tagName("h6"));
+            if (playerTag.getText().equals(playerName)) {
+                checkMarkText = playerTag.findElement(By.tagName("i")).getAttribute("class");
+                System.out.println("text: " + checkMarkText);
+            }
+        }
+        return checkMarkText;
+    }
+    public static ArrayList<String> getPossiblePayerCardsList() {
+        ArrayList<String> playerCards = new ArrayList<>();
+        for (WebElement cardElement : browser.findElements(By.className("number"))) {
+            playerCards.add(cardElement.getText());
+        }
+        return playerCards;
+    }
+    public static ArrayList<String> getPossibleModeratorCardsList(){
+        ArrayList<String> moderatorCards = new ArrayList<>();
+        for (WebElement cardsElement : browser.findElements(By.className("number"))) {
+            moderatorCards.add(cardsElement.getText());
+        }
+        return moderatorCards;
+    }
+
 }

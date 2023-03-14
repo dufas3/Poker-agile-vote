@@ -28,8 +28,17 @@ public class SeleniumJunitLoginTest {
         Assert.assertNotEquals(Selenium.getLoginResults(), expectedResults);
 
     }
-    @Test
 
+    @Test
+    public void loginPlayerUnsuccessfulMessageTest() {
+        Selenium.loginPlayer();
+        Selenium.getUnsuccessfulLoginMessage();
+        String expectedResults = "Please enter username!";
+        Assert.assertNotEquals(Selenium.getUnsuccessfulLoginMessage(), expectedResults);
+
+    }
+
+    @Test
     public void loginModeratorPositiveTest() {
         Selenium.loginModerator();
         String expectedResults = "testemail@gmail.com";
@@ -43,6 +52,36 @@ public class SeleniumJunitLoginTest {
         String expectedResults = "Business";
         Assert.assertNotEquals(Selenium.getLoginResults(), expectedResults);
 
+    }
+
+    @Test
+    public void logoutUserPlayerPositiveTest() {
+        Selenium.loginPlayer();
+        Selenium.logoutUser();
+        String currentUrl = Selenium.browser.getCurrentUrl();
+        Assert.assertEquals(Selenium.POKER_URL, currentUrl);
+    }
+    @Test
+    public void logoutUserPlayerNegativeTest() {
+        Selenium.loginPlayer();
+        String currentUrl = Selenium.browser.getCurrentUrl();
+        Selenium.logoutUser();
+        Assert.assertNotEquals(Selenium.POKER_URL, currentUrl);
+    }
+
+    @Test
+    public void logoutUserModeratorPositiveTest() {
+        Selenium.loginModerator();
+        Selenium.logoutUser();
+        String currentUrl = Selenium.browser.getCurrentUrl();
+        Assert.assertEquals(Selenium.POKER_URL, currentUrl);
+    }
+    @Test
+    public void logoutUserModeratorNegativeTest() {
+        Selenium.loginModerator();
+        String currentUrl = Selenium.browser.getCurrentUrl();
+        Selenium.logoutUser();
+        Assert.assertNotEquals(Selenium.POKER_URL, currentUrl);
     }
 
 
