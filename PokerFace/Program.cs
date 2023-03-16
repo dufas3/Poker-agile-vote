@@ -5,6 +5,8 @@ using PokerFace.Data.Common;
 using PokerFace.Data.Hubs;
 using PokerFace.Data.Repositories;
 using PokerFace.Services;
+using PokerFace.Data.Entities;
+using PokerFace.Commands.Email;
 
 namespace PokerFace.Web
 {
@@ -34,6 +36,13 @@ namespace PokerFace.Web
             builder.Services.AddScoped<ISignalRService, SignalRService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
 
+
+            //email
+            var emailConfig = builder.Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig);
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
             //for adding static data 
             //builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
 
@@ -43,7 +52,7 @@ namespace PokerFace.Web
                                   policy =>
                                   {
                                       policy
-                                      .WithOrigins("https://pokerfaceapp-dev.azurewebsites.net")
+                                      .WithOrigins("http://localhost:3000")
                                       .AllowCredentials()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();
