@@ -27,10 +27,11 @@ namespace PokerFace.Services
                 RoomId = roomId.ToString()
             };
             var user = await userRepository.GetAsync(moderatorId);
+            var link = "http://localhost:3000/?room=" + roomId;
             user.RoomId = roomId.ToString();
 
-            var message = new Message(new string[] { "pokerfacebalandziai@gmail.com" }, "Test email", "This is a test.");
-            _emailSender.SendEmail(message);
+            var message = new Message(new string[] { user.Name }, "FESTO Scrum Poker", "Dear Moderator,\n\nYou have created new voting room, its unique link is: " + link + "\nPlease use it to access this room. This link can be shared with other players to access the same room.");
+            await _emailSender.SendEmailAsync(message);
 
             await sessionRepository.AddAsync(session);
             await userRepository.UpdateAsync(user);
