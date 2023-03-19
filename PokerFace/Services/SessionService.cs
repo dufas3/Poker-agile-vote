@@ -31,7 +31,7 @@ namespace PokerFace.Services
             user.RoomId = roomId.ToString();
 
             var message = new Message(new string[] { user.Name }, "FESTO Scrum Poker", "Dear Moderator,\n\nYou have created new voting room, its unique link is: " + link + "\nPlease use it to access this room. This link can be shared with other players to access the same room.");
-            _emailSender.SendEmail(message);
+            await _emailSender.SendEmailAsync(message);
 
             await sessionRepository.AddAsync(session);
             await userRepository.UpdateAsync(user);
