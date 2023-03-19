@@ -46,8 +46,8 @@ namespace PokerFace.Data.Hubs
                 await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, user.RoomId);
             }
             //deletes session but not sends an logout update //fix
-            //else
-                //await sessionService.LogoutSessionAsync(user.RoomId);
+            else
+                await sessionService.LogoutSessionAsync(user.RoomId);
 
         }
 

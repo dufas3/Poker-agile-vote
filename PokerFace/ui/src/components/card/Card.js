@@ -6,7 +6,9 @@ const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleOnClick = async () => {
-    //if (sessionState == 1) return;
+    console.log("handle set active card invoked!");
+    console.log("sessionState", sessionState);
+    if (sessionState == 1) return;
 
     try {
       let isSelectedBgs = document.querySelectorAll(".selected-bg-true");
@@ -20,22 +22,23 @@ const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
       });
     } catch (error) {}
 
-    // setTimeout(
-    //   function () {
-    //     if (!isSelected) {
-    //       setIsSelected(true);
-    //     } else {
-    //       setIsSelected(false);
-    //     }
-    //   }.bind(this),
-    //   55
-    // );
+    setTimeout(
+      function () {
+        if (!isSelected) {
+          setIsSelected(true);
+        } else {
+          setIsSelected(false);
+        }
+      }.bind(this),
+      55
+    );
 
-    await setUserSelectedCard({
+    let response = await setUserSelectedCard({
       userId: userId,
       cardId: cardId,
       roomId: roomId,
     });
+    console.log("setUserSelectedCard response", response);
   };
 
   return (
