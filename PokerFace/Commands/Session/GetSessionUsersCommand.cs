@@ -6,7 +6,7 @@ namespace PokerFace.Commands.Session
 {
     public class GetSessionUsersCommand : IRequest<List<UserDto>>
     {
-        public string Id { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class GetSessionUsersCommandHandler : IRequestHandler<GetSessionUsersCommand, List<UserDto>>
@@ -22,16 +22,17 @@ namespace PokerFace.Commands.Session
 
         public async Task<List<UserDto>> Handle(GetSessionUsersCommand request, CancellationToken cancellationToken)
         {
-            var users = await sessionRepository.GetSessionUsersAsync(request.Id);
+            var users = await sessionRepository.GetSessionUsersAsync(request.RoomId);
 
-            var userDtos = users.Select(x => x.ToUserDto()).ToList();
+            var userDtos = users.Select(x => x.ToDto()).ToList();
 
             foreach (var userDto in userDtos)
             {
-                var user = users.Where(x => x.Id == userDto.Id).FirstOrDefault();
+                var user = users.FirstOrDefault(x => x.Id == userDto.Id);
 
-                if (user.SelectedCardId != null) {
-                    userDto.SelectedCard = await cardsRepository.GetAsync(user.SelectedCardId.Value);
+                if (user.SelectedCardId != null)
+                {
+                    userDto.SelectedCard = await cardsRepository.GetCardAsync(user.SelectedCardId.Value);
                 }
             }
 

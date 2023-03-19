@@ -1,28 +1,26 @@
 import ConnectionUrl from "../common/connectionUrl";
 
-const LogoutUser = async (props) => {
+const LogoutUser = async ({ roomId, userId }) => {
+  const requestOptions = {
+    method: "Get",
+    headers: { "Content-Type": "application/json" },
+  };
 
-    const requestOptions = {
-        method: "Get",
-        headers: {"Content-Type": "application/json"},
-    };
+  if (!roomId || !userId) return;
 
-    if (!props) return;
+  const url = ConnectionUrl({ appendix: "/session/LogoutUser" });
+  url.searchParams.append("roomId", roomId);
+  url.searchParams.append("userId", userId);
 
-    const url = ConnectionUrl({appendix: "/session/LogoutUser"});
-    url.searchParams.append("roomId", props.roomId);
-    url.searchParams.append("userId", props.userId);
-
-
-    try {
-        const response = await fetch(url.toString(), requestOptions);
-        const isJson = response.headers
-            .get("content-type")
-            ?.includes("application/json");
-        const data = isJson && (await response.json());
-        return data;
-    } catch (error) {
-        return;
-    }
-}
-export default LogoutUser
+  try {
+    const response = await fetch(url.toString(), requestOptions);
+    const isJson = response.headers
+      .get("content-type")
+      ?.includes("application/json");
+    const data = isJson && (await response.json());
+    return data;
+  } catch (error) {
+    return;
+  }
+};
+export default LogoutUser;

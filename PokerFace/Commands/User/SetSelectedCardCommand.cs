@@ -7,6 +7,7 @@ namespace PokerFace.Commands.User
     {
         public int UserId { get; set; }
         public int CardId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class SetSelectedCardCommandHandler : IRequestHandler<SetSelectedCardCommand>
@@ -22,10 +23,8 @@ namespace PokerFace.Commands.User
 
         public async Task<Unit> Handle(SetSelectedCardCommand request, CancellationToken cancellationToken)
         {
-            await userRepository.SetSelectedCardAsync(request.UserId, request.CardId);
-
-            var roomId = await userRepository.GetRoomId(request.UserId);
-            await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, roomId);
+            await userRepository.SetSelectedCardAsync(request.UserId, request.CardId, request.RoomId);
+            await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, request.RoomId);
 
             return Unit.Value;
         }

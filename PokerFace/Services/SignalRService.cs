@@ -26,5 +26,17 @@ namespace PokerFace.Services
                 await hubContext.Clients.Client(connId).SendCoreAsync(methodName,new string[] {connId});
             }
         }
+
+        public async Task SendMessage(string methodName, string roomId, string args)
+        {
+            var users = await sessionRepository.GetSessionUsersAsync(roomId);
+
+            var ids = users.Select(x => x.ConnectionId).ToList();
+
+            foreach (var connId in ids)
+            {
+                await hubContext.Clients.Client(connId).SendCoreAsync(methodName, new string[] { connId, args });
+            }
+        }
     }
 }

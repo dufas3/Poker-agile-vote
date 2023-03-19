@@ -12,21 +12,19 @@ namespace PokerFace.Commands.Session
 
     public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommand>
     {
-        private readonly ISessionRepository sessionRepository;
+        private readonly ISessionService sessionService;
         private readonly ISignalRService signalRService;
 
-        public LogoutUserCommandHandler(ISessionRepository sessionRepository, ISignalRService signalRService)
+        public LogoutUserCommandHandler(ISessionService sessionService, ISignalRService signalRService)
         {
-            this.sessionRepository = sessionRepository;
+            this.sessionService = sessionService;
             this.signalRService = signalRService;
         }
 
         public async Task<Unit> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
         {
-            await sessionRepository.LogoutUserAsync(request.UserId, request.RoomId);
-
-            await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate,request.RoomId);
-
+            await sessionService.LogoutSessionUserAsync(request.RoomId, request.UserId);
+            await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, request.RoomId);
             return Unit.Value;
         }
     }

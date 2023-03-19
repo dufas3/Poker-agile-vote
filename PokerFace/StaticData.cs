@@ -7,10 +7,10 @@ namespace PokerFace
     {
         public StaticData(ApplicationDbContext context)
         {
-            if (context.Users.Count() != 0 && context.Cards.Count() != 0)
+            if (context.Moderators.Count() != 0 && context.Cards.Count() != 0)
                 return;
            
-            context.Users.Add(new User { Name = "testemail@gmail.com", Password = "testpassword123" });
+            context.Moderators.Add(new Moderator { Name = "testemail@gmail.com", Password = "testpassword123" });
 
             var cards = new List<Card>
             {

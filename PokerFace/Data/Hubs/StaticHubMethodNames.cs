@@ -7,5 +7,6 @@
         public static string SendUserCardSelectionUpdate = "UserCardSelectionUpdate";
         public static string SendActiveCardsUpdate = "ActiveCardsUpdate";
         public static string SendSessionStateUpdate = "SessionStateUpdate";
+        public static string SessionLogout = "SessionLogout";
     }
 }

@@ -1,9 +1,9 @@
 import Nav from "../header/Nav";
-import '../GlobalCSS.css'
+import "../GlobalCSS.css";
 import PlayerList from "./PlayerList";
 import VotingArea from "./VotingArea";
 import VotingControls from "./VotingControls";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GetCards from "../../api/get/getCards";
 import getSessionState from "../../api/get/getSessionState";
@@ -13,7 +13,7 @@ import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
 import getUser from "../../api/get/getUser";
-import {getUserId} from "../../common/UserId";
+import { getUserId, setUserId } from "../../common/UserId";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
@@ -41,38 +41,50 @@ const Poker = () => {
   }, []);
 
   useEffect(() => {
-    setRoomId(searchParams.get("room"));
+    setRoomId(searchParams.get("roomId"));
   }, [roomId]);
-  useEffect(()=>{
-    if(getUserId() == null){
-      if (searchParams.get("room") === undefined) {
-        setNavig(navigate("/Login", {replace: true}));
+  useEffect(() => {
+    if (getUserId() == null) {
+      if (searchParams.get("roomId") === undefined) {
+        setNavig(navigate("/Login", { replace: true }));
       } else {
-        setNavig(navigate("/Join?room=" + searchParams.get("room"), {replace: true}));
+        setNavig(
+          navigate("/Join?roomId=" + searchParams.get("roomId"), {
+            replace: true,
+          })
+        );
       }
     }
-  },[])
+  }, []);
+
+  useEffect(() => {
+    //to force rerender when response is awaited
+  }, [users]);
 
   const setUserList = async () => {
     let response = await GetSessionUsers({
-      id: searchParams.get("room"),
+      roomId: searchParams.get("roomId"),
     });
     if (response) setUsers(response);
   };
 
   const setSessionStateFromApi = async () => {
-    let response = await getSessionState({ roomId: searchParams.get("room") });
+    let response = await getSessionState({
+      roomId: searchParams.get("roomId"),
+    });
     setSessionState(response);
   };
   const setUpUser = async () => {
-    let response = await getUser({userId: getUserId()});
-    setUser(response)
+    let response = await getUser({
+      userId: getUserId(),
+      roomId: searchParams.get("roomId"),
+    });
+    console.log("set up user", response);
+    setUser(response);
   };
 
   const getCards = async () => {
-    let response = await GetCards({
-      roomId: searchParams.get("room"),
-    });
+    let response = await GetCards();
     if (response) {
       setCards(response);
     }
@@ -80,14 +92,14 @@ const Poker = () => {
 
   const getActiveCards = async () => {
     let activeCardsResponse = await GetActiveCards({
-      roomId: searchParams.get("room"),
+      roomId: searchParams.get("roomId"),
     });
     if (activeCardsResponse) {
       setActiveCards(activeCardsResponse);
     }
   };
 
-  //-----------------Event Listeners--------------------------------------
+  //-----------------Event Listeners-------------------------------------
   useEffect(() => {
     const getData = async () => {
       signalRConnection.on(MethodNames.PlayerListUpdate, () => {
@@ -115,24 +127,35 @@ const Poker = () => {
     getData();
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      signalRConnection.on(MethodNames.SessionLogout, () => {
+        console.log("ALLLO");
+        setUserId(undefined);
+        setNavig(navigate("/Login", { replace: true }));
+      });
+    };
+    getData();
+  }, []);
+
   return (
     <>
       {roomId && (
         <>
-          <Nav user = {user}/>
+          <Nav user={user} />
           <div className="poker">
             <div className="voting">
               <VotingArea
                 cards={activeCards}
-                userId={localStorage.getItem("userId")}
-                roomId={searchParams.get("room")}
+                userId={user.id}
+                roomId={searchParams.get("roomId")}
                 sessionState={sessionState}
                 userList={users}
               />
               {user.role == "moderator" ? (
                 <VotingControls
                   cards={cards}
-                  roomId={searchParams.get("room")}
+                  roomId={searchParams.get("roomId")}
                   activeCards={activeCards}
                   session={sessionState}
                   key={activeCards.join(",")}

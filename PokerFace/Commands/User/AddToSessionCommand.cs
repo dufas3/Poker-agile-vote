@@ -4,7 +4,6 @@ using PokerFace.Data.Hubs;
 
 namespace PokerFace.Commands.User
 {
-    //will create new user here
     public class AddToSessionCommand : IRequest<UserDto>
     {
         public string Name { get; set; }
@@ -29,13 +28,12 @@ namespace PokerFace.Commands.User
             if (user == null)
                 throw new BadHttpRequestException("no socket by that id");
             user.Name = request.Name;
-            user.RoomId = request.RoomId;
 
-            await userRepository.AddUserToSessionAsync(user, request.RoomId);
+            await userRepository.AddUserToSessionAsync(user);
 
             await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, request.RoomId);
 
-            return user.ToUserDto();
+            return user.ToDto();
         }
     }
 }

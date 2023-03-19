@@ -1,8 +1,8 @@
 import "./Poker.css";
 import Card from "../card/Card";
 import VotingSummary from "./VotingSummary";
-import './VotingArea.css'
-import '../GlobalCSS.css'
+import "./VotingArea.css";
+import "../GlobalCSS.css";
 
 const VotingArea = ({ sessionState, roomId, cards, userId, userList }) => {
   return (
@@ -13,12 +13,11 @@ const VotingArea = ({ sessionState, roomId, cards, userId, userList }) => {
             {cards.map((card) =>
               card.id < 8 ? (
                 <Card
-                  cardValue={{
-                    cardValue: card.value,
-                    cardId: card.id,
-                    userId: userId,
-                    roomId: roomId,
-                  }}
+                  cardValue={card.value}
+                  cardId={card.id}
+                  userId={userId}
+                  sessionState={sessionState}
+                  roomId={roomId}
                 />
               ) : (
                 " "
@@ -29,12 +28,11 @@ const VotingArea = ({ sessionState, roomId, cards, userId, userList }) => {
             {cards.map((card) =>
               card.id > 7 ? (
                 <Card
-                  cardValue={{
-                    cardValue: card.value,
-                    cardId: card.id,
-                    userId: userId,
-                    roomId: roomId,
-                  }}
+                  cardValue={card.value}
+                  cardId={card.id}
+                  userId={userId}
+                  sessionState={sessionState}
+                  roomId={roomId}
                 />
               ) : (
                 " "

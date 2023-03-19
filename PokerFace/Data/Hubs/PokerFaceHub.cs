@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Org.BouncyCastle.Asn1.Ocsp;
 using PokerFace.Data.Common;
+using PokerFace.Services;
 
 namespace PokerFace.Data.Hubs
 {
@@ -7,23 +9,24 @@ namespace PokerFace.Data.Hubs
     {
         private readonly IUserRepository userRepository;
         private readonly ISignalRService signalRService;
+        private readonly ISessionService sessionService;
 
-        public PokerFaceHub(IUserRepository userRepository, ISignalRService signalRService)
+        public PokerFaceHub(IUserRepository userRepository, ISignalRService signalRService, ISessionService sessionService)
         {
             this.userRepository = userRepository;
             this.signalRService = signalRService;
+            this.sessionService = sessionService;
         }
 
         [HubMethodName("ReceiveConnectSockets")]
-        public async Task ReceiveConnectSockets(string message)
+        public async Task ReceiveConnectSockets(int userId, string roomId)
         {
-            //message = userId
             try
             {
-                if (!string.IsNullOrEmpty(message))
-                    await userRepository.SetSocketId(Context.ConnectionId, int.Parse(message));
+                if (userId != 0)
+                    await userRepository.SetSocketId(Context.ConnectionId, userId, roomId);
                 else
-                    await userRepository.SetSocketId(Context.ConnectionId, 0);
+                    await userRepository.SetSocketId(Context.ConnectionId, 0, roomId);
             }
             catch
             {
@@ -31,15 +34,21 @@ namespace PokerFace.Data.Hubs
             }
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var user = await userRepository.GetAsync(Context.ConnectionId);
+            if (user == null)
+                return;
+
             if (!user.Name.Contains("@"))
             {
-                await userRepository.DeleteAsync(user);
+                await sessionService.LogoutSessionUserAsync(user.RoomId, user.Id);
                 await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, user.RoomId);
             }
-            //else handle moderator log out
+            //deletes session but not sends an logout update //fix
+            //else
+                //await sessionService.LogoutSessionAsync(user.RoomId);
+
         }
 
         [HubMethodName("PlayerListUpdate")]

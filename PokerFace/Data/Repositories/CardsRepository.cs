@@ -13,27 +13,19 @@ namespace PokerFace.Data.Repositories
             this.context = context;
         }
 
+        public async Task<Card> GetCardAsync(int id)
+        {
+            return await Task.Run(() => StaticSessionData.AllCards.FirstOrDefault(x => x.Id == id));
+        }
+
         public async Task<List<Card>> GetCardsAsync()
         {
             return await context.Cards.ToListAsync();
-
-        } 
-
-        public async Task SetActiveUserCardAsync(int cardId, int userId)
-        {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null)
-                throw new BadHttpRequestException("no user");
-
-            var card = context.Cards.Where(x => x.Id == cardId).First();
-
-            user.SelectedCardId = card.Id;
-            await context.SaveChangesAsync();
         }
 
-        public async Task<Card> GetAsync(int cardId)
+        public async Task SetCardsAsync()
         {
-            return await context.Cards.Where(x => x.Id == cardId).FirstOrDefaultAsync();
+            StaticSessionData.AllCards = await GetCardsAsync();
         }
     }
 }

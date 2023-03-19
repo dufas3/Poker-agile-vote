@@ -1,6 +1,6 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const GetConnectionId = async ({ userId }) => {
+const GetConnectionId = async ({ userId, roomId }) => {
   if (!userId) return;
 
   const requestOptions = {
@@ -10,6 +10,7 @@ const GetConnectionId = async ({ userId }) => {
 
   const url = ConnectionUrl({ appendix: "/user/getModerator" });
   url.searchParams.append("userId", userId);
+  url.searchParams.append("roomId", roomId);
 
   try {
     const response = await fetch(url.toString(), requestOptions);

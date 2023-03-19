@@ -7,6 +7,7 @@ namespace PokerFace.Commands.User
     public class GetSelectedCardCommand : IRequest<Card>
     {
         public int UserId { get; set; }
+        public string RoomId { get; set; }
     }
 
     public class GetSelectedCardCommandHanlder : IRequestHandler<GetSelectedCardCommand, Card>
@@ -20,7 +21,7 @@ namespace PokerFace.Commands.User
 
         public async Task<Card> Handle(GetSelectedCardCommand request, CancellationToken cancellationToken)
         {
-            return await userRepository.GetSelectedCardAsync(request.UserId);
+            return await userRepository.GetSelectedCardAsync(request.UserId, request.RoomId);
         }
     }
 }

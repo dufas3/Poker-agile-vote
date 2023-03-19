@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokerFace.Data.Common;
-using PokerFace.Data.Entities;
+using PokerFace.Data.SessionModels;
 
 namespace PokerFace.Data.Repositories
 {
@@ -13,68 +13,40 @@ namespace PokerFace.Data.Repositories
             this.context = context;
         }
 
-        public async Task<List<Session>> GetAllAsync()
-        {
-            return await Task.FromResult(context.Sessions.ToList());
-        }
-
         public async Task<List<User>> GetSessionUsersAsync(string roomId)
         {
-            var session = await GetByRoomIdAsync(roomId);
-            if (session == null)
-                throw new BadHttpRequestException("No session by that id");
-
-            var users = new List<User>();
-
-            users = await Task.FromResult(context.Users.Where(x => x.RoomId == roomId).ToList());
-
-            return users;
+            return await StaticSessionData.GetSessionUsersAsync(roomId);
         }
 
-        public async Task<Session> GetAsync(int id)
+        public async Task<Session> GetByRoomIdAsync(string roomId)
         {
-            return await Task.FromResult(context.Sessions.Where(x => x.Id == id).First());
+            return await StaticSessionData.GetSessionAsync(roomId);
         }
 
-        public async Task<Session> GetByRoomIdAsync(string id)
-        {
-            return await Task.FromResult(context.Sessions.Where(x => x.RoomId == id).First());
-        }
-
-        public async Task AddAsync(Session session)
+        public async Task AddAsync(Entities.Session session)
         {
             await context.Sessions.AddAsync(session);
             await context.SaveChangesAsync();
         }
 
-        public async Task LogoutSessionAsync(string roomId)
+        public async Task AddAsync(Entities.Moderator moderator)
         {
-            var session = await GetByRoomIdAsync(roomId);
-
-            if (session == null)
-                throw new BadHttpRequestException("No session by that id");
-
-            var users = await Task.FromResult(context.Users.Where(x => x.RoomId == roomId).ToList());
-
-            context.Users.RemoveRange(users);
-            context.Sessions.Remove(session);
-
-            await context.SaveChangesAsync();
+            var session = await GetSessionFromDb(moderator.RoomId);
+            StaticSessionData.AddSession(moderator, session.Id);
         }
 
-        public async Task<List<Card>> GetUserSelectedCardsAsync(string roomId)
+        public async Task<List<Entities.Card>> GetSessionUsersSelectedCardAsync(string roomId)
         {
-            var users = await GetSessionUsersAsync(roomId);
+            var users = await StaticSessionData.GetSessionUsersAsync(roomId);
 
-            var cards = new List<Card>();
+            var cards = new List<Entities.Card>();
 
             foreach (var user in users)
             {
-                //not selected card
                 if (user.SelectedCardId == null)
                     continue;
 
-                var card = await context.Cards.FirstOrDefaultAsync(x => x.Id == user.SelectedCardId);
+                var card = StaticSessionData.AllCards.Where(x => x.Id == user.SelectedCardId).FirstOrDefault();
                 cards.Add(card);
             }
 
@@ -95,62 +67,30 @@ namespace PokerFace.Data.Repositories
         {
             var session = await GetByRoomIdAsync(roomId);
 
-            if (session == null)
-                throw new BadHttpRequestException("No session by that id");
-
             session.State = state;
 
-            context.SaveChanges();
-        }
-
-        public async Task ClearVotes(string roomId)
-        {
-            var session = await GetByRoomIdAsync(roomId);
-
-            if (session == null)
-                throw new BadHttpRequestException("No session by that id");
-
-            var users = new List<User>();
-            foreach (var id in session.UserIds)
-            {
-                var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
-                if (user == null)
-                    continue;
-
-                user.SelectedCardId = null;
-                users.Add(user);
-            }
-            context.Users.UpdateRange(users);
-
-            await context.SaveChangesAsync();
+            await StaticSessionData.SaveChangesAsync(session, roomId);
         }
 
         public async Task SetActiveCardsAsync(string roomId, List<int> cardIds)
         {
             var session = await GetByRoomIdAsync(roomId);
 
-            if (session == null)
-                throw new BadHttpRequestException("There's no session with this Id!");
-
             session.CardIds.Clear();
             session.CardIds.AddRange(cardIds);
 
-            context.Sessions.Update(session);
-            await context.SaveChangesAsync();
+            await StaticSessionData.SaveChangesAsync(session, roomId);
         }
 
-        public async Task<List<Card>> GetActiveCardsAsync(string roomId)
+        public async Task<List<Entities.Card>> GetActiveCardsAsync(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
 
-            if (session == null)
-                throw new BadHttpRequestException("There's no session with this Id!");
-
-            var activeCards = new List<Card>();
+            var activeCards = new List<Entities.Card>();
 
             foreach (var id in session.CardIds)
             {
-                var card = await context.Cards.FirstOrDefaultAsync(x => x.Id == id);
+                var card = StaticSessionData.AllCards.Where(x => x.Id == id).FirstOrDefault();
                 if (card != null)
                     activeCards.Add(card);
             }
@@ -158,26 +98,28 @@ namespace PokerFace.Data.Repositories
             return activeCards;
         }
 
-        public async Task LogoutUserAsync(int userId, string roomId)
+        public async Task RemoveSession(string roomId)
         {
-            var session = await GetByRoomIdAsync(roomId);
-            if (session == null)
-                throw new BadHttpRequestException("There's no session with this Id!");
+            await StaticSessionData.RemoveSessionAsync(roomId);
+        }
 
-            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null)
-                throw new BadHttpRequestException("There's no user with this Id!");
-
-            session.UserIds.Remove(user.Id);
-
-            context.Update(session);
-            context.Users.Remove(user);
+        public async Task UpdateTimeStampAsync(string roomId, DateTime time)
+        {
+            var session = await context.Sessions.FirstOrDefaultAsync(x => x.RoomId == roomId);
+            session.LastLogin = time;
             await context.SaveChangesAsync();
         }
 
-        public async Task<int> GetModeratorId(string roomId)
+        public async Task<Entities.Session> GetSessionFromDb(string roomId)
         {
-            return context.Sessions.FirstOrDefault(x => x.RoomId == roomId).ModeratorId;
+            return await context.Sessions.FirstOrDefaultAsync(x => x.RoomId == roomId);
         }
+
+        public async Task UpdateAsync(Session session)
+        {
+            await StaticSessionData.SaveChangesAsync(session, session.RoomId);
+        }
+
+
     }
 }

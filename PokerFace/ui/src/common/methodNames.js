@@ -4,4 +4,5 @@ export const MethodNames = Object.freeze({
   UserCardSelectionUpdate: "usercardselectionupdate",
   ActiveCardsUpdate: "activecardsupdate",
   SessionStateUpdate: "sessionstateupdate",
+  SessionLogout: "sessionlogout",
 });
