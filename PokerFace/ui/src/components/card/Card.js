@@ -1,38 +1,15 @@
-import { useState } from "react";
 import "./Card.css";
 import setUserSelectedCard from "../../api/set/setUserSelectedCard";
+import {getSelectedCard, setSelectedCard} from "./SelectedCard";
+import {useEffect} from "react";
 
 const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
-  const [isSelected, setIsSelected] = useState(false);
 
   const handleOnClick = async () => {
     console.log("handle set active card invoked!");
     console.log("sessionState", sessionState);
     if (sessionState == 1) return;
-
-    try {
-      let isSelectedBgs = document.querySelectorAll(".selected-bg-true");
-      let isSelectedTxts = document.querySelectorAll(".selected-true");
-
-      isSelectedBgs.forEach((isSelectedBg) => {
-        isSelectedBg.classList.remove("selected-bg-true");
-      });
-      isSelectedTxts.forEach((isSelectedTxt) => {
-        isSelectedTxt.classList.remove("selected-true");
-      });
-    } catch (error) {}
-
-    setTimeout(
-      function () {
-        if (!isSelected) {
-          setIsSelected(true);
-        } else {
-          setIsSelected(false);
-        }
-      }.bind(this),
-      55
-    );
-
+    setSelectedCard(cardId)
     let response = await setUserSelectedCard({
       userId: userId,
       cardId: cardId,
@@ -40,29 +17,32 @@ const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
     });
     console.log("setUserSelectedCard response", response);
   };
+  useEffect(()=>{
+    setSelectedCard("")
+  },[sessionState])
 
   return (
-    <div className={!isSelected ? "card-css" : "card-css selected-bg-true"}>
+    <div className={getSelectedCard() == cardId? "card-css selected-bg-true" : "card-css"}>
       {cardValue.length > 3 ? (
         <button className="card-button" onClick={handleOnClick}>
           <h6
-            className={!isSelected ? "number-top" : "number-top selected-true"}
+            className={getSelectedCard() == cardId  ? "number-top selected-true" : "number-top"}
           >
             {cardValue}
           </h6>
 
           <div
             className={
-              !isSelected ? "card-middle" : "card-middle selected-bg-true"
+              getSelectedCard() == cardId ? "card-middle selected-bg-true" : "card-middle"
             }
           >
-            <h6 className={!isSelected ? "number" : "number selected-true"}>
+            <h6 className={getSelectedCard() == cardId ? "number selected-true" : "number"}>
               {cardValue}
             </h6>
           </div>
           <h6
             className={
-              !isSelected ? "number-bottom" : "number-bottom selected-true"
+              getSelectedCard() == cardId ? "number-bottom selected-true" : "number-bottom"
             }
           >
             {cardValue}
@@ -72,23 +52,23 @@ const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
         <button className="card-button" onClick={handleOnClick}>
           <h5
             className={
-              !isSelected ? "number-top1" : "number-top1 selected-true"
+              getSelectedCard() == cardId ? "number-top1 selected-true" : "number-top1"
             }
           >
             {cardValue}
           </h5>
           <div
             className={
-              !isSelected ? "card-middle" : "card-middle selected-bg-true"
+              getSelectedCard() == cardId ? "card-middle selected-bg-true" : "card-middle"
             }
           >
-            <h2 className={!isSelected ? "number" : "number selected-true"}>
+            <h2 className={getSelectedCard() == cardId ? "number selected-true" : "number"}>
               {cardValue}
             </h2>
           </div>
           <h5
             className={
-              !isSelected ? "number-bottom1 " : "number-bottom1 selected-true"
+              getSelectedCard() == cardId ? "number-bottom1 selected-true" : "number-bottom1"
             }
           >
             {cardValue}
