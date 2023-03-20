@@ -1,6 +1,7 @@
 import "./Card.css";
 import setUserSelectedCard from "../../api/set/setUserSelectedCard";
 import {getSelectedCard, setSelectedCard} from "./SelectedCard";
+import {useEffect} from "react";
 
 const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
 
@@ -16,6 +17,9 @@ const Card = ({ cardId, cardValue, userId, sessionState, roomId }) => {
     });
     console.log("setUserSelectedCard response", response);
   };
+  useEffect(()=>{
+    setSelectedCard("")
+  },[sessionState])
 
   return (
     <div className={getSelectedCard() == cardId? "card-css selected-bg-true" : "card-css"}>
