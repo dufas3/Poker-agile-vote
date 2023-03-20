@@ -6,6 +6,7 @@ import LoadingScreen from "../loadingScreen/LoadingScreen";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { setUserId } from "../../common/UserId";
+import Nav from "../header/Nav";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -58,6 +59,7 @@ const Login = () => {
   };
   return (
     <>
+      <Nav user={null}/>
       <div className="center">
         {isLoading ? <LoadingScreen /> : ""}
         <div className="login">

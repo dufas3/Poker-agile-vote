@@ -9,6 +9,7 @@ import { signalRConnection } from "../../api/signalR/signalRHub";
 import * as signalR from "@microsoft/signalr";
 import { setUserId } from "../../common/UserId";
 import GetSessionUsers from "../../api/get/getSessionUsers";
+import Nav from "../header/Nav";
 
 const Join = () => {
   const [name, setName] = useState("");
@@ -31,7 +32,7 @@ const Join = () => {
     }
   }, []);
 
-  const setError = ({ message }) => {
+  const setError = (message) => {
     setErrorMessage(message);
     setErrors(true);
     setIsLoading(false);
@@ -102,6 +103,7 @@ const Join = () => {
 
   return (
     <>
+      <Nav user={null}/>
       {isLoading ? <LoadingScreen /> : ""}
       <body className="center">
         <div className="register">
