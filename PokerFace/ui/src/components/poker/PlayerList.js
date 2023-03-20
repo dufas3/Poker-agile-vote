@@ -41,33 +41,6 @@ const PlayerList = ({sessionState, userList}) => {
         setUsers(userList)
     }, [state, userList])
 
-    useEffect(() => {
-        let allVoted = true;
-
-        if (userList.length > 1) {
-            userList.map((user) => {
-                if (!user.name.includes("@gmail.com")) {
-                    if (user.selectedCard == null) {
-                        allVoted = false;
-
-                    }
-                }
-            })
-        } else {
-            allVoted = false
-        }
-        if (allVoted) {
-            const stateChange = async () =>{
-                await setSessionState({
-                    roomId: searchParams.get("room"),
-                    state: SessionState.FINILIZESTATE,
-                });
-            }
-            stateChange();
-        }
-    }, [userList])
-
-
     return (
         <div className="player-list border rounded bg-light">
             <h6 className="bg-primary border border-primary rounded-top w-100 p-4 text-center text-white">
@@ -77,7 +50,7 @@ const PlayerList = ({sessionState, userList}) => {
                 <div className="mt-2  border-top border-bottom user align-center-between">
                     <div className="align-center-start">
                         <div className="icon m-lg-1 align-center">
-                            {user.name.includes("@gmail.com")
+                            {user.name.includes("@")
                                 ? <><img src={UserIcon} className="user-icon"/><i
                                     className="fa-solid fa-circle moderator-indicator"></i></> :
                                 <><img src={UserIcon} className="user-icon"/><i
@@ -86,7 +59,7 @@ const PlayerList = ({sessionState, userList}) => {
                         <h6>
                             {user.name}
                             {user.cardId != "0"
-                                ? user.name.includes("@gmail.com")
+                                ? user.name.includes("@")
                                     ? ""
                                     : user.selectedCard && (
                                     <i className="fa-regular fa-circle-check text-primary"></i>

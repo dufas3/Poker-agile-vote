@@ -14,12 +14,14 @@ import { signalRConnection } from "../../api/signalR/signalRHub";
 import { useSearchParams } from "react-router-dom";
 import getUser from "../../api/get/getUser";
 import { getUserId, setUserId } from "../../common/UserId";
+import setSessionState from "../../api/set/setSessionState";
+import {SessionState} from "../../common/sessionState";
 
 const Poker = () => {
   const [cards, setCards] = useState([]);
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState([]);
-  const [sessionState, setSessionState] = useState(0);
+  const [state, setState] = useState(0);
   const [activeCards, setActiveCards] = useState([]);
   const [roomId, setRoomId] = useState("");
   const [searchParams] = useSearchParams();
@@ -74,8 +76,9 @@ const Poker = () => {
       roomId: searchParams.get("roomId"),
     });
     console.log("setSessionStateFromApi response", response);
-    setSessionState(response);
+    setState(response);
   };
+
   const setUpUser = async () => {
     let response = await getUser({
       userId: getUserId(),
@@ -102,6 +105,36 @@ const Poker = () => {
       setActiveCards(activeCardsResponse);
     }
   };
+  //---------------CHANGES STATE IF ALL PLAYERS VOTED---------------------
+  useEffect(() => {
+    let allVoted = true;
+
+    if (users.length > 1) {
+      users.map((user) => {
+
+        if (!user.name.includes("@")) {
+          if (user.selectedCard == null) {
+            allVoted = false;
+          }
+        }
+      })
+    } else {
+      allVoted = false
+    }
+    if (allVoted) {
+      const stateChange = async () =>{
+        await setSessionState({
+          roomId: searchParams.get("roomId"),
+          state: SessionState.FINILIZESTATE,
+        });
+        let response = await getSessionState({
+          roomId: searchParams.get("roomId"),
+        });
+        console.log("getSessionState: ", response)
+      }
+      stateChange();
+    }
+  }, [users])
 
   //-----------------Event Listeners-------------------------------------
   useEffect(() => {
@@ -113,7 +146,6 @@ const Poker = () => {
     };
     getData();
   }, []);
-
   useEffect(() => {
     const getData = async () => {
       signalRConnection.on(MethodNames.SessionStateUpdate, () => {
@@ -144,7 +176,7 @@ const Poker = () => {
     };
     getData();
   }, []);
-
+//---------------------------------------------------------------------------
   return (
     <>
       {roomId && (
@@ -156,7 +188,7 @@ const Poker = () => {
                 cards={activeCards}
                 userId={user.id}
                 roomId={searchParams.get("roomId")}
-                sessionState={sessionState}
+                sessionState={state}
                 userList={users}
               />
               {user.role == "moderator" ? (
@@ -164,14 +196,14 @@ const Poker = () => {
                   cards={cards}
                   roomId={searchParams.get("roomId")}
                   activeCards={activeCards}
-                  session={sessionState}
+                  session={state}
                   key={activeCards.join(",")}
                 />
               ) : (
                 ""
               )}
             </div>
-            <PlayerList sessionState={sessionState} userList={users} />
+            <PlayerList sessionState={state} userList={users} />
           </div>
         </>
       )}

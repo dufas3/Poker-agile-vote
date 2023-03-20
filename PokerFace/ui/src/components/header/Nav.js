@@ -23,7 +23,7 @@ const Nav = ({ user }) => {
         <div className="container-fluid">
           <a className="navbar-brand">Festo Scrum Poker</a>
           <div className="d-flex justify-content-end">
-            {!user.name ? (
+            {!user ? (
               <Link to="/Login">
                 <a className="btn mx-5" id="H1">
                   <i className="bi bi-person-fill" />
@@ -42,7 +42,7 @@ const Nav = ({ user }) => {
                       onClick={() => {
                         navigator.clipboard.writeText(
                           WebsiteUrl +
-                            "/Join?roomId=" +
+                            "/?roomId=" +
                             searchParams.get("roomId")
                         );
                       }}

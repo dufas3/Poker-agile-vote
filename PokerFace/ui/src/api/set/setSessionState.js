@@ -1,7 +1,6 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
 const SetSessionState = async ({ roomId, state }) => {
-  if (!roomId || !state) return;
 
   const requestOptions = {
     method: "Post",
