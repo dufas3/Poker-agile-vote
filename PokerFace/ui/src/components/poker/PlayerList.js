@@ -67,7 +67,7 @@ const PlayerList = ({sessionState, userList}) => {
                                 : ""}
                         </h6>
                     </div>
-                    {user.name.includes("@gmail.com") ? (
+                    {user.name.includes("@") ? (
                         ""
                     ) : state == 1 ? (
                         <h5

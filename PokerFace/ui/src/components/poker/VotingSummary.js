@@ -6,7 +6,7 @@ const VotingSummary = (props) => {
     let totalVotes = props.data.users.length - 1;
 
     props.data.users.forEach((user) => {
-        if (!user.name.includes("@gmail.com")) {
+        if (!user.name.includes("@")) {
             if (user.selectedCard != null) {
                 cards.push(user.selectedCard.value);
             } else {
