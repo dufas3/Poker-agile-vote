@@ -32,7 +32,7 @@ const Join = () => {
     }
   }, []);
 
-  const setError = ({ message }) => {
+  const setError = (message) => {
     setErrorMessage(message);
     setErrors(true);
     setIsLoading(false);
