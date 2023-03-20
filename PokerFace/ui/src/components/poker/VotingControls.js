@@ -9,6 +9,7 @@ import SetActiveCards from "../../api/set/setActiveCards";
 const VotingControls = ({ cards, activeCards, roomId }) => {
   const [inSettings, setInSettings] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [isCheckAll, setIsCheckAll] = useState(false);
 
   useEffect(() => {
     setUpAlreadyActiveCards();
@@ -18,8 +19,13 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     setUpAlreadyActiveCards();
   }, []);
 
-  const handleSetAllCards = () => {
+  const handleSetAllCards = e => {
     //  To Do (set all cards for players to vote)
+    setIsCheckAll(!isCheckAll);
+    setSelectedCheckboxes(cards.map(li => li.id.toString()));
+    if (isCheckAll) {
+      setSelectedCheckboxes([]);
+    }
   };
 
   const handleFlipCards = async () => {
@@ -157,9 +163,9 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
                   className="form-check-input"
                   type="checkbox"
                   checked={selectedCheckboxes.includes(card.id.toString())}
-                  id="flexCheckDefault"
+                  id={card.value}
                 />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
+                <label className="form-check-label" htmlFor={card.value}>
                   {card.value}
                 </label>
               </div>
