@@ -31,10 +31,12 @@ namespace PokerFace.Web
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ICardsRepository, CardsRepository>();
+            builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 
             //services
             builder.Services.AddScoped<ISignalRService, SignalRService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
+        
 
 
             //email
@@ -53,7 +55,7 @@ namespace PokerFace.Web
                                   policy =>
                                   {
                                       policy
-                                      .WithOrigins("https://pokerface-dev.azurewebsites.net")
+                                      .WithOrigins("http://localhost:3000")
                                       .AllowCredentials()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();

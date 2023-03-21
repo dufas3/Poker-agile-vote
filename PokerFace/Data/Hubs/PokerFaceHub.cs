@@ -78,5 +78,12 @@ namespace PokerFace.Data.Hubs
             if (Context.ConnectionId == socketId)
                 await Clients.Client(socketId).SendAsync("SessionStateUpdate");
         }
+
+        [HubMethodName("SettingsUpdate")]
+        public async Task SendSettingsUpdate(string socketId)
+        {
+            if (Context.ConnectionId == socketId)
+                await Clients.Client(socketId).SendAsync("SettingsUpdate");
+        }
     }
 }

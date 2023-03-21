@@ -6,10 +6,11 @@ import setSessionState from "../../api/set/setSessionState";
 import ClearSessionVotes from "../../api/clearSessionVotes";
 import SetActiveCards from "../../api/set/setActiveCards";
 
-const VotingControls = ({ cards, activeCards, roomId }) => {
+const VotingControls = ({ cards, activeCards, roomId, settings }) => {
   const [inSettings, setInSettings] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
+  const [settingsCheckBox, setSettingsCheckbox] = useState([])
 
   useEffect(() => {
     setUpAlreadyActiveCards();
@@ -17,6 +18,7 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
 
   useEffect(() => {
     setUpAlreadyActiveCards();
+    setSettingsCheckbox(settings)
   }, []);
 
   const handleSetAllCards = e => {
@@ -50,6 +52,9 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     });
     await ClearSessionVotes({ roomId: roomId });
   };
+  const handleSettingsCheckbox = () => {
+    console.log(settings)
+  }
 
   const handleCheckboxChange = (event, id) => {
     if (event) {
@@ -143,6 +148,17 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
       ) : (
         <div className="voting-container border rounded bg-light">
           <div className="options">
+            <input
+                className="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDefault"
+                onClick={handleSettingsCheckbox}
+            />
+            <label className="form-check-label" htmlFor="flexCheckDefault">
+              Auto Reveal
+            </label>
+
             <div className="form-check border rounded bg-light">
               <input
                 className="form-check-input"
@@ -178,6 +194,7 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
             >
               <h6 className="center-text">Save</h6>
             </button>
+
             <button
               onClick={handleChangeCardsCancel}
               className="w-25 btn btn-outline-primary"

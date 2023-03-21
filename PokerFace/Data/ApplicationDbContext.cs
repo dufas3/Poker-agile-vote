@@ -19,5 +19,6 @@ namespace PokerFace.Data
         public DbSet<Moderator> Moderators { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<Setting> Settings { get; set; }
     }
 }
