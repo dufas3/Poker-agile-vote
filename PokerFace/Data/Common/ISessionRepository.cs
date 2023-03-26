@@ -6,7 +6,7 @@ namespace PokerFace.Data.Common
     public interface ISessionRepository
     {
         Task AddAsync(Entities.Session session);
-        Task AddAsync(Entities.Moderator moderator);
+        Task AddAsync(Entities.Moderator moderator, List<Entities.Setting> settings);
 
         Task UpdateAsync(Session session);
 

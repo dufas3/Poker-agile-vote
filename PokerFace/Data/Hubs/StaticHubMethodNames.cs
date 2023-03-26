@@ -8,5 +8,6 @@
         public static string SendActiveCardsUpdate = "ActiveCardsUpdate";
         public static string SendSessionStateUpdate = "SessionStateUpdate";
         public static string SessionLogout = "SessionLogout";
+        public static string SettingsUpdate = "SettingsUpdate";
     }
 }
