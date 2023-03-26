@@ -10,5 +10,8 @@ namespace PokerFace.Controllers
     {
         [HttpGet]
         public async Task<ActionResult> GetSettings([FromQuery] GetSettingsCommand command) => await SendMessage(command);
+
+        [HttpPost]
+        public async Task<ActionResult> SetSettings([FromBody] SetSettingsCommand command) => await SendMessage(command);
     }
 }

@@ -1,17 +1,17 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const SetSettings = async ({ roomId, settings }) => {
+const SetSettings = async ({ roomId, ids }) => {
 
     const requestOptions = {
         method: "Post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             roomId: roomId,
-            settings: settings,
+            ids: ids,
         }),
     };
 
-    const url = ConnectionUrl({ appendix: "/session/SetSessionState" });
+    const url = ConnectionUrl({ appendix: "/settings/setSettings" });
     try {
         const response = await fetch(url.toString(), requestOptions);
         const isJson = response.headers

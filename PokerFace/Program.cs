@@ -55,7 +55,7 @@ namespace PokerFace.Web
                                   policy =>
                                   {
                                       policy
-                                      .WithOrigins("http://localhost:3000")
+                                      .WithOrigins("https://pokerface-dev.azurewebsites.net")
                                       .AllowCredentials()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();

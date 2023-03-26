@@ -23,10 +23,16 @@ namespace PokerFace.Data.Repositories
            return await context.Settings.ToListAsync();
         }
 
-        public async Task SetSettingsAsync(List<Setting> settings, string roomId)
+        public async Task SetSettingsAsync(List<int> ids, string roomId)
         {
             var session = await StaticSessionData.GetSessionAsync(roomId);
-            session.Settings = settings;
+
+
+            foreach (Setting setting in session.Settings)
+            {
+                if (ids.Contains(setting.Id)) setting.IsActive = true; 
+                else setting.IsActive = false; 
+            }
             await StaticSessionData.SaveChangesAsync(session, roomId);
         }
     }

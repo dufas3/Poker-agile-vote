@@ -6,6 +6,6 @@ namespace PokerFace.Data.Common
     {
         Task<List<Setting>> GetSettingsAsync(string roomId);
         Task<List<Setting>> GetSettingsAsync();
-        Task SetSettingsAsync(List<Setting> settings, string roomId);
+        Task SetSettingsAsync(List<int> ids, string roomId);
     }
 }

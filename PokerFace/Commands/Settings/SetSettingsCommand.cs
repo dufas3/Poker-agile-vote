@@ -7,7 +7,7 @@ namespace PokerFace.Commands.Settings
 {
     public class SetSettingsCommand : IRequest
     {
-        public List<Setting> Settings { get; set; }
+        public List<int> Ids { get; set; }
         public string RoomId { get; set; }
 
     }
@@ -25,7 +25,7 @@ namespace PokerFace.Commands.Settings
 
         public async Task<Unit> Handle(SetSettingsCommand request, CancellationToken cancellationToken)
         {
-            await settingsRepository.SetSettingsAsync(request.Settings, request.RoomId);
+            await settingsRepository.SetSettingsAsync(request.Ids, request.RoomId);
             await signalRService.SendMessage(StaticHubMethodNames.SettingsUpdate, request.RoomId);
             return Unit.Value;
         }

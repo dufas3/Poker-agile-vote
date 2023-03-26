@@ -17,6 +17,7 @@ import {getUserId, setUserId} from "../../common/UserId";
 import setSessionState from "../../api/set/setSessionState";
 import {SessionState} from "../../common/sessionState";
 import getSettings from "../../api/get/getSettings";
+import {SettingsType} from "../../common/settingsType";
 
 const Poker = () => {
     const [cards, setCards] = useState([]);
@@ -70,7 +71,6 @@ const Poker = () => {
         let response = await GetSessionUsers({
             roomId: searchParams.get("roomId"),
         });
-        console.log("GetSessionUsers response", response);
         if (response) setUsers(response);
     };
 
@@ -78,7 +78,6 @@ const Poker = () => {
         let response = await getSessionState({
             roomId: searchParams.get("roomId"),
         });
-        console.log("setSessionStateFromApi response", response);
         setState(response);
     };
 
@@ -87,13 +86,11 @@ const Poker = () => {
             userId: getUserId(),
             roomId: searchParams.get("roomId"),
         });
-        console.log("getUser response", response);
         setUser(response);
     };
 
     const getCards = async () => {
         let response = await GetCards();
-        console.log("GetCards response", response);
         if (response) {
             setCards(response);
         }
@@ -103,32 +100,31 @@ const Poker = () => {
         let activeCardsResponse = await GetActiveCards({
             roomId: searchParams.get("roomId"),
         });
-        console.log("GetActiveCards response", activeCardsResponse);
         if (activeCardsResponse) {
             setActiveCards(activeCardsResponse);
         }
     };
     const updateSettings = async () => {
         let response = await getSettings({roomId: searchParams.get("roomId")});
-        console.log("aaaaa ",response);
         setSettings(response);
     }
     //---------------CHANGES STATE IF ALL PLAYERS VOTED---------------------
     useEffect(() => {
         let allVoted = true;
+        console.log("Auto reveal: ", settings.filter((x) => x.name === SettingsType.AutoReveal)[0]?.isActive)
+        if (!(settings.filter((x) => x.name === SettingsType.AutoReveal)[0]?.isActive)) return;
+            if (users.length > 1) {
+                users.map((user) => {
 
-        if (users.length > 1) {
-            users.map((user) => {
-
-                if (!user.name.includes("@")) {
-                    if (user.selectedCard == null) {
-                        allVoted = false;
+                    if (!user.name.includes("@")) {
+                        if (user.selectedCard == null) {
+                            allVoted = false;
+                        }
                     }
-                }
-            })
-        } else {
-            allVoted = false
-        }
+                })
+            } else {
+                allVoted = false
+            }
         if (allVoted) {
             const stateChange = async () => {
                 await setSessionState({
@@ -138,7 +134,6 @@ const Poker = () => {
                 let response = await getSessionState({
                     roomId: searchParams.get("roomId"),
                 });
-                console.log("getSessionState: ", response)
             }
             stateChange();
         }
@@ -148,7 +143,6 @@ const Poker = () => {
     useEffect(() => {
         const getData = async () => {
             signalRConnection.on(MethodNames.PlayerListUpdate, () => {
-                console.log("PlayerListUpdate Event!");
                 setUserList();
             });
         };
@@ -157,7 +151,6 @@ const Poker = () => {
     useEffect(() => {
         const getData = async () => {
             signalRConnection.on(MethodNames.SessionStateUpdate, () => {
-                console.log("SessionStateUpdate Event!");
                 setSessionStateFromApi();
             });
         };
@@ -167,8 +160,8 @@ const Poker = () => {
     useEffect(() => {
         const getData = async () => {
             signalRConnection.on(MethodNames.ActiveCardsUpdate, () => {
-                console.log("ActiveCardsUpdate Event!");
                 getActiveCards();
+                updateSettings();
             });
         };
         getData();
@@ -177,7 +170,6 @@ const Poker = () => {
     useEffect(() => {
         const getData = async () => {
             signalRConnection.on(MethodNames.SessionLogout, () => {
-                console.log("SessionLogout Event!");
                 setUserId(undefined);
                 setNavig(navigate("/Login", {replace: true}));
             });
@@ -187,7 +179,6 @@ const Poker = () => {
     useEffect(() => {
         const getDate = async () => {
             signalRConnection.on(MethodNames.SettingsUpdate, () => {
-                console.log("Settings update!");
                 updateSettings();
             });
         }
