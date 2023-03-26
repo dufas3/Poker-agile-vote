@@ -51,7 +51,7 @@ namespace PokerFace.Services
             var link = "https://pokerface-dev.azurewebsites.net/?roomId=" + moderator.RoomId;
 
             var message = new Message(new string[] { moderator.Name }, "FESTO Scrum Poker", "Dear Moderator,\n\nYou have created new voting room, its unique link is: " + link + "\nPlease use it to access this room. This link can be shared with other players to access the same room.");
-            await _emailSender.SendEmailAsync(message);
+            //await _emailSender.SendEmailAsync(message);
 
             if (isSessionNew)
                 await sessionRepository.AddAsync(dbSession);
