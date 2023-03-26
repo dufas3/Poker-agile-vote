@@ -52,15 +52,16 @@ namespace PokerFace.Data
                 .FirstOrDefault()));
         }
 
-        public static void AddSession(Entities.Moderator moderator, int sessionIdDb)
+        public static void AddSession(Entities.Moderator moderator, int sessionIdDb, List<Data.Entities.Setting> settings)
         {
             var sessions = SessionData.Select(x => x.Value.Session).ToList();
 
             var sd = new SessionData
             {
                 RoomId = moderator.RoomId,
-                Session = new Session { ModeratorId = moderator.Id, RefId = sessionIdDb},
+                Session = new Session { ModeratorId = moderator.Id, RefId = sessionIdDb, Settings = settings},
                 Users = new List<User> { moderator.ToSessionDataUser() }
+
             };
 
             int maxId = 1;

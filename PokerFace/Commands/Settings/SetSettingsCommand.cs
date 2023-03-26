@@ -25,7 +25,7 @@ namespace PokerFace.Commands.Settings
 
         public async Task<Unit> Handle(SetSettingsCommand request, CancellationToken cancellationToken)
         {
-            await settingsRepository.SetSettingsAsync(request.Settings);
+            await settingsRepository.SetSettingsAsync(request.Settings, request.RoomId);
             await signalRService.SendMessage(StaticHubMethodNames.SettingsUpdate, request.RoomId);
             return Unit.Value;
         }

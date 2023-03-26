@@ -12,16 +12,22 @@ namespace PokerFace.Data.Repositories
             this.context = context;
         }
 
+        public async Task<List<Setting>> GetSettingsAsync(string roomId)
+        {
+            var session = await StaticSessionData.GetSessionAsync(roomId);
+            return session.Settings;
+        }
+
         public async Task<List<Setting>> GetSettingsAsync()
         {
-
-            return await context.Settings.ToListAsync();
+           return await context.Settings.ToListAsync();
         }
-        public async Task SetSettingsAsync(List<Setting> settings)
-        {
-            context.Settings.UpdateRange(settings);
 
-            await context.SaveChangesAsync();
+        public async Task SetSettingsAsync(List<Setting> settings, string roomId)
+        {
+            var session = await StaticSessionData.GetSessionAsync(roomId);
+            session.Settings = settings;
+            await StaticSessionData.SaveChangesAsync(session, roomId);
         }
     }
 }

@@ -11,13 +11,15 @@ namespace PokerFace.Services
         private readonly IUserRepository userRepository;
         private readonly IEmailSender _emailSender;
         private readonly ICardsRepository cardsRepository;
+        private readonly ISettingsRepository settingsRepository;
 
-        public SessionService(ISessionRepository sessionRepository, IUserRepository userRepository, IEmailSender emailSender, ICardsRepository cardsRepository)
+        public SessionService(ISessionRepository sessionRepository, IUserRepository userRepository, IEmailSender emailSender, ICardsRepository cardsRepository, ISettingsRepository settingsRepository)
         {
             this.sessionRepository = sessionRepository;
             this.userRepository = userRepository;
             _emailSender = emailSender;
             this.cardsRepository = cardsRepository;
+            this.settingsRepository = settingsRepository;
         }
 
         public async Task CreateSession(Moderator moderator)
@@ -34,6 +36,8 @@ namespace PokerFace.Services
 
             if (isSessionNew)
                 moderator.RoomId = roomId;
+            
+            var settings = await settingsRepository.GetSettingsAsync();
 
             var dbSession = new Session
             {
@@ -42,6 +46,8 @@ namespace PokerFace.Services
                 LastLogin = DateTime.Now
             };
 
+           
+
             var link = "https://pokerface-dev.azurewebsites.net/?roomId=" + moderator.RoomId;
 
             var message = new Message(new string[] { moderator.Name }, "FESTO Scrum Poker", "Dear Moderator,\n\nYou have created new voting room, its unique link is: " + link + "\nPlease use it to access this room. This link can be shared with other players to access the same room.");
@@ -49,7 +55,7 @@ namespace PokerFace.Services
 
             if (isSessionNew)
                 await sessionRepository.AddAsync(dbSession);
-            await sessionRepository.AddAsync(moderator);
+            await sessionRepository.AddAsync(moderator, settings);
 
             if (isSessionNew)
                 await userRepository.UpdateModeratorAsync(moderator);

@@ -1,4 +1,5 @@
 ﻿using PokerFace.Data.Common;
+using PokerFace.Data.Entities;
 
 namespace PokerFace.Data.SessionModels
 {
@@ -10,5 +11,6 @@ namespace PokerFace.Data.SessionModels
         public int ModeratorId { get; set; }
         public List<int> CardIds { get; } = new List<int>();//active cards
         public SessionState State { get; set; }
+        public List<Setting> Settings { get; set; }
     }
 }

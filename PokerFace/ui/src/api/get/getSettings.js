@@ -1,6 +1,6 @@
 import ConnectionUrl from "../../common/connectionUrl";
 
-const GetSettings = async () => {
+const GetSettings = async ({roomId}) => {
 
     const requestOptions = {
         method: "Get",
@@ -8,6 +8,7 @@ const GetSettings = async () => {
     };
 
     const url = ConnectionUrl({appendix: "/settings/getSettings"});
+    url.searchParams.append("roomId", roomId);
 
     try {
         const response = await fetch(url.toString(), requestOptions);

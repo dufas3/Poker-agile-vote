@@ -7,7 +7,7 @@ namespace PokerFace.Commands.Settings
 {
     public class GetSettingsCommand : IRequest <List<Setting>>
     {
-
+        public string RoomId { get; set; }
     }
 
     public class GetSettingsCommandHandler : IRequestHandler<GetSettingsCommand, List<Setting>>
@@ -21,7 +21,7 @@ namespace PokerFace.Commands.Settings
         }
         public async Task<List<Setting>> Handle(GetSettingsCommand request, CancellationToken cancellationToken)
         {
-            return await settingsRepository.GetSettingsAsync();
+            return await settingsRepository.GetSettingsAsync(request.RoomId);
         }
     }
 

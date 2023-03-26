@@ -29,10 +29,11 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task AddAsync(Entities.Moderator moderator)
+        public async Task AddAsync(Entities.Moderator moderator, List<Entities.Setting> settings)
         {
             var session = await GetSessionFromDb(moderator.RoomId);
-            StaticSessionData.AddSession(moderator, session.Id);
+            
+            StaticSessionData.AddSession(moderator, session.Id, settings);
         }
 
         public async Task<List<Entities.Card>> GetSessionUsersSelectedCardAsync(string roomId)

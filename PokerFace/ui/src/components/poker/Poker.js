@@ -109,7 +109,7 @@ const Poker = () => {
         }
     };
     const updateSettings = async () => {
-        let response = await getSettings();
+        let response = await getSettings({roomId: searchParams.get("roomId")});
         console.log("aaaaa ",response);
         setSettings(response);
     }

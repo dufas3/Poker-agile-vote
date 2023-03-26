@@ -8,6 +8,7 @@ namespace PokerFace.Controllers
    
     public class SettingsController : ApiController
     {
-        public async Task<ActionResult> GetSettings(GetSettingsCommand command) => await SendMessage(command);
+        [HttpGet]
+        public async Task<ActionResult> GetSettings([FromQuery] GetSettingsCommand command) => await SendMessage(command);
     }
 }
