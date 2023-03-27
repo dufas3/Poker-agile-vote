@@ -9,36 +9,24 @@ import java.util.concurrent.TimeUnit;
 
 public class LoginLogout {
 
-    public static final String FIELD_NAME = "Antanukas";
+    public static final String FIELD_NAME = "saule";
     public static final String EMAIL_CORRECT = "testemail@gmail.com";
     public static final String EMAIL_INCORRECT = "testemailgmail.com";
 
-    public static final String PASSWORD_CORRCT = "testpassword123";
-    public static final String PASSWORD_INCORRCT = "testpass";
-
+    public static final String PASSWORD_CORRECT = "testpassword123";
+    public static final String PASSWORD_INCORRECT = "testpass";
 
     public static void loginPlayer(String name) {
         WebElement nameField = Setup.browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/body/div/input"));
         Assert.assertTrue("Player name field is inactive and/or invisible", nameField.isEnabled() && nameField.isDisplayed());
         nameField.sendKeys(name);
+        Setup.browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     }
 
     public static void clickEnterPlayerButton() {
-        WebElement enterButton = Setup.browser.findElement(By.className("join-button"));
+        WebElement enterButton = Setup.browser.findElement(By.id("joinbutton"));
+        Assert.assertTrue("Enter button is invisible", enterButton.isDisplayed());
         enterButton.click();
-
-    }
-
-    public static WebElement findNameInput() {
-        WebElement nameInputPlayer = Setup.browser.findElement(By.xpath("//input[@placeholder=\"Enter your name\"]"));
-        return nameInputPlayer;
-    }
-
-    public static void clickIconModeratorLogin() {
-        WebElement moderatorLoginLink = Setup.browser.findElement(By.className("login-button"));
-        moderatorLoginLink.click();
-
-        Setup.browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     }
 
     public static void enterEmail(String email) {
@@ -55,20 +43,26 @@ public class LoginLogout {
 
     public static void submitLoginForm() {
         WebElement loginButton = Setup.browser.findElement(By.className("login-button"));
+        Assert.assertTrue("Login button is invisible", loginButton.isDisplayed());
         loginButton.click();
     }
 
-    //patikrinam headerio elementa ir patikrinam (paasertinam Logintest)ar tiktai tas userio name'as yra rodomas
+    public static void waitForLoginResults() {
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.presenceOfElementLocated(By.id("dropdown-basic")));
+    }
+
+    public static void waitForNameResults(String text) {
+        WebElement name = Setup.browser.findElement(By.id("dropdown-basic"));
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.textToBePresentInElement(name,text));
+    }
+
     public static String getLoginResults() {
-        By loginResult = By.id("dropdown-basic"); //pasiimam elementa userio name
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(loginResult));
         WebElement loginName = Setup.browser.findElement(By.id("dropdown-basic"));
         String resultsText = loginName.getText();
         return resultsText;
-
     }
 
-    public static String getUnsuccessfulModeratorLoginMessage() {
+    public static String getUnsuccessfulLoginMessage() {
         new WebDriverWait(Setup.browser, Duration.ofSeconds(3)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".error-text.text-danger")));
         WebElement loginErrorMessage = Setup.browser.findElement(By.cssSelector(".error-text.text-danger"));
         String errorMessageText = loginErrorMessage.getText();
@@ -76,11 +70,23 @@ public class LoginLogout {
         return errorMessageText;
     }
 
-    public static void logoutUser() {
-        By logoutLink = By.partialLinkText("Logout");
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(3)).until(ExpectedConditions.presenceOfElementLocated(logoutLink));
-        WebElement logoutButton = Setup.browser.findElement(By.partialLinkText("Logout"));
+    public static void pressLoginNameButton() {
+        By loginResult = By.id("dropdown-basic");
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(loginResult));
+        WebElement loginNameButton = Setup.browser.findElement(By.id("dropdown-basic"));
+        Assert.assertTrue("Login User name button located in Header is invisible", loginNameButton.isDisplayed());
+        loginNameButton.click();
+    }
+
+    public static void pressLogoutButton() {
+        WebElement logoutButton = Setup.browser.findElement(By.id("logoutbutton"));
+        Assert.assertTrue("Logout button located in Header is invisible", logoutButton.isDisplayed());
         logoutButton.click();
     }
 
+    public static String getButtonColor(By elementSelector){
+        String buttonColor = Setup.browser.findElement(elementSelector).getCssValue("background");
+        System.out.println("Button color: " + buttonColor);
+        return buttonColor;
+    }
 }

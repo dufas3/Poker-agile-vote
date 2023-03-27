@@ -2,10 +2,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
 
 public class LoginLogoutJunitTest {
-
 
     @Before
     public void setup() {
@@ -14,31 +13,59 @@ public class LoginLogoutJunitTest {
 
     @Test
     public void loginPlayerPositiveTest() {
-        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer("Justas");
         LoginLogout.clickEnterPlayerButton();
-        String expectedResults = "Antanukas";
-        Assert.assertEquals(LoginLogout.getLoginResults(), expectedResults);
+        LoginLogout.waitForNameResults("Justas");
+        LoginLogout.getLoginResults();
+        String actualPlayerName = LoginLogout.getLoginResults();
+        System.out.println("result" + LoginLogout.getLoginResults());
+        String expectedPlayerName = "Justas";
+        Assert.assertEquals(expectedPlayerName, actualPlayerName);
     }
 
     @Test
     public void loginPlayerNegativeTest() {
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
         String expectedResults = "Business";
-        Assert.assertNotEquals(LoginLogout.getLoginResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, LoginLogout.getLoginResults());
     }
 
     @Test
-    public void loginPlayerUnsuccessfulMessageTest() {
-        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
+    public void loginPlayerEmptyNameUnsuccessfulMessageTest() {
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer("");
         LoginLogout.clickEnterPlayerButton();
-        LoginLogout.getUnsuccessfulModeratorLoginMessage();
+        LoginLogout.getUnsuccessfulLoginMessage();
         String expectedResults = "Please enter username!";
-        Assert.assertNotEquals(LoginLogout.getUnsuccessfulModeratorLoginMessage(), expectedResults);
+        Assert.assertEquals(expectedResults, LoginLogout.getUnsuccessfulLoginMessage());
     }
 
     @Test
     public void loginPlayerNameMaxSymbolsTest() {
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer("Wsnklksjeiwocms01#&laqoksm");
         LoginLogout.clickEnterPlayerButton();
         String expectedNameResult = "Wsnklksjeiwocms01#&laqoksm";
@@ -47,104 +74,139 @@ public class LoginLogoutJunitTest {
     }
 
     @Test
-    public void loginPlayerNameMinSymbolTest() {
-        LoginLogout.loginPlayer("");
+    public void loginPlayerSameNameTwiceTest() {
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer("Antanas");
         LoginLogout.clickEnterPlayerButton();
-        String expectedNameResult = "";
-        String actualNameResult = LoginLogout.getLoginResults();
-        Assert.assertNotEquals(expectedNameResult, actualNameResult);
-    }
-
-    @Test
-    public void loginPlayerNameEmptyTest() {
-        LoginLogout.loginPlayer("");
-        WebElement nameInput = LoginLogout.findNameInput();
-        String expectedResult = "true";
-        Assert.assertEquals(expectedResult, nameInput.getAttribute("required"));
+        LoginLogout.waitForLoginResults();
+        Setup.launchThirdBrowser();
+        LoginLogout.loginPlayer("Antanas");
+        LoginLogout.clickEnterPlayerButton();
+        LoginLogout.getUnsuccessfulLoginMessage();
+        String actualMessage = LoginLogout.getUnsuccessfulLoginMessage();
+        String expectedMessage = "This username is taken!";
+        Assert.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     public void loginModeratorPositiveTest() {
-        LoginLogout.clickIconModeratorLogin();
         LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRCT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
         LoginLogout.submitLoginForm();
-        String expectedResults = "testemail@gmail.com";
-        Assert.assertEquals(LoginLogout.getLoginResults(), expectedResults);
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        LoginLogout.waitForNameResults("testemail@gmail.com");
+        String actualModeratorResults = LoginLogout.getLoginResults();
+        String expectedModeratorResults = "testemail@gmail.com";
+        Assert.assertEquals(expectedModeratorResults, actualModeratorResults);
     }
 
     @Test
     public void loginModeratorNegativeTest() {
-        LoginLogout.clickIconModeratorLogin();
         LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRCT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
         LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        LoginLogout.getLoginResults();
         String expectedResults = "Business";
-        Assert.assertNotEquals(LoginLogout.getLoginResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, LoginLogout.getLoginResults());
     }
 
     @Test
     public void loginModeratorIncorrectPasswordTest() {
-        LoginLogout.clickIconModeratorLogin();
         LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_INCORRCT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_INCORRECT);
         LoginLogout.submitLoginForm();
-        LoginLogout.getUnsuccessfulModeratorLoginMessage();
-        String actualErrorMessage = LoginLogout.getUnsuccessfulModeratorLoginMessage();
+        LoginLogout.getUnsuccessfulLoginMessage();
+        String actualErrorMessage = LoginLogout.getUnsuccessfulLoginMessage();
         String expectedErrorMessage = "Wrong username or password!";
-        Assert.assertEquals(actualErrorMessage, expectedErrorMessage);
+        Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
     @Test
     public void loginModeratorIncorrectEmailTest() {
-        LoginLogout.clickIconModeratorLogin();
         LoginLogout.enterEmail(LoginLogout.EMAIL_INCORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRCT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
         LoginLogout.submitLoginForm();
-        LoginLogout.getUnsuccessfulModeratorLoginMessage();
-        String actualErrorMessage = LoginLogout.getUnsuccessfulModeratorLoginMessage();
+        LoginLogout.getUnsuccessfulLoginMessage();
+        String actualErrorMessage = LoginLogout.getUnsuccessfulLoginMessage();
         String expectedErrorMessage = "Wrong username or password!";
-        Assert.assertEquals(actualErrorMessage, expectedErrorMessage);
+        Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
     @Test
     public void logoutUserPlayerPositiveTest() {
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
-        LoginLogout.logoutUser();
+        LoginLogout.pressLoginNameButton();
+        LoginLogout.pressLogoutButton();
         String currentUrl = Setup.browser.getCurrentUrl();
         Assert.assertEquals(Setup.POKER_URL, currentUrl);
     }
 
     @Test
     public void logoutUserPlayerNegativeTest() {
+        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.submitLoginForm();
+        LoginLogout.waitForLoginResults();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
+        LoginLogout.waitForLoginResults();
         String currentUrl = Setup.browser.getCurrentUrl();
-        LoginLogout.logoutUser();
+        LoginLogout.pressLoginNameButton();
+        LoginLogout.pressLogoutButton();
         Assert.assertNotEquals(Setup.POKER_URL, currentUrl);
     }
 
     @Test
     public void logoutUserModeratorPositiveTest() {
-        LoginLogout.clickIconModeratorLogin();
         LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRCT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
         LoginLogout.submitLoginForm();
-        LoginLogout.logoutUser();
+        Setup.waitForElementToAppear(By.id("dropdown-basic"));
+        LoginLogout.pressLoginNameButton();
+        LoginLogout.pressLogoutButton();
         String currentUrl = Setup.browser.getCurrentUrl();
         Assert.assertEquals(Setup.POKER_URL, currentUrl);
     }
 
     @Test
     public void logoutUserModeratorNegativeTest() {
-        LoginLogout.clickIconModeratorLogin();
         LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRCT);
+        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
         LoginLogout.submitLoginForm();
-        String currentUrl = Setup.browser.getCurrentUrl();
-        LoginLogout.logoutUser();
-        Assert.assertNotEquals(Setup.POKER_URL, currentUrl);
+        LoginLogout.waitForLoginResults();
+        String currentUrlLoggedIn = Setup.browser.getCurrentUrl();
+        LoginLogout.pressLoginNameButton();
+        LoginLogout.pressLogoutButton();
+        Assert.assertNotEquals(Setup.POKER_URL, currentUrlLoggedIn);
+    }
+
+    @Test
+    public void getLoginButtonColorBlueTest() {
+        String actualColor = LoginLogout.getButtonColor(By.className("login-button"));
+        String expectedColor = "rgb(100, 149, 237) none repeat scroll 0% 0% / auto padding-box border-box";
+        Assert.assertEquals(expectedColor, actualColor);
+    }
+
+    @Test
+    public void getEnterButtonColorBlueTest() {
+        Setup.launchAlternativeBrowser();
+        String actualColor = LoginLogout.getButtonColor(By.className("join-button"));
+        String expectedColor = "rgb(240, 240, 240) none repeat scroll 0% 0% / auto padding-box border-box";
+        Assert.assertEquals(expectedColor, actualColor);
     }
 
     @After

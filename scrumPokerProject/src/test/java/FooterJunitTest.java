@@ -5,7 +5,6 @@ import org.junit.Test;
 
 public class FooterJunitTest {
 
-
     @Before
     public void setup() {
         Setup.launchMainBrowser();
@@ -16,7 +15,7 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Imprint");
         Setup.acceptFestoCookies();
         String expectedResults = "Imprint";
-        Assert.assertEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
@@ -24,7 +23,7 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Imprint");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
@@ -32,7 +31,7 @@ public class FooterJunitTest {
         Footer.clickFooterLink("privacy");
         Setup.acceptFestoCookies();
         String expectedResults = "Festo Data Privacy Statement";
-        Assert.assertEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
@@ -40,16 +39,15 @@ public class FooterJunitTest {
         Footer.clickFooterLink("privacy");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
-
     public void pressTermsLinkPositiveTest() {
         Footer.clickFooterLink("Terms");
         Setup.acceptFestoCookies();
         String expectedResults = "Terms and Conditions of Sale";
-        Assert.assertEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
@@ -57,7 +55,7 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Terms");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
@@ -65,7 +63,7 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Cloud");
         Setup.acceptFestoCookies();
         String expectedResults = "Cloud Services";
-        Assert.assertEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @Test
@@ -73,7 +71,7 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Cloud");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(Footer.getFooterLinkResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
     }
 
     @After

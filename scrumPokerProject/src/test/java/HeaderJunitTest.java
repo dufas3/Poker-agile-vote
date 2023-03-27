@@ -12,33 +12,38 @@ public class HeaderJunitTest {
 
     @Test
     public void pressUserIconPositiveTest() {
-        Header.clickUserIcon();
+        Setup.launchAlternativeBrowser();
+        Header.clickUserIcon("Login");
         String expectedResults = "Welcome back";
-        Assert.assertEquals(Header.getHeaderIconResults(), expectedResults);
+        Assert.assertEquals(expectedResults,Header.getHeaderIconResults());
     }
 
     @Test
     public void pressUserIconNegativeTest() {
-        Header.clickUserIcon();
+        Setup.launchAlternativeBrowser();
+        Header.clickUserIcon("Login");
         String expectedResults = "Something";
-        Assert.assertNotEquals(Header.getHeaderIconResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, Header.getHeaderIconResults());
     }
 
     @Test
     public void pressFestoLogoPositiveTest() {
         Header.clickFestoLogo();
-        String expectedResults = "Discover your Essentials";
-        Assert.assertEquals(Header.getFestoLogoResults(), expectedResults);
+        Setup.acceptFestoCookies();
+        String currentUrlFesto = Setup.browser.getCurrentUrl();
+        String expectedUrlFesto = Setup.URL_FESTO;
+        Assert.assertEquals(expectedUrlFesto, currentUrlFesto);
     }
 
     @Test
     public void pressFestoLogoNegativeTest() {
         Header.clickFestoLogo();
+        Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(Header.getFestoLogoResults(), expectedResults);
+        Assert.assertNotEquals(expectedResults, Header.getFestoLogoResults());
     }
 
-    @After
+   @After
     public void finish() {
         Setup.closePage();
     }

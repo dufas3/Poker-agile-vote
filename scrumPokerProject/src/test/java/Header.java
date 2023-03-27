@@ -1,29 +1,20 @@
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 public class Header {
-    public static void clickUserIcon() {
-        WebElement userIcon = Setup.browser.findElement(By.id("H1"));
-        userIcon.click();
 
-        Setup.browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+    public static void clickUserIcon(String text) {
+        Setup.waitForElementToAppear(By.partialLinkText(text));
+        WebElement userIconLogin = Setup.browser.findElement(By.partialLinkText(text));
+        Setup.clickJavaScript(userIconLogin);
     }
 
     public static void clickFestoLogo() {
-        WebElement festoLogo = Setup.browser.findElement(By.className("logo"));
-        festoLogo.click();
-
-        Setup.browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-
-        By buttonSelector = By.xpath("/html/body/dialog/div/div/menu/button[2]");
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(3)).until(
-                ExpectedConditions.presenceOfElementLocated(buttonSelector));
-        Setup.browser.findElement(buttonSelector).click();
+        Setup.waitForElementToAppear(By.id("logolink"));
+        WebElement festoLogo = Setup.browser.findElement(By.id("logolink"));
+        Assert.assertTrue("Festo logo is invisible", festoLogo.isDisplayed());
+        Setup.clickJavaScript(festoLogo);
     }
 
     public static String getHeaderIconResults() {

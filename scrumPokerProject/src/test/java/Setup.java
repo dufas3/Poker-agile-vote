@@ -15,8 +15,10 @@ public class Setup {
     public static WebDriver browser;
     public static WebDriver mainBrowser;
     public static WebDriver alternativeBrowser;
-    public static final String POKER_URL = "https://pokerface-test.azurewebsites.net/";
-
+    public static WebDriver thirdBrowser;
+    public static final String POKER_URL = "https://pokerface-dev.azurewebsites.net/Login";
+    public static final String URL_ROOM_PLAYER = "https://pokerface-dev.azurewebsites.net/?roomId=4d23f8a6-7cd4-4dfc-b4b4-52e844d7ede0";
+    public static final String URL_FESTO ="https://www.festo.com/us/en/";
 
     public static WebDriver setup() { //leidzia per chrome by default, jeigu settingsu lentelej nurodai BROWSER=edge, tada leis edge
         String browserType = System.getenv("BROWSER");
@@ -38,8 +40,8 @@ public class Setup {
         return browser;
     }
 
-    public static void waitForElementToAppear(By element) {
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(20)).until(e -> e.findElement(element).isDisplayed());
+    public static void waitForElementToAppear(By elementSelector) {
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(20)).until(e -> e.findElement(elementSelector).isDisplayed());
     }
 
     public static void clickJavaScript(WebElement element) {
@@ -63,9 +65,17 @@ public class Setup {
     public static void launchAlternativeBrowser() {
         if (alternativeBrowser == null) {
             alternativeBrowser = setup();
-            alternativeBrowser.get(POKER_URL);
+            alternativeBrowser.get(URL_ROOM_PLAYER);
         }
         browser = alternativeBrowser;
+    }
+
+    public static void launchThirdBrowser() {
+        if (thirdBrowser == null) {
+            thirdBrowser = setup();
+            thirdBrowser.get(URL_ROOM_PLAYER);
+        }
+        browser = thirdBrowser;
     }
 
     public static void closePage() {
