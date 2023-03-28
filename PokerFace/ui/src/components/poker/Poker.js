@@ -136,7 +136,7 @@ const Poker = () => {
       const stateChange = async () => {
         await setSessionState({
           roomId: searchParams.get("roomId"),
-          state: SessionState.FINILIZESTATE,
+          state: SessionState.ALLUSERSVOTED,
         });
       };
       stateChange();

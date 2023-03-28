@@ -8,10 +8,11 @@ import {useEffect, useState} from "react";
 import setSessionState from "../../api/set/setSessionState";
 import {SessionState} from "../../common/sessionState";
 import {useSearchParams} from "react-router-dom";
+import React from 'react';
 
 const PlayerList = ({sessionState, userList}) => {
     const [users, setUsers] = useState([]);
-    const [state, setState] = useState(0);
+    const [state, setState] = useState(20);
     const [userCount, setUserCount] = useState(0);
     const [listText, setListText] = useState("");
     const [searchParams] = useSearchParams();
@@ -25,27 +26,71 @@ const PlayerList = ({sessionState, userList}) => {
         setState(sessionState);
     }, [userList, sessionState]);
 
+
+    
     useEffect(() => {
         if (userCount <= 0) {
             setListText("Waiting for players");
         } else {
-            if (state == 0) {
-                setListText("Waiting on " + userCount + " players to vote");
-            } else if (state == 2) {
-                setListText("Waiting on " + userCount + " players to vote");
-            } else if (state == 1) {
-                setListText("Waiting for moderator to finalise votes");
+            if (state == SessionState.VOTESTATE) {
+                setListText("Waiting for " + userCount + " players to vote");
+            } else if (state == SessionState.FINISHSTATE) {
+                setListText("Waiting for " + userCount + " players to vote");
+            } else if (state == SessionState.FINILIZESTATE || state == SessionState.ALLUSERSVOTED) {
+                setListText("Waiting for moderator to finalize votes");
             }
         }
 
         setUsers(userList)
     }, [state, userList])
 
+
+    const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
+    const [interv, setInterv] = useState();
+    let updatedS = time.s, updatedM = time.m, updatedH = time.h;
+
+
+
+    useEffect(() => {
+            if (state == SessionState.VOTESTATE || state == SessionState.FINISHSTATE ) {
+                clearInterval(interv);
+                setInterv(setInterval(run, 1000));
+            } else if (state == SessionState.FINILIZESTATE || state == SessionState.ALLUSERSVOTED || state == SessionState.VOTINGSTART) {
+                clearInterval(interv);
+                setTime({s: 0, m: 0, h: 0})
+            }
+    }, [state])
+
+
+    const run = () => {
+            if (updatedM === 60) {
+                updatedH++;
+                 updatedM = 0;
+             }
+             if (updatedS === 60) {
+                updatedM++;
+                 updatedS = 0;
+             }
+             updatedS++;
+             setTime ({s: updatedS, m: updatedM, h: updatedH})
+         };
+
     return (
         <div className="player-list border rounded bg-light">
             <h6 className="bg-primary border border-primary rounded-top w-100 p-4 text-center text-white">
                 {listText}
             </h6>
+            <div className="container row p-1 text-dark">
+                <h6 className="col">
+                    Players:
+                </h6>
+                <h6 className="col text-end">
+                    <i class="bi bi-clock px-2" />
+                    <span>{(time.h >= 10) ? time.h : "0" + time.h}</span>:
+                    <span>{(time.m >= 10) ? time.m : "0" + time.m}</span>:
+                    <span>{(time.s >= 10) ? time.s : "0" + time.s}</span>
+                </h6>
+            </div>
             {users.map((user) => (
                 <div className="mt-2  border-top border-bottom user align-center-between">
                     <div className="align-center-start">
@@ -69,7 +114,7 @@ const PlayerList = ({sessionState, userList}) => {
                     </div>
                     {user.name.includes("@") ? (
                         ""
-                    ) : state == 1 ? (
+                    ) : state == SessionState.ALLUSERSVOTED || state == SessionState.FINILIZESTATE ? (
                         <h5
                             className={
                                 user.selectedCard == null
