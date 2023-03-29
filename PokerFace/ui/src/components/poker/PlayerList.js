@@ -80,7 +80,7 @@ const PlayerList = ({sessionState, userList}) => {
             <h6 className="bg-primary border border-primary rounded-top w-100 p-4 text-center text-white">
                 {listText}
             </h6>
-            <div className="container row p-1 text-dark">
+            <div className="align-center-between p-1 text-dark border-bottom">
                 <h6 className="col">
                     Players:
                 </h6>
@@ -92,7 +92,7 @@ const PlayerList = ({sessionState, userList}) => {
                 </h6>
             </div>
             {users.map((user) => (
-                <div className="mt-2  border-top border-bottom user align-center-between">
+                <div className="border-bottom user align-center-between">
                     <div className="align-center-start">
                         <div className="icon m-lg-1 align-center">
                             {user.name.includes("@")
