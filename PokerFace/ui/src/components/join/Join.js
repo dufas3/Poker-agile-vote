@@ -58,9 +58,10 @@ const Join = () => {
       setError("Please enter username!");
     } else if (name.includes("@")) {
       setError("You can't use @ in your username!");
-    } else if (sessionUserList.length >= 10) {
-      setError("This room is full!");
-    } else if (name.length <= 2) {
+    } //else if (sessionUserList.length >= 10) {
+      //setError("This room is full!");
+   // } 
+      else if (name.length <= 2) {
       setError("Username is too short!");
     } else if (isUsernameTaken) {
       setError("This username is taken!");
