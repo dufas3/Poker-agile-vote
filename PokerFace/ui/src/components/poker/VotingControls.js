@@ -87,6 +87,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     selectedCheckboxes.map((cb) => {
       if (!ids.includes(cb)) ids.push(cb);
     });
+    ids.sort((a, b) => a - b);
 
     if (ids.length == 0) {
       await setSessionState({
@@ -162,7 +163,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
       ) : (
         <div className="voting-container border rounded bg-light">
           <div className="cards-select">
-            <div className="form-check border rounded bg-light">
+            <div className="form-check bg-light">
               <input
                 className="form-check-input"
                 type="checkbox"
@@ -176,7 +177,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
               </label>
             </div>
             {cards.map((card) => (
-              <div className="form-check border rounded bg-light">
+              <div className="form-check bg-light">
                 <input
                   onChange={handleCheckboxChange}
                   value={card.id.toString()}
