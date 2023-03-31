@@ -22,7 +22,7 @@ import { SettingsType } from "../../common/settingsType";
 const Poker = () => {
   const [cards, setCards] = useState([]);
   const [users, setUsers] = useState([]);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [state, setState] = useState(0);
   const [activeCards, setActiveCards] = useState([]);
   const [roomId, setRoomId] = useState("");
@@ -216,7 +216,7 @@ const Poker = () => {
                 ""
               )}
             </div>
-            <PlayerList sessionState={state} userList={users} />
+            <PlayerList sessionState={state} userList={users} roomId={searchParams.get("roomId")} user={user}/>
           </div>
         </>
       )}

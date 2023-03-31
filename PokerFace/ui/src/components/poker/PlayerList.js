@@ -4,18 +4,23 @@ import "react-toastify/dist/ReactToastify.css";
 import UserIcon from "../../imgs/user.png";
 import VoteIcon from "../../imgs/vote-icon.png";
 import Notifications from "../notifications/Notifications";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import setSessionState from "../../api/set/setSessionState";
-import {SessionState} from "../../common/sessionState";
-import {useSearchParams} from "react-router-dom";
+import { SessionState } from "../../common/sessionState";
+import { useSearchParams } from "react-router-dom";
 import React from 'react';
+import SetLastTimer from '../../api/set/setLastTimer';
+import GetLastTimer from '../../api/get/getLastTimer';
 
-const PlayerList = ({sessionState, userList}) => {
+const PlayerList = ({ sessionState, userList, roomId, user }) => {
     const [users, setUsers] = useState([]);
     const [state, setState] = useState(20);
     const [userCount, setUserCount] = useState(0);
     const [listText, setListText] = useState("");
     const [searchParams] = useSearchParams();
+    const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
+    const [interv, setInterv] = useState();
+    let updatedS = time.s, updatedM = time.m, updatedH = time.h;
 
     const setUserList = async () => {
         setUserCount(userList.length - 1);
@@ -26,8 +31,23 @@ const PlayerList = ({sessionState, userList}) => {
         setState(sessionState);
     }, [userList, sessionState]);
 
+    useEffect(() => {
+        if (user?.role === undefined) return;
+        if (user?.role !== "moderator") {
+            const GetData = async () => {
+                let response = await GetLastTimer({ roomId: roomId });
+                console.log("resp", response);
+                let date = new Date(Date.now() - new Date(response));
+                console.log("laikas", date);
+                setTime({ s: date.getSeconds(), m: date.getMinutes(), h: date.getHours() });
+            };
+            console.log("user", user.role)
+            GetData();
+        }
+    }, [user])
 
-    
+
+
     useEffect(() => {
         if (userCount <= 0) {
             setListText("Waiting for players");
@@ -44,36 +64,35 @@ const PlayerList = ({sessionState, userList}) => {
         setUsers(userList)
     }, [state, userList])
 
-
-    const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
-    const [interv, setInterv] = useState();
-    let updatedS = time.s, updatedM = time.m, updatedH = time.h;
-
-
-
     useEffect(() => {
-            if (state == SessionState.VOTESTATE || state == SessionState.FINISHSTATE ) {
-                clearInterval(interv);
-                setInterv(setInterval(run, 1000));
-            } else if (state == SessionState.FINILIZESTATE || state == SessionState.ALLUSERSVOTED || state == SessionState.VOTINGSTART) {
-                clearInterval(interv);
-                setTime({s: 0, m: 0, h: 0})
-            }
-    }, [state])
+        if (state == SessionState.VOTINGSTART || state == SessionState.VOTESTATE) {
+            if (user?.role === "moderator")
+                SetLastTimer({
+                    roomId: roomId,
+                })
+            clearInterval(interv);
+            setInterv(setInterval(run, 1000));
+        } else if (state == SessionState.FINILIZESTATE || state == SessionState.ALLUSERSVOTED) {
+            clearInterval(interv);
+            setTime({ s: 0, m: 0, h: 0 });
+        }
+    }, [state, user]);
 
 
     const run = () => {
-            if (updatedM === 60) {
-                updatedH++;
-                 updatedM = 0;
-             }
-             if (updatedS === 60) {
-                updatedM++;
-                 updatedS = 0;
-             }
-             updatedS++;
-             setTime ({s: updatedS, m: updatedM, h: updatedH})
-         };
+        if (updatedM === 60) {
+            updatedH++;
+            updatedM = 0;
+        }
+        if (updatedS === 60) {
+            updatedM++;
+            updatedS = 0;
+        }
+        updatedS++;
+        if (user.role == "moderator") setTime({ s: updatedS, m: updatedM, h: updatedH });
+        console.log(updatedS);
+    };
+
 
     return (
         <div className="player-list border rounded bg-light">
@@ -96,9 +115,9 @@ const PlayerList = ({sessionState, userList}) => {
                     <div className="align-center-start">
                         <div className="icon m-lg-1 align-center">
                             {user.name.includes("@")
-                                ? <><img src={UserIcon} className="user-icon"/><i
+                                ? <><img src={UserIcon} className="user-icon" /><i
                                     className="fa-solid fa-circle moderator-indicator"></i></> :
-                                <><img src={UserIcon} className="user-icon"/><i
+                                <><img src={UserIcon} className="user-icon" /><i
                                     className="fa-solid fa-circle user-indicator"></i></>}
                         </div>
                         <h6>
@@ -107,8 +126,8 @@ const PlayerList = ({sessionState, userList}) => {
                                 ? user.name.includes("@")
                                     ? ""
                                     : user.selectedCard && (
-                                    <i className="fa-regular fa-circle-check text-primary"></i>
-                                )
+                                        <i className="fa-regular fa-circle-check text-primary"></i>
+                                    )
                                 : ""}
                         </h6>
                     </div>
@@ -127,11 +146,11 @@ const PlayerList = ({sessionState, userList}) => {
                             {user.selectedCard == null ? "?" : user.selectedCard.value}
                         </h5>
                     ) : (
-                        <img src={VoteIcon} className="vote-icon"/>
+                        <img src={VoteIcon} className="vote-icon" />
                     )}
                 </div>
             ))}
-            <Notifications data={{state: sessionState}}/>
+            <Notifications data={{ state: sessionState }} />
         </div>
     );
 };
