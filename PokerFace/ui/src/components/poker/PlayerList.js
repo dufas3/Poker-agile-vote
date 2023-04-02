@@ -96,22 +96,25 @@ const PlayerList = ({ sessionState, userList, roomId, user }) => {
 
     return (
         <div className="player-list border rounded bg-light">
-            <h6 className="bg-primary border border-primary rounded-top w-100 p-4 text-center text-white">
+            <div className="player-list-top">
+            <h6 className="bg-primary border border-primary rounded-top w-100 p-4 text-center text-white margin-0">
                 {listText}
             </h6>
-            <div className="container row p-1 text-dark">
-                <h6 className="col">
+            <div className="align-center-between p-1 text-dark border-bottom bg-light">
+                <h6 className="mt-1">
                     Players:
                 </h6>
-                <h6 className="col text-end">
+                <h6 className="mt-1">
                     <i class="bi bi-clock px-2" />
                     <span>{(time.h >= 10) ? time.h : "0" + time.h}</span>:
                     <span>{(time.m >= 10) ? time.m : "0" + time.m}</span>:
                     <span>{(time.s >= 10) ? time.s : "0" + time.s}</span>
                 </h6>
             </div>
+            </div>
+            <div className="users">
             {users.map((user) => (
-                <div className="mt-2  border-top border-bottom user align-center-between">
+                <div className="border-bottom user align-center-between">
                     <div className="align-center-start">
                         <div className="icon m-lg-1 align-center">
                             {user.name.includes("@")
@@ -150,6 +153,7 @@ const PlayerList = ({ sessionState, userList, roomId, user }) => {
                     )}
                 </div>
             ))}
+            </div>
             <Notifications data={{ state: sessionState }} />
         </div>
     );
