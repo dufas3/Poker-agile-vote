@@ -5,7 +5,6 @@ import UserIcon from "../../imgs/user.png";
 import VoteIcon from "../../imgs/vote-icon.png";
 import Notifications from "../notifications/Notifications";
 import { useEffect, useState } from "react";
-import setSessionState from "../../api/set/setSessionState";
 import { SessionState } from "../../common/sessionState";
 import { useSearchParams } from "react-router-dom";
 import React from 'react';
@@ -17,7 +16,6 @@ const PlayerList = ({ sessionState, userList, roomId, user }) => {
     const [state, setState] = useState(20);
     const [userCount, setUserCount] = useState(0);
     const [listText, setListText] = useState("");
-    const [searchParams] = useSearchParams();
     const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
     const [interv, setInterv] = useState();
     let updatedS = time.s, updatedM = time.m, updatedH = time.h;
@@ -36,12 +34,16 @@ const PlayerList = ({ sessionState, userList, roomId, user }) => {
         if (user?.role !== "moderator") {
             const GetData = async () => {
                 let response = await GetLastTimer({ roomId: roomId });
-                console.log("resp", response);
                 let date = new Date(Date.now() - new Date(response));
-                console.log("laikas", date);
-                setTime({ s: date.getSeconds(), m: date.getMinutes(), h: date.getHours() });
+                setTime({
+                    s: date.getSeconds(),
+                    m: date.getMinutes(),
+                    h: date.getHours() - 3,
+                });
+                updatedS = date.getSeconds();
+                updatedM = date.getMinutes();
+                updatedH = date.getHours() - 3;
             };
-            console.log("user", user.role)
             GetData();
         }
     }, [user])
@@ -89,8 +91,7 @@ const PlayerList = ({ sessionState, userList, roomId, user }) => {
             updatedS = 0;
         }
         updatedS++;
-        if (user.role == "moderator") setTime({ s: updatedS, m: updatedM, h: updatedH });
-        console.log(updatedS);
+        setTime({ s: updatedS, m: updatedM, h: updatedH });
     };
 
 
