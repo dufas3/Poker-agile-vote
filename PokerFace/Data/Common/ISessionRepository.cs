@@ -22,5 +22,7 @@ namespace PokerFace.Data.Common
 
         Task RemoveSession(string roomId);
         Task UpdateTimeStampAsync(string roomId, DateTime time);
+        Task SetLastTimerAsync(string roomId);
+        Task<DateTime> GetLastTimerAsync(string roomId);
     }
 }

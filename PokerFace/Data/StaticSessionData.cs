@@ -59,7 +59,7 @@ namespace PokerFace.Data
             var sd = new SessionData
             {
                 RoomId = moderator.RoomId,
-                Session = new Session { ModeratorId = moderator.Id, RefId = sessionIdDb, Settings = settings},
+                Session = new Session { ModeratorId = moderator.Id, RefId = sessionIdDb, Settings = settings, LastTimer = DateTime.UtcNow},
                 Users = new List<User> { moderator.ToSessionDataUser() }
 
             };

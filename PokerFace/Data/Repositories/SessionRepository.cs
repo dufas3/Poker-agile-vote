@@ -121,6 +121,17 @@ namespace PokerFace.Data.Repositories
             await StaticSessionData.SaveChangesAsync(session, session.RoomId);
         }
 
+        public async Task SetLastTimerAsync(string roomId)
+        { 
+            var session = await StaticSessionData.GetSessionAsync(roomId);
+            session.LastTimer = DateTime.UtcNow;
+        }
+
+        public async Task<DateTime> GetLastTimerAsync(string roomId)
+        {
+            var session = await StaticSessionData.GetSessionAsync(roomId);
+            return session.LastTimer;
+        }
 
     }
 }

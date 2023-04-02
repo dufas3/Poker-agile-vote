@@ -37,7 +37,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
       roomId: roomId,
       state: SessionState.FINISHSTATE,
     });
-    await ClearSessionVotes({ roomId: roomId });
+    //await ClearSessionVotes({ roomId: roomId });
   };
 
   const handleClearVotes = async () => {
@@ -199,13 +199,13 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
                   className="form-check-input "
                   type="checkbox"
                   value={setting.id}
-                  id="flexCheckDefault"
+                  id={setting.name}
                   checked={settingsCheckBox.includes(setting.id.toString())}
                   onChange={handleSettingsCheckbox}
                 />
                 <label
                   className="form-check-label ml-5"
-                  htmlFor="flexCheckDefault"
+                  htmlFor={setting.name}
                 >
                   {setting.name}
                 </label>
