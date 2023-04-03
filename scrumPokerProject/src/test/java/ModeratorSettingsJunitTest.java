@@ -2,7 +2,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +18,10 @@ public class ModeratorSettingsJunitTest {
 
         cardCheckBoxValuesExpected = new ArrayList<>();
         cardCheckBoxValuesExpected.add("Use all cards");
-        cardCheckBoxValuesExpected.add("1");
-        cardCheckBoxValuesExpected.add("2");
         cardCheckBoxValuesExpected.add("0");
         cardCheckBoxValuesExpected.add("1/2");
+        cardCheckBoxValuesExpected.add("1");
+        cardCheckBoxValuesExpected.add("2");
         cardCheckBoxValuesExpected.add("3");
         cardCheckBoxValuesExpected.add("5");
         cardCheckBoxValuesExpected.add("8");
@@ -35,10 +34,10 @@ public class ModeratorSettingsJunitTest {
         cardCheckBoxValuesExpected.add("Auto Reveal");
 
         cardOptionsExpected = new ArrayList<>();
-        cardOptionsExpected.add("1");
-        cardOptionsExpected.add("2");
         cardOptionsExpected.add("0");
         cardOptionsExpected.add("1/2");
+        cardOptionsExpected.add("1");
+        cardOptionsExpected.add("2");
         cardOptionsExpected.add("3");
         cardOptionsExpected.add("5");
         cardOptionsExpected.add("8");
@@ -58,26 +57,20 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getPossibleCardCheckboxValuesTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.getPossibleCardCheckboxValuesList();
         ArrayList<String> actualCardCheckboxValuesList = ModeratorSettings.getPossibleCardCheckboxValuesList();
         System.out.println("actual list: " + ModeratorSettings.getPossibleCardCheckboxValuesList());
-        Assert.assertEquals(cardCheckBoxValuesExpected, actualCardCheckboxValuesList);
+        Assert.assertEquals("Actual Card Checkbox values list does not meet the requirements", cardCheckBoxValuesExpected, actualCardCheckboxValuesList);
     }
 
     @Test
     public void selectAllCardsTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("Use all cards");
@@ -85,77 +78,97 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         List<String> actualListOfModeratorCards = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
-        Assert.assertEquals(cardOptionsExpected, actualListOfModeratorCards);
+        Assert.assertEquals("All cards are not selected", cardOptionsExpected, actualListOfModeratorCards);
     }
 
     @Test
     public void selectSpecificCardsTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickAndValidateCardCheckbox("3");
         ModeratorSettings.clickAndValidateCardCheckbox("8");
         ModeratorSettings.clickAndValidateCardCheckbox("20");
         ModeratorSettings.clickAndValidateCardCheckbox("Coffee");
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div[1]/div[1]/div[2]/div[3]/button[1]/h6"));
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         List<String> actualListOfModeratorCards = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
-        Assert.assertEquals(specificCardOptionsExpected, actualListOfModeratorCards);
+        Assert.assertEquals("Specific cards are not selected", specificCardOptionsExpected, actualListOfModeratorCards);
+    }
+
+    @Test
+    public void checkIfActiveVotingSessionResetAfterNewValuesSelectedTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickAndValidateCardCheckbox("3");
+        ModeratorSettings.clickAndValidateCardCheckbox("5");
+        ModeratorSettings.clickAndValidateCardCheckbox("8");
+        ModeratorSettings.clickAndValidateCardCheckbox("13");
+        ModeratorSettings.clickSaveButton();
+        ModeratorSettings.waitForCardsOptions();
+        List<String> firstListOfModeratorCards = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
+        LoginLogout.clickEnterPlayerButton();
+        ModeratorSettings.waitForCardsOptions();
+        PlayerFunctionality.clickCardPlayer("8");
+        PlayerFunctionality.getCheckMarkElement("saule");
+        ModeratorSettings.waitForNumberOfCheckmarksToBe(1);
+        Setup.launchMainBrowser();
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickAndValidateCardCheckbox("20");
+        ModeratorSettings.clickAndValidateCardCheckbox("40");
+        ModeratorSettings.clickAndValidateCardCheckbox("100");
+        ModeratorSettings.clickAndValidateCardCheckbox("Coffee");
+        ModeratorSettings.clickAndValidateCardCheckbox("?");
+        ModeratorSettings.clickSaveButton();
+        ModeratorSettings.waitForCardsOptionsVotingArea();
+        ModeratorSettings.waitForNumberOfCheckmarksToBe(0);
+        List<String> secondListOfModeratorCards = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
+        Assert.assertNotEquals("New Card values were not applied", firstListOfModeratorCards, secondListOfModeratorCards);
+        Assert.assertTrue("Checkmark did not disappear/ Voting session did not reset after value changes", ModeratorSettings.waitForNumberOfCheckmarksToBe(0));
     }
 
     @Test
     public void flipCardsTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/div/button[1]/h6"));
         ModeratorSettings.clickFlipCardsButton();
-        Setup.waitForElementToAppear(By.className("circle"));
+        Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
         String actualCircleText = ModeratorSettings.getCircleText();
         String expectedCircleText = "0 Players\nvoted";
-        Assert.assertEquals(expectedCircleText, actualCircleText);
+        Assert.assertEquals("Cards are not flipped/ Flip Cards button does not work", expectedCircleText, actualCircleText);
     }
 
     @Test
     public void clearVotesTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickAndValidateCardCheckbox("3");
         ModeratorSettings.clickAndValidateCardCheckbox("8");
         ModeratorSettings.clickAndValidateCardCheckbox("20");
         ModeratorSettings.clickAndValidateCardCheckbox("Coffee");
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div[1]/div[1]/div[2]/div[3]/button[1]/h6"));
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         List<String> expectedListOfModeratorCards = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/div/button[1]/h6"));
         ModeratorSettings.clickFlipCardsButton();
-        Setup.waitForElementToAppear(By.className("circle"));
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/div/button[2]/h6"));
+        Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
         ModeratorSettings.clickClearVotesButton();
         ModeratorSettings.waitForCardsOptions();
         List<String> actualListOfModeratorCards = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
-        Assert.assertEquals(expectedListOfModeratorCards, actualListOfModeratorCards);
+        Assert.assertEquals("Votes are not cleared/ Clear votes button does not work", expectedListOfModeratorCards, actualListOfModeratorCards);
     }
 
     @Test
     public void finishVotingTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -166,7 +179,7 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Antanas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_THIRD);
         LoginLogout.clickEnterPlayerButton();
         LoginLogout.waitForLoginResults();
         Setup.launchThirdBrowser();
@@ -177,40 +190,33 @@ public class ModeratorSettingsJunitTest {
         PlayerFunctionality.getCheckMarkElement("saule");
         ModeratorSettings.waitForNumberOfCheckmarksToBe(1);
         Setup.launchMainBrowser();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/button/h6"));
         ModeratorSettings.clickFinishVotingButton();
         ModeratorSettings.waitForNumberOfCheckmarksToBe(0);
-        Assert.assertTrue("Checkmark did not disappear", ModeratorSettings.waitForNumberOfCheckmarksToBe(0));
+        Assert.assertTrue("Checkmark did not disappear/ Voting is not finished/ Voting button does not work", ModeratorSettings.waitForNumberOfCheckmarksToBe(0));
     }
 
     @Test
     public void getFirstUserInTheListTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
         LoginLogout.waitForNameResults(LoginLogout.FIELD_NAME);
         Setup.launchThirdBrowser();
-        LoginLogout.loginPlayer("Justas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
         LoginLogout.waitForNameResults("Justas");
         ModeratorSettings.getFirstUserInTheList();
         String expectedUserInTheList = "testemail@gmail.com";
         String actualUserInTheList = ModeratorSettings.getFirstUserInTheList();
-        Assert.assertEquals(expectedUserInTheList, actualUserInTheList);
+        Assert.assertEquals("First user in the list is not Moderator", expectedUserInTheList, actualUserInTheList);
     }
 
     @Test
     public void getPhaseMessageTopOffListAfterCardsFlippedTest() {
-        Setup.launchMainBrowser();
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -221,7 +227,7 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Justas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
         Setup.launchThirdBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
@@ -230,23 +236,18 @@ public class ModeratorSettingsJunitTest {
         PlayerFunctionality.clickCardPlayer("20");
         PlayerFunctionality.getCheckMarkElement("saule");
         Setup.launchMainBrowser();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/div/button[1]/h6"));
         ModeratorSettings.clickFlipCardsButton();
-        ModeratorSettings.waitPhaseMessageResults("Waiting for moderator to finalise votes");
-        Setup.waitForElementToAppear(By.cssSelector("#root > div > div.poker > div.player-list.border.rounded.bg-light > h6"));
+        ModeratorSettings.waitPhaseMessageResults("Waiting for moderator to finalize votes");
         ModeratorSettings.getPhaseMessageTopOffList();
-        String expectedPhaseMessage = "Waiting for moderator to finalise votes";
+        String expectedPhaseMessage = "Waiting for moderator to finalize votes";
         String actualPhaseMessage = ModeratorSettings.getPhaseMessageTopOffList();
-        Assert.assertEquals(expectedPhaseMessage, actualPhaseMessage);
+        Assert.assertEquals("Phase Message shown after Cards have been flipped does not meet the requirements", expectedPhaseMessage, actualPhaseMessage);
     }
 
     @Test
-    public void getPhaseMessageTopOffListAfterFinishVotingTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+    public void getMessageTopOffListVotingPhaseTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -257,7 +258,7 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Antanas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_THIRD);
         LoginLogout.clickEnterPlayerButton();
         LoginLogout.waitForLoginResults();
         Setup.launchThirdBrowser();
@@ -267,40 +268,117 @@ public class ModeratorSettingsJunitTest {
         PlayerFunctionality.clickCardPlayer("20");
         PlayerFunctionality.getCheckMarkElement("saule");
         Setup.launchMainBrowser();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/button/h6"));
         ModeratorSettings.clickFinishVotingButton();
-        ModeratorSettings.waitPhaseMessageResults("Waiting on 2 players to vote");
-        Setup.waitForElementToAppear(By.cssSelector("#root > div > div.poker > div.player-list.border.rounded.bg-light > h6"));
+        ModeratorSettings.waitPhaseMessageResults("Waiting for 2 players to vote");
         ModeratorSettings.getPhaseMessageTopOffList();
-        String expectedPhaseMessage = "Waiting on 2 players to vote";
+        String expectedPhaseMessage = "Waiting for 2 players to vote";
         String actualPhaseMessage = ModeratorSettings.getPhaseMessageTopOffList();
-        Assert.assertEquals(expectedPhaseMessage, actualPhaseMessage);
+        Assert.assertEquals("Message shown during Voting Phase does not meet the requirements", expectedPhaseMessage, actualPhaseMessage);
     }
 
-    //TODO testas geras, bet yra bug'as, todel paskutines dvi eilutes uzkomentuotos (kolkas kad pipeline praeitu testas kaip passed)
+    @Test
+    public void getSumOfPlayersVotedInVotingSummaryTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("0");
+        ModeratorSettings.clickCardCheckbox("3");
+        ModeratorSettings.clickCardCheckbox("8");
+        ModeratorSettings.clickCardCheckbox("20");
+        ModeratorSettings.clickCardCheckbox("Coffee");
+        ModeratorSettings.clickSaveButton();
+        ModeratorSettings.waitForCardsOptions();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
+        LoginLogout.clickEnterPlayerButton();
+        ModeratorSettings.waitForCardsOptions();
+        PlayerFunctionality.clickCardPlayer("8");
+        Setup.launchThirdBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
+        LoginLogout.clickEnterPlayerButton();
+        ModeratorSettings.waitForCardsOptions();
+        PlayerFunctionality.clickCardPlayer("20");
+        Setup.launchMainBrowser();
+        ModeratorSettings.clickFlipCardsButton();
+        Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
+        String actualSumOfPlayersText = ModeratorSettings.getCircleText();
+        String expectedSumOfPlayersText = "2 Players\nvoted";
+        Assert.assertEquals("Sum of Players voted is not shown in the Voting summary", expectedSumOfPlayersText, actualSumOfPlayersText);
+    }
+
+    @Test
+    public void getVoteValueInSplitOfVotesVotingSummaryTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("0");
+        ModeratorSettings.clickCardCheckbox("3");
+        ModeratorSettings.clickCardCheckbox("8");
+        ModeratorSettings.clickCardCheckbox("20");
+        ModeratorSettings.clickCardCheckbox("Coffee");
+        ModeratorSettings.clickSaveButton();
+        ModeratorSettings.waitForCardsOptions();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_THIRD);
+        LoginLogout.clickEnterPlayerButton();
+        ModeratorSettings.waitForCardsOptions();
+        PlayerFunctionality.clickCardPlayer("8");
+        Setup.launchMainBrowser();
+        ModeratorSettings.clickFlipCardsButton();
+        Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
+        ModeratorSettings.getSplitOfVotesInVotingSummary(ModeratorSettings.VOTE_VALUE);
+        String expectedVoteValue = "8";
+        String actualVoteValue = ModeratorSettings.getSplitOfVotesInVotingSummary(ModeratorSettings.VOTE_VALUE);
+        Assert.assertEquals("Voting Value is not shown in the Voting summary", expectedVoteValue, actualVoteValue);
+    }
+
+    @Test
+    public void getPercentageOfPlayersForEachVoteVotingSummaryTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("0");
+        ModeratorSettings.clickCardCheckbox("3");
+        ModeratorSettings.clickCardCheckbox("8");
+        ModeratorSettings.clickCardCheckbox("20");
+        ModeratorSettings.clickCardCheckbox("Coffee");
+        ModeratorSettings.clickSaveButton();
+        ModeratorSettings.waitForCardsOptions();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_THIRD);
+        LoginLogout.clickEnterPlayerButton();
+        ModeratorSettings.waitForCardsOptions();
+        PlayerFunctionality.clickCardPlayer("8");
+        Setup.launchMainBrowser();
+        ModeratorSettings.clickFlipCardsButton();
+        Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
+        ModeratorSettings.getSplitOfVotesInVotingSummary(ModeratorSettings.VOTE_PERCENTAGE);
+        String expectedVotePercentage = "100.0% (1 players)";
+        String actualVotePercentage = ModeratorSettings.getSplitOfVotesInVotingSummary(ModeratorSettings.VOTE_PERCENTAGE);
+        Assert.assertEquals("Percentage of players who voted for each different vote is visible in the Voting results summary", expectedVotePercentage, actualVotePercentage);
+    }
+
     @Test
     public void selectAutoRevealCheckboxTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("3");
+        ModeratorSettings.clickCardCheckbox("8");
         ModeratorSettings.clickCardCheckbox("Auto Reveal");
         ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal");
-        //ModeratorSettings.clickSaveButton();
-        //Assert.assertTrue("Auto Reveal is not selected", ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal"));
+        ModeratorSettings.clickSaveButton();
+        Assert.assertTrue("Auto Reveal is not selected", ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal"));
     }
 
-    //TODO testas geras, bet del bug'o nevaziuoja, todel uzkomentuotas (atkomentuosim kai bug'as bus istaisytas)
-    /*@Test
+    @Test
     public void checkIfVotesAreRevealedWhenAllPlayersVotedAutoRevealCheckboxMarkedTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -312,29 +390,26 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal");
         ModeratorSettings.clickSaveButton();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Justas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
         ModeratorSettings.waitForCardsOptions();
-        PlayerFunctionality.clickCardPlayer("3");
         Setup.launchThirdBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
         ModeratorSettings.waitForCardsOptions();
+        PlayerFunctionality.clickCardPlayer("3");
+        Setup.launchAlternativeBrowser();
         PlayerFunctionality.clickCardPlayer("8");
-        Setup.waitForElementToAppear(By.className("circle"));
+        Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
         String actualCircleText = ModeratorSettings.getCircleText();
-        String expectedCircleText = "0 Players\nvoted";
-        Assert.assertEquals(expectedCircleText, actualCircleText);
-    }*/
+        String expectedCircleText = "2 Players\nvoted";
+        Assert.assertEquals("Votes are not revealed automatically after all Players have voted, even though AutoReveal had been marked", expectedCircleText, actualCircleText);
+    }
 
-    //TODO testas bus geras ir naudojamas, bet dar nebaigtas del bug'o ir neparasytos vienos funkcijos
-   /*@Test
+    @Test
     public void checkIfVotesAreNotRevealedWhenAllPlayersVotedAutoRevealCheckboxUnmarkedTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -343,21 +418,61 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.clickCardCheckbox("20");
         ModeratorSettings.clickCardCheckbox("Coffee");
         ModeratorSettings.clickCardCheckbox("Auto Reveal");
-        ModeratorSettings.clickCardCheckbox("Auto Reveal");
         ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal");
+        ModeratorSettings.clickCardCheckbox("Auto Reveal");
         ModeratorSettings.clickSaveButton();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Justas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
         ModeratorSettings.waitForCardsOptions();
         PlayerFunctionality.clickCardPlayer("3");
-        Setup.launchThirdBrowser();
-        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
+        PlayerFunctionality.getVoteIconNextToNameBeforeVotes("Justas");
+        String expectedSymbolResult = "vote-icon";
+        String actualSymbolResult = PlayerFunctionality.getVoteIconNextToNameBeforeVotes("Justas");
+        Assert.assertEquals("Votes are revealed automatically after all Players have voted, however AutoReveal had been unmarked", actualSymbolResult, expectedSymbolResult);
+    }
+
+    @Test
+    public void getModeratorGeneratedRoomLinkTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        Setup.browser.getCurrentUrl().contains("https://pokerface-dev.azurewebsites.net/Poker?roomId");
+        Assert.assertTrue("Current room link is not uniquely generated", Setup.browser.getCurrentUrl().contains("https://pokerface-dev.azurewebsites.net/Poker?roomId"));
+        Assert.assertNotEquals("General link and uniquely generated link are the same", Setup.POKER_URL, Setup.browser.getCurrentUrl());
+    }
+
+    @Test
+    public void compareModeratorAndPlayerRoomLinksTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        String moderatorRoomLink = Setup.browser.getCurrentUrl();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
-        ModeratorSettings.waitForCardsOptions();
-        PlayerFunctionality.clickCardPlayer("8");
-        //toliau vote ikoneles radimo funkcija(neparasyta) ir assertEquals
-    }*/
+        LoginLogout.waitForLoginResults();
+        String playerRoomLink = Setup.browser.getCurrentUrl();
+        Assert.assertEquals("Player and Moderator are in different rooms", moderatorRoomLink, playerRoomLink);
+    }
+
+    @Test
+    public void compareGeneratedRoomLinksFromTwoDifferentModeratorsTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        String firstModeratorRoomLink = Setup.browser.getCurrentUrl();
+        Setup.launchFourthBrowser();
+        LoginLogout.loginModerator(LoginLogout.SECOND_EMAIL, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        String secondModeratorRoomLink = Setup.browser.getCurrentUrl();
+        Assert.assertNotEquals("Both newly generated room links from each different Moderator are the same", firstModeratorRoomLink, secondModeratorRoomLink);
+    }
+
+    @Test
+    public void checkIfTimerIsVisibleInPlayersSectionTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForNameResults("testemail@gmail.com");
+        ModeratorSettings.getTimerVisibleInPlayersSection();
+        Assert.assertTrue("Timer is not displayed", ModeratorSettings.getTimerVisibleInPlayersSection());
+    }
 
     @After
     public void finish() {

@@ -11,19 +11,21 @@ public class HeaderJunitTest {
     }
 
     @Test
-    public void pressUserIconPositiveTest() {
+    public void pressUserIconLoginPositiveTest() {
         Setup.launchAlternativeBrowser();
-        Header.clickUserIcon("Login");
-        String expectedResults = "Welcome back";
-        Assert.assertEquals(expectedResults,Header.getHeaderIconResults());
+        Header.clickUserIconLogin("Login");
+        String expectedModeratorPageResults = "Welcome back";
+        String actualModeratorPageResults = Header.getHeaderIconResults();
+        Assert.assertEquals("User Icon/Login button does not redirect to Moderator login page", expectedModeratorPageResults, actualModeratorPageResults);
     }
 
     @Test
     public void pressUserIconNegativeTest() {
         Setup.launchAlternativeBrowser();
-        Header.clickUserIcon("Login");
+        Header.clickUserIconLogin("Login");
         String expectedResults = "Something";
-        Assert.assertNotEquals(expectedResults, Header.getHeaderIconResults());
+        String actualResults = Header.getHeaderIconResults();
+        Assert.assertNotEquals("Main headline of Moderator login page is Something", expectedResults, actualResults);
     }
 
     @Test
@@ -32,7 +34,7 @@ public class HeaderJunitTest {
         Setup.acceptFestoCookies();
         String currentUrlFesto = Setup.browser.getCurrentUrl();
         String expectedUrlFesto = Setup.URL_FESTO;
-        Assert.assertEquals(expectedUrlFesto, currentUrlFesto);
+        Assert.assertEquals("Festo logo does not redirect to Festo company main page", expectedUrlFesto, currentUrlFesto);
     }
 
     @Test
@@ -40,7 +42,7 @@ public class HeaderJunitTest {
         Header.clickFestoLogo();
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(expectedResults, Header.getFestoLogoResults());
+        Assert.assertNotEquals("Main headline of Festo company main page is Something", expectedResults, Header.getFestoLogoResults());
     }
 
    @After

@@ -2,25 +2,28 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerFunctionalityJunitTest {
 
+    ArrayList<String>expectedUsersList;
+
     @Before
     public void setup() {
         Setup.launchMainBrowser();
+
+        expectedUsersList = new ArrayList<>();
+        expectedUsersList.add("testemail@gmail.com");
+        expectedUsersList.add("saule");
+        expectedUsersList.add("Justas");
     }
 
     @Test
     public void getCheckMarkPlayerVotedTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -37,16 +40,13 @@ public class PlayerFunctionalityJunitTest {
         PlayerFunctionality.clickCardPlayer("20");
         PlayerFunctionality.getCheckMarkElement("saule");
         String expectedResults = "fa-regular fa-circle-check text-primary";
-        Assert.assertEquals(PlayerFunctionality.getCheckMarkElement("saule"), expectedResults);
+        Assert.assertEquals("Checkmark did not appear next to the Player's name after the vote", PlayerFunctionality.getCheckMarkElement("saule"), expectedResults);
     }
 
     @Test
     public void comparePlayerCardsWithModeratorCardsPositiveTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -65,14 +65,12 @@ public class PlayerFunctionalityJunitTest {
         System.out.println("Moderator cards list: " + ModeratorSettings.getPossibleModeratorVotingAreaCardsList());
         System.out.println("Player cards list: " + PlayerFunctionality.getPossiblePayerVotingAreaCardsList());
         ArrayList<String> actualListPlayer = PlayerFunctionality.getPossiblePayerVotingAreaCardsList();
-        Assert.assertEquals(actualListOfModeratorCards, actualListPlayer);
+        Assert.assertEquals("Moderator cards list is different from Player cards list", actualListOfModeratorCards, actualListPlayer);
     }
 
     @Test
     public void getPlayerNameInTheListTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
@@ -81,16 +79,30 @@ public class PlayerFunctionalityJunitTest {
         PlayerFunctionality.getPlayerVisibleInTheList(LoginLogout.FIELD_NAME);
         String expectedPlayerName = "saule";
         String actualPlayerName = PlayerFunctionality.getPlayerVisibleInTheList(LoginLogout.FIELD_NAME);
-        Assert.assertEquals(expectedPlayerName, actualPlayerName);
+        Assert.assertEquals("Player is not shown in the list", expectedPlayerName, actualPlayerName);
+    }
+
+    @Test
+    public void getAllUsersInTheListTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
+        LoginLogout.clickEnterPlayerButton();
+        LoginLogout.waitForLoginResults();
+        Setup.launchThirdBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
+        LoginLogout.clickEnterPlayerButton();
+        LoginLogout.waitForLoginResults();
+        PlayerFunctionality.getAllUsersInTheList();
+        ArrayList<String> actualUsersList = PlayerFunctionality.getAllUsersInTheList();
+        Assert.assertEquals("Acquirement of All Users List was unsuccessful", expectedUsersList, actualUsersList);
     }
 
     @Test
     public void getQuestionMarkPlayerNotVotedTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -101,7 +113,7 @@ public class PlayerFunctionalityJunitTest {
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Justas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
         Setup.launchThirdBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
@@ -109,22 +121,17 @@ public class PlayerFunctionalityJunitTest {
         ModeratorSettings.waitForCardsOptions();
         PlayerFunctionality.clickCardPlayer("20");
         Setup.launchMainBrowser();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/div/button[1]/h6"));
         ModeratorSettings.clickFlipCardsButton();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div/div[1]/div[2]/div[2]/h5"));
         PlayerFunctionality.getVotingResultAfterFlipCards("Justas");
-        String expectedSymbolResult = "vote-icon";
-        String actualSymbolResult = PlayerFunctionality.getVotingResultAfterFlipCards("Justas");
-        Assert.assertEquals(actualSymbolResult, expectedSymbolResult);
+        String expectedQuestionMarkResult = "?";
+        String actualQuestionMarkResult = PlayerFunctionality.getVotingResultAfterFlipCards("Justas");
+        Assert.assertEquals("Question mark is invisible", actualQuestionMarkResult, expectedQuestionMarkResult);
     }
 
     @Test
     public void getVotingResultNextToPlayerNameTest() {
-        LoginLogout.enterEmail(LoginLogout.EMAIL_CORRECT);
-        LoginLogout.enterPassword(LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.submitLoginForm();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForLoginResults();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/button/i"));
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -135,18 +142,29 @@ public class PlayerFunctionalityJunitTest {
         ModeratorSettings.clickSaveButton();
         ModeratorSettings.waitForCardsOptions();
         Setup.launchAlternativeBrowser();
-        LoginLogout.loginPlayer("Justas");
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
         ModeratorSettings.waitForCardsOptions();
         PlayerFunctionality.clickCardPlayer("8");
         Setup.launchMainBrowser();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div[1]/div/div[1]/div[2]/div/div/div/button[1]/h6"));
         ModeratorSettings.clickFlipCardsButton();
-        Setup.waitForElementToAppear(By.xpath("//*[@id=\"root\"]/div/div[1]/div[2]/div[2]/h5"));
         PlayerFunctionality.getVotingResultAfterFlipCards("Justas");
+        String expectedVotingResult = "8";
+        String actualVotingResult = PlayerFunctionality.getVotingResultAfterFlipCards("Justas");
+        Assert.assertEquals("Voting result is invisible", actualVotingResult, expectedVotingResult);
+    }
+
+    @Test
+    public void getVoteIconBeforePlayerVotedTest() {
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        Setup.launchAlternativeBrowser();
+        LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
+        LoginLogout.clickEnterPlayerButton();
+        PlayerFunctionality.getVoteIconNextToNameBeforeVotes("Justas");
         String expectedSymbolResult = "vote-icon";
-        String actualSymbolResult = PlayerFunctionality.getVotingResultAfterFlipCards("Justas");
-        Assert.assertEquals(actualSymbolResult, expectedSymbolResult);
+        String actualSymbolResult = PlayerFunctionality.getVoteIconNextToNameBeforeVotes("Justas");
+        Assert.assertEquals("Vote icon is invisible", actualSymbolResult, expectedSymbolResult);
     }
 
     @After

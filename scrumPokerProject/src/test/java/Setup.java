@@ -10,17 +10,19 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class Setup {
     public static WebDriver browser;
     public static WebDriver mainBrowser;
     public static WebDriver alternativeBrowser;
     public static WebDriver thirdBrowser;
+    public static WebDriver fourthBrowser;
     public static final String POKER_URL = "https://pokerface-dev.azurewebsites.net/Login";
-    public static final String URL_ROOM_PLAYER = "https://pokerface-dev.azurewebsites.net/?roomId=4d23f8a6-7cd4-4dfc-b4b4-52e844d7ede0";
+    public static final String URL_ROOM_PLAYER = "https://pokerface-dev.azurewebsites.net/Poker?roomId=92aabb76-af53-4652-a2cc-16d7ce4dfe76";
     public static final String URL_FESTO ="https://www.festo.com/us/en/";
 
-    public static WebDriver setup() { //leidzia per chrome by default, jeigu settingsu lentelej nurodai BROWSER=edge, tada leis edge
+    public static WebDriver setup() {
         String browserType = System.getenv("BROWSER");
 
         WebDriver browser;
@@ -37,6 +39,7 @@ public class Setup {
             options.addArguments("--remote-allow-origins=*");
             browser = new ChromeDriver(options);
         }
+        browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
         return browser;
     }
 
@@ -78,11 +81,23 @@ public class Setup {
         browser = thirdBrowser;
     }
 
+    public static void launchFourthBrowser() {
+        if (fourthBrowser == null) {
+            fourthBrowser = setup();
+            fourthBrowser.get(POKER_URL);
+        }
+        browser = fourthBrowser;
+    }
+
     public static void closePage() {
         if (mainBrowser != null) mainBrowser.close();
         if (alternativeBrowser != null) alternativeBrowser.close();
+        if (thirdBrowser != null) thirdBrowser.close();
+        if (fourthBrowser != null) fourthBrowser.close();
         mainBrowser = null;
         alternativeBrowser = null;
+        thirdBrowser = null;
+        fourthBrowser = null;
     }
 }
 

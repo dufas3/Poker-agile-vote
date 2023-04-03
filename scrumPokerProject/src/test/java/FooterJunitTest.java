@@ -15,7 +15,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Imprint");
         Setup.acceptFestoCookies();
         String expectedResults = "Imprint";
-        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertEquals("Imprint link does not redirect to Festo Imprint page", expectedResults, actualResults);
     }
 
     @Test
@@ -23,7 +24,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Imprint");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertNotEquals("Main headline of Festo Imprint page is Something",expectedResults, actualResults);
     }
 
     @Test
@@ -31,7 +33,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("privacy");
         Setup.acceptFestoCookies();
         String expectedResults = "Festo Data Privacy Statement";
-        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertEquals("Data Privacy link does not redirect to Festo Data Privacy page", expectedResults, actualResults);
     }
 
     @Test
@@ -39,7 +42,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("privacy");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertNotEquals("Main headline of Festo Data Privacy page is Something", expectedResults, actualResults);
     }
 
     @Test
@@ -47,7 +51,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Terms");
         Setup.acceptFestoCookies();
         String expectedResults = "Terms and Conditions of Sale";
-        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertEquals("Terms and Conditions link does not redirect to Festo Terms and Conditions of Sale page", expectedResults, actualResults);
     }
 
     @Test
@@ -55,7 +60,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Terms");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertNotEquals("Main headline of Festo Terms and Conditions of Sale page is Something", expectedResults, actualResults);
     }
 
     @Test
@@ -63,7 +69,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Cloud");
         Setup.acceptFestoCookies();
         String expectedResults = "Cloud Services";
-        Assert.assertEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertEquals("Cloud Services link does not redirect to Festo Cloud Services page", expectedResults, actualResults);
     }
 
     @Test
@@ -71,7 +78,8 @@ public class FooterJunitTest {
         Footer.clickFooterLink("Cloud");
         Setup.acceptFestoCookies();
         String expectedResults = "Something";
-        Assert.assertNotEquals(expectedResults, Footer.getFooterLinkResults());
+        String actualResults = Footer.getFooterLinkResults();
+        Assert.assertNotEquals("Main headline of Festo Cloud Services page is Something", expectedResults, actualResults);
     }
 
     @After

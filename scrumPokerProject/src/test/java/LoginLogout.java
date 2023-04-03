@@ -5,81 +5,106 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 public class LoginLogout {
 
     public static final String FIELD_NAME = "saule";
+    public static final String FIELD_NAME_SECOND = "Justas";
+    public static final String FIELD_NAME_THIRD = "Antanas";
+    public static final String FIELD_NAME_MAX_SYMBOLS = "Wsnklksjeiwocms01#&laqoksm";
+    public static final String FIELD_NAME_MIN_SYMBOLS = "Li";
+    public static final String FIELD_NAME_EMPTY = "";
+
     public static final String EMAIL_CORRECT = "testemail@gmail.com";
     public static final String EMAIL_INCORRECT = "testemailgmail.com";
+    public static final String SECOND_EMAIL = "testemail10@gmail.com";
 
     public static final String PASSWORD_CORRECT = "testpassword123";
     public static final String PASSWORD_INCORRECT = "testpass";
 
+    public static final By ENTER_BUTTON = By.id("joinbutton");
+    public static final By NAME_FIELD = By.id("loginname");
+    public static final By EMAIL_FIELD = By.id("emailenter");
+    public static final By PASSWORD_FIELD = By.id("passwordenter");
+    public static final By LOGIN_BUTTON = By.className("login-button");
+    public static final By LOGIN_NAME_RESULT = By.id("dropdown-basic");
+    public static final By LOGIN_ERROR_MESSAGE = By.cssSelector(".error-text.text-danger");
+    public static final By LOGOUT_BUTTON = By.id("logoutbutton");
+
     public static void loginPlayer(String name) {
-        WebElement nameField = Setup.browser.findElement(By.xpath("//*[@id=\"root\"]/div[1]/body/div/input"));
+        Setup.waitForElementToAppear(NAME_FIELD);
+        WebElement nameField = Setup.browser.findElement(NAME_FIELD);
         Assert.assertTrue("Player name field is inactive and/or invisible", nameField.isEnabled() && nameField.isDisplayed());
         nameField.sendKeys(name);
-        Setup.browser.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     }
 
     public static void clickEnterPlayerButton() {
-        WebElement enterButton = Setup.browser.findElement(By.id("joinbutton"));
+        Setup.waitForElementToAppear(ENTER_BUTTON);
+        WebElement enterButton = Setup.browser.findElement(ENTER_BUTTON);
         Assert.assertTrue("Enter button is invisible", enterButton.isDisplayed());
         enterButton.click();
     }
 
     public static void enterEmail(String email) {
-        WebElement emailField = Setup.browser.findElement(By.id("emailenter"));
+        Setup.waitForElementToAppear(EMAIL_FIELD);
+        WebElement emailField = Setup.browser.findElement(EMAIL_FIELD);
         Assert.assertTrue("Email field is inactive and/or invisible", emailField.isEnabled() && emailField.isDisplayed());
         emailField.sendKeys(email);
     }
 
     public static void enterPassword(String password) {
-        WebElement passwordField = Setup.browser.findElement(By.id("passwordenter"));
+        Setup.waitForElementToAppear(PASSWORD_FIELD);
+        WebElement passwordField = Setup.browser.findElement(PASSWORD_FIELD);
         Assert.assertTrue("Password field is inactive and/or invisible", passwordField.isEnabled() && passwordField.isDisplayed());
         passwordField.sendKeys(password);
     }
 
+    public static void loginModerator(String email, String password){
+        enterEmail(email);
+        enterPassword(password);
+        submitLoginForm();
+    }
+
     public static void submitLoginForm() {
-        WebElement loginButton = Setup.browser.findElement(By.className("login-button"));
+        Setup.waitForElementToAppear(LOGIN_BUTTON);
+        WebElement loginButton = Setup.browser.findElement(LOGIN_BUTTON);
         Assert.assertTrue("Login button is invisible", loginButton.isDisplayed());
         loginButton.click();
     }
 
     public static void waitForLoginResults() {
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.presenceOfElementLocated(By.id("dropdown-basic")));
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.presenceOfElementLocated(LOGIN_NAME_RESULT));
     }
 
     public static void waitForNameResults(String text) {
-        WebElement name = Setup.browser.findElement(By.id("dropdown-basic"));
+        WebElement name = Setup.browser.findElement(LOGIN_NAME_RESULT);
         new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.textToBePresentInElement(name,text));
     }
 
     public static String getLoginResults() {
-        WebElement loginName = Setup.browser.findElement(By.id("dropdown-basic"));
+        WebElement loginName = Setup.browser.findElement(LOGIN_NAME_RESULT);
         String resultsText = loginName.getText();
         return resultsText;
     }
 
     public static String getUnsuccessfulLoginMessage() {
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(3)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".error-text.text-danger")));
-        WebElement loginErrorMessage = Setup.browser.findElement(By.cssSelector(".error-text.text-danger"));
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(3)).until(ExpectedConditions.presenceOfElementLocated(LOGIN_ERROR_MESSAGE));
+        WebElement loginErrorMessage = Setup.browser.findElement(LOGIN_ERROR_MESSAGE);
         String errorMessageText = loginErrorMessage.getText();
         System.out.println(errorMessageText);
         return errorMessageText;
     }
 
     public static void pressLoginNameButton() {
-        By loginResult = By.id("dropdown-basic");
+        By loginResult = LOGIN_NAME_RESULT;
         new WebDriverWait(Setup.browser, Duration.ofSeconds(5)).until(ExpectedConditions.presenceOfElementLocated(loginResult));
-        WebElement loginNameButton = Setup.browser.findElement(By.id("dropdown-basic"));
+        WebElement loginNameButton = Setup.browser.findElement(LOGIN_NAME_RESULT);
         Assert.assertTrue("Login User name button located in Header is invisible", loginNameButton.isDisplayed());
         loginNameButton.click();
     }
 
     public static void pressLogoutButton() {
-        WebElement logoutButton = Setup.browser.findElement(By.id("logoutbutton"));
+        WebElement logoutButton = Setup.browser.findElement(LOGOUT_BUTTON);
         Assert.assertTrue("Logout button located in Header is invisible", logoutButton.isDisplayed());
         logoutButton.click();
     }
