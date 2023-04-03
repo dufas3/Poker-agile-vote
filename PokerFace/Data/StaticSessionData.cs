@@ -1,6 +1,5 @@
 ﻿using PokerFace.Data.SessionModels;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace PokerFace.Data
 {
@@ -46,29 +45,37 @@ namespace PokerFace.Data
         public static async Task RemoveSessionAsync(string roomId)
         {
             await Task
-                .Run(()=>SessionData
+                .Run(() => SessionData
                 .TryRemove(SessionData
                 .Where(x => x.Key == roomId)
                 .FirstOrDefault()));
         }
 
-        public static void AddSession(Entities.Moderator moderator, int sessionIdDb, List<Data.Entities.Setting> settings)
+        public static void AddSession(
+            Entities.Moderator moderator,
+            int sessionIdDb,
+            List<Data.Entities.Setting> settings,
+            List<Data.Entities.Card> activeCards,
+            List<Data.Entities.Card> allCards)
         {
             var sessions = SessionData.Select(x => x.Value.Session).ToList();
+
+            AllCards = allCards;
 
             var sd = new SessionData
             {
                 RoomId = moderator.RoomId,
                 Session = new Session { ModeratorId = moderator.Id, RefId = sessionIdDb, Settings = settings, LastTimer = DateTime.UtcNow},
                 Users = new List<User> { moderator.ToSessionDataUser() }
-
             };
 
-            int maxId = 1;
+            sd.Session.CardIds.AddRange(activeCards.Select(x => x.Id).ToList());
+
+            int maxId = 0;
             for (int i = 0; i < sessions.Count; i++)
                 if (sessions[i].Id > maxId)
                     maxId = sessions[i].Id;
-            sd.Session.Id = maxId;
+            sd.Session.Id = maxId + 1;
 
             try
             {

@@ -4,10 +4,11 @@ using PokerFace.Data.Entities;
 
 namespace PokerFace.Data.Repositories
 {
-    public class SettingsRepository : ISettingsRepository
+    public class SettingsRepository : AsyncRepository<Setting>, ISettingsRepository
     {
-        private readonly ApplicationDbContext context;
-        public SettingsRepository(ApplicationDbContext context)
+        private ApplicationDbContext context;
+
+        public SettingsRepository(ApplicationDbContext context) : base(context)
         {
             this.context = context;
         }
@@ -20,19 +21,19 @@ namespace PokerFace.Data.Repositories
 
         public async Task<List<Setting>> GetSettingsAsync()
         {
-           return await context.Settings.ToListAsync();
+            return await context.Settings.ToListAsync();
         }
 
         public async Task SetSettingsAsync(List<int> ids, string roomId)
         {
             var session = await StaticSessionData.GetSessionAsync(roomId);
 
-
             foreach (Setting setting in session.Settings)
             {
-                if (ids.Contains(setting.Id)) setting.IsActive = true; 
-                else setting.IsActive = false; 
+                if (ids.Contains(setting.Id)) setting.IsActive = true;
+                else setting.IsActive = false;
             }
+
             await StaticSessionData.SaveChangesAsync(session, roomId);
         }
     }

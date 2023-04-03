@@ -17,6 +17,10 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     setUpAlreadyActiveCards();
   }, [activeCards]);
 
+  useEffect(() => {
+    setUpAlreadyActiveSettings();
+  }, [settings]);
+
   const handleSetAllCards = (e) => {
     setIsCheckAll(!isCheckAll);
     setSelectedCheckboxes(cards.map((li) => li.id.toString()));
@@ -48,22 +52,35 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     await ClearSessionVotes({ roomId: roomId });
   };
 
-  const handleSettingsCheckbox = (event, id) => {
-    if (event) {
-      const value = event.target.value;
-      console.log(value);
-      const checked = event.target.checked;
-      if (checked) {
-        setSettingsCheckbox([...settingsCheckBox, value]);
-      } else {
+  // const handleSettingsCheckbox = (event, id) => {
+  //   if (event) {
+  //     const value = event.target.value;
+  //     console.log(value);
+  //     const checked = event.target.checked;
+  //     if (checked) {
+  //       setSettingsCheckbox([...settingsCheckBox, value]);
+  //     } else {
+  //       setSettingsCheckbox(settingsCheckBox.filter((item) => item !== value));
+  //     }
+  //   } else {
+  //     let checked = !(settingsCheckBox.filter((x) => x == id).length > 0);
+  //     if (checked) {
+  //       setSettingsCheckbox([...settingsCheckBox, id]);
+  //     } else {
+  //       setSettingsCheckbox(settingsCheckBox.filter((item) => item !== id));
+  //     }
+  //   }
+  // };
+
+  const handleSettingsCheckboxChange = (e, id) => {
+    if (e) {
+      const { value, checked } = e.target;
+      console.log("value", value);
+      setSettingsCheckbox([...settingsCheckBox, id]);
+      if (!checked) {
         setSettingsCheckbox(settingsCheckBox.filter((item) => item !== value));
-      }
-    } else {
-      let checked = !(settingsCheckBox.filter((x) => x == id).length > 0);
-      if (checked) {
-        setSettingsCheckbox([...settingsCheckBox, id]);
       } else {
-        setSettingsCheckbox(settingsCheckBox.filter((item) => item !== id));
+        setSettingsCheckbox([...settingsCheckBox, value]);
       }
     }
   };
@@ -125,6 +142,15 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     });
   };
 
+  const setUpAlreadyActiveSettings = async () => {
+    settings?.map((setting) => {
+      if (setting.isActive) {
+        handleSettingsCheckboxChange(undefined, setting.id.toString());
+        setSettingsCheckbox(settings.map((li) => li.id.toString()));
+      }
+    });
+  };
+
   return (
     <>
       {!inSettings ? (
@@ -169,7 +195,9 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
                 type="checkbox"
                 value=""
                 id="flexCheckDefault"
-                checked={selectedCheckboxes.length >= 13 ? true : false}
+                checked={
+                  selectedCheckboxes.length >= cards?.length ? true : false
+                }
                 onChange={handleSetAllCards}
               />
               <label className="form-check-label" htmlFor="flexCheckDefault">
@@ -201,12 +229,9 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
                   value={setting.id}
                   id={setting.name}
                   checked={settingsCheckBox.includes(setting.id.toString())}
-                  onChange={handleSettingsCheckbox}
+                  onChange={handleSettingsCheckboxChange}
                 />
-                <label
-                  className="form-check-label ml-5"
-                  htmlFor={setting.name}
-                >
+                <label className="form-check-label ml-5" htmlFor={setting.name}>
                   {setting.name}
                 </label>
               </div>

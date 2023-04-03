@@ -2,12 +2,13 @@
 using PokerFace.Data.Common;
 using PokerFace.Data.Entities;
 using PokerFace.Data.SessionModels;
+using CardDb = PokerFace.Data.Entities.Card;
 
 namespace PokerFace.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        ApplicationDbContext context { get; set; }
+        private ApplicationDbContext context { get; set; }
 
         public UserRepository(ApplicationDbContext context)
         {
@@ -46,7 +47,7 @@ namespace PokerFace.Data.Repositories
             await StaticSessionData.SaveChangesAsync(user);
         }
 
-        public async Task<Entities.Card> GetSelectedCardAsync(int userId, string roomId)
+        public async Task<CardDb> GetSelectedCardAsync(int userId, string roomId)
         {
             var user = await StaticSessionData.GetSessionUserAsync(roomId, userId);
             return await Task.Run(() => StaticSessionData.AllCards.Where(x => x.Id == user.SelectedCardId).FirstOrDefault());

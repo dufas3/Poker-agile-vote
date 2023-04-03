@@ -1,12 +1,15 @@
 ﻿using PokerFace.Data.SessionModels;
+using SessionDb = PokerFace.Data.Entities.Session;
+using ModeratorDb = PokerFace.Data.Entities.Moderator;
+using SettingDb = PokerFace.Data.Entities.Setting;
+using CardDb = PokerFace.Data.Entities.Card;
 
 
 namespace PokerFace.Data.Common
 {
-    public interface ISessionRepository
+    public interface ISessionRepository : IAsyncRepository<SessionDb>
     {
-        Task AddAsync(Entities.Session session);
-        Task AddAsync(Entities.Moderator moderator, List<Entities.Setting> settings);
+        Task AddAsync(ModeratorDb moderator, List<SettingDb> activeSettings, List<CardDb> activeCards);
 
         Task UpdateAsync(Session session);
 
@@ -15,7 +18,7 @@ namespace PokerFace.Data.Common
         Task<List<Entities.Card>> GetActiveCardsAsync(string roomId);
         Task<List<Entities.Card>> GetSessionUsersSelectedCardAsync(string roomId);
         Task<SessionState> GetSessionStateAsync(string roomId);
-        Task<Entities.Session> GetSessionFromDb(string roomId);
+        Task<SessionDb> GetSessionFromDb(string roomId);
 
         Task SetSessionStateAsync(string roomId, SessionState state);
         Task SetActiveCardsAsync(string roomId, List<int> cardIds);

@@ -4,11 +4,11 @@ using PokerFace.Data.Entities;
 
 namespace PokerFace.Data.Repositories
 {
-    public class CardsRepository : ICardsRepository
+    public class CardsRepository : AsyncRepository<Card>, ICardsRepository
     {
         private readonly ApplicationDbContext context;
 
-        public CardsRepository(ApplicationDbContext context)
+        public CardsRepository(ApplicationDbContext context) : base(context)
         {
             this.context = context;
         }
@@ -21,11 +21,6 @@ namespace PokerFace.Data.Repositories
         public async Task<List<Card>> GetCardsAsync()
         {
             return await context.Cards.ToListAsync();
-        }
-
-        public async Task SetCardsAsync()
-        {
-            StaticSessionData.AllCards = await GetCardsAsync();
         }
     }
 }

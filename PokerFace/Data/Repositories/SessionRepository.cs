@@ -1,14 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokerFace.Data.Common;
 using PokerFace.Data.SessionModels;
+using SessionDb = PokerFace.Data.Entities.Session;
+using ModeratorDb = PokerFace.Data.Entities.Moderator;
+using CardDb = PokerFace.Data.Entities.Card;
+using SettingDb = PokerFace.Data.Entities.Setting;
 
 namespace PokerFace.Data.Repositories
 {
-    public class SessionRepository : ISessionRepository
+    public class SessionRepository : AsyncRepository<SessionDb>, ISessionRepository
     {
         private readonly ApplicationDbContext context;
 
-        public SessionRepository(ApplicationDbContext context)
+        public SessionRepository(ApplicationDbContext context) : base(context)
         {
             this.context = context;
         }
@@ -23,24 +27,21 @@ namespace PokerFace.Data.Repositories
             return await StaticSessionData.GetSessionAsync(roomId);
         }
 
-        public async Task AddAsync(Entities.Session session)
+        public async Task AddAsync(ModeratorDb moderator, List<SettingDb> activeSettings, List<CardDb> activeCards)
         {
-            await context.Sessions.AddAsync(session);
-            await context.SaveChangesAsync();
+            var settings = await context.Settings.ToListAsync();
+            var cards = await context.Cards.ToListAsync();
+
+            var session = await context.Sessions.FirstOrDefaultAsync(x => x.RoomId == moderator.RoomId);
+
+            StaticSessionData.AddSession(moderator, session.Id, settings, activeCards, cards);
         }
 
-        public async Task AddAsync(Entities.Moderator moderator, List<Entities.Setting> settings)
-        {
-            var session = await GetSessionFromDb(moderator.RoomId);
-            
-            StaticSessionData.AddSession(moderator, session.Id, settings);
-        }
-
-        public async Task<List<Entities.Card>> GetSessionUsersSelectedCardAsync(string roomId)
+        public async Task<List<CardDb>> GetSessionUsersSelectedCardAsync(string roomId)
         {
             var users = await StaticSessionData.GetSessionUsersAsync(roomId);
 
-            var cards = new List<Entities.Card>();
+            var cards = new List<CardDb>();
 
             foreach (var user in users)
             {
@@ -83,11 +84,11 @@ namespace PokerFace.Data.Repositories
             await StaticSessionData.SaveChangesAsync(session, roomId);
         }
 
-        public async Task<List<Entities.Card>> GetActiveCardsAsync(string roomId)
+        public async Task<List<CardDb>> GetActiveCardsAsync(string roomId)
         {
             var session = await GetByRoomIdAsync(roomId);
 
-            var activeCards = new List<Entities.Card>();
+            var activeCards = new List<CardDb>();
 
             foreach (var id in session.CardIds)
             {
@@ -111,9 +112,9 @@ namespace PokerFace.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<Entities.Session> GetSessionFromDb(string roomId)
+        public async Task<SessionDb> GetSessionFromDb(string roomId)
         {
-            return await context.Sessions.FirstOrDefaultAsync(x => x.RoomId == roomId);
+            return await context.Sessions.Include(x => x.ActiveCards).Include(x => x.ActiveSettings).FirstOrDefaultAsync(x => x.RoomId == roomId);
         }
 
         public async Task UpdateAsync(Session session)
@@ -122,7 +123,7 @@ namespace PokerFace.Data.Repositories
         }
 
         public async Task SetLastTimerAsync(string roomId)
-        { 
+        {
             var session = await StaticSessionData.GetSessionAsync(roomId);
             session.LastTimer = DateTime.UtcNow;
         }
@@ -132,6 +133,5 @@ namespace PokerFace.Data.Repositories
             var session = await StaticSessionData.GetSessionAsync(roomId);
             return session.LastTimer;
         }
-
     }
 }

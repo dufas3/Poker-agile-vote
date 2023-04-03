@@ -28,6 +28,10 @@ namespace PokerFace.Web
                 );
 
             //repos
+            builder.Services.AddScoped<IAsyncRepository<Session>, AsyncRepository<Session>>();
+            builder.Services.AddScoped<IAsyncRepository<Card>, AsyncRepository<Card>>();
+            builder.Services.AddScoped<IAsyncRepository<Moderator>, AsyncRepository<Moderator>>();
+
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ICardsRepository, CardsRepository>();
@@ -36,8 +40,6 @@ namespace PokerFace.Web
             //services
             builder.Services.AddScoped<ISignalRService, SignalRService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
-        
-
 
             //email
             var emailConfig = builder.Configuration
@@ -46,8 +48,6 @@ namespace PokerFace.Web
             builder.Services.AddSingleton(emailConfig);
             builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-            //for adding static data 
-            //builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
 
             builder.Services.AddCors(options =>
             {
@@ -77,7 +77,6 @@ namespace PokerFace.Web
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.Run();
         }

@@ -1,6 +1,6 @@
 const ConnectionUrl = ({ appendix }) => {
   return new URL(
-      "https://pokerface-devbackend.azurewebsites.net/api" + appendix
+    "https://pokerface-devbackend.azurewebsites.net/api" + appendix
   );
 };
 

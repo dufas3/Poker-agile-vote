@@ -2,7 +2,7 @@
 
 namespace PokerFace.Data.Common
 {
-    public interface ISettingsRepository
+    public interface ISettingsRepository : IAsyncRepository<Setting>
     {
         Task<List<Setting>> GetSettingsAsync(string roomId);
         Task<List<Setting>> GetSettingsAsync();
