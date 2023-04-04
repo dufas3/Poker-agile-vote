@@ -24,7 +24,17 @@ const Notifications = (props) => {
       } else if (props.data.state == SessionState.FINILIZESTATE) {
         message = "Moderator flipped the cards. Voting stopped.";
       } else if (props.data.state == SessionState.FINISHSTATE) {
-        message = "Voting finished.";
+          toast.info("Voting finished", {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+          })
+          message = "Voting starts.";
       } else if (props.data.state == SessionState.ALLUSERSVOTED) {
         message = "Voting stopped.";
       } else if (props.data.state == SessionState.VOTINGSTART) {
