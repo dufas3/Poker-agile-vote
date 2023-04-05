@@ -41,7 +41,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
       roomId: roomId,
       state: SessionState.FINISHSTATE,
     });
-    //await ClearSessionVotes({ roomId: roomId });
+    await ClearSessionVotes({ roomId: roomId });
   };
 
   const handleClearVotes = async () => {
@@ -51,26 +51,6 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     });
     await ClearSessionVotes({ roomId: roomId });
   };
-
-  // const handleSettingsCheckbox = (event, id) => {
-  //   if (event) {
-  //     const value = event.target.value;
-  //     console.log(value);
-  //     const checked = event.target.checked;
-  //     if (checked) {
-  //       setSettingsCheckbox([...settingsCheckBox, value]);
-  //     } else {
-  //       setSettingsCheckbox(settingsCheckBox.filter((item) => item !== value));
-  //     }
-  //   } else {
-  //     let checked = !(settingsCheckBox.filter((x) => x == id).length > 0);
-  //     if (checked) {
-  //       setSettingsCheckbox([...settingsCheckBox, id]);
-  //     } else {
-  //       setSettingsCheckbox(settingsCheckBox.filter((item) => item !== id));
-  //     }
-  //   }
-  // };
 
   const handleSettingsCheckboxChange = (e, id) => {
     if (e) {
@@ -114,7 +94,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     } else {
       await setSessionState({
         roomId: roomId,
-        state: SessionState.VOTINGSTART,
+        state: SessionState.VOTESTATE,
       });
       setInSettings(false);
 
