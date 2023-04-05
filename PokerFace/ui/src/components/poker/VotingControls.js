@@ -94,7 +94,7 @@ const VotingControls = ({ cards, activeCards, roomId, settings }) => {
     } else {
       await setSessionState({
         roomId: roomId,
-        state: SessionState.VOTESTATE,
+        state: SessionState.VOTINGSTART,
       });
       setInSettings(false);
 
