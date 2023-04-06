@@ -106,7 +106,7 @@ const Join = () => {
     <>
       <Nav user={null}/>
       {isLoading ? <LoadingScreen /> : ""}
-      <body className="center">
+      <body className="center mb-355">
         <div className="register">
           <div className="info">
             <h2>Let's start!</h2>
