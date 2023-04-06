@@ -15,6 +15,8 @@ public class ModeratorSettingsJunitTest {
     @Before
     public void setup() {
         Setup.launchMainBrowser();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
 
         cardCheckBoxValuesExpected = new ArrayList<>();
         cardCheckBoxValuesExpected.add("Use all cards");
@@ -57,8 +59,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getPossibleCardCheckboxValuesTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.getPossibleCardCheckboxValuesList();
@@ -69,8 +69,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void selectAllCardsTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("Use all cards");
@@ -83,8 +81,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void selectSpecificCardsTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickAndValidateCardCheckbox("3");
@@ -99,8 +95,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void checkIfActiveVotingSessionResetAfterNewValuesSelectedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickAndValidateCardCheckbox("3");
@@ -135,8 +129,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void flipCardsTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickFlipCardsButton();
         Setup.waitForElementToAppear(ModeratorSettings.VOTING_SUMMARY_CIRCLE);
         String actualCircleText = ModeratorSettings.getCircleText();
@@ -146,8 +138,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void clearVotesTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickAndValidateCardCheckbox("3");
@@ -167,8 +157,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void finishVotingTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -196,9 +184,25 @@ public class ModeratorSettingsJunitTest {
     }
 
     @Test
+    public void checkCancelButtonFunctionality() {
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("13");
+        ModeratorSettings.clickCardCheckbox("20");
+        ModeratorSettings.clickCardCheckbox("100");
+        ModeratorSettings.clickSaveButton();
+        ModeratorSettings.waitForCardsOptions();
+        List <String> expectedList = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("Use all cards");
+        ModeratorSettings.clickCancelButton();
+        List <String> actualList = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
+        Assert.assertEquals("Cancel button does not work properly", expectedList, actualList);
+    }
+
+    @Test
     public void getFirstUserInTheListTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
@@ -215,8 +219,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getPhaseMessageTopOffListAfterCardsFlippedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -246,8 +248,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getMessageTopOffListVotingPhaseTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -278,8 +278,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getSumOfPlayersVotedInVotingSummaryTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -309,8 +307,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getVoteValueInSplitOfVotesVotingSummaryTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -336,8 +332,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getPercentageOfPlayersForEachVoteVotingSummaryTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -363,8 +357,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void selectAutoRevealCheckboxTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("3");
@@ -377,8 +369,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void checkIfVotesAreRevealedWhenAllPlayersVotedAutoRevealCheckboxMarkedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -408,8 +398,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void checkIfVotesAreNotRevealedWhenAllPlayersVotedAutoRevealCheckboxUnmarkedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -434,8 +422,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void getModeratorGeneratedRoomLinkTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         Setup.browser.getCurrentUrl().contains("https://pokerface-dev.azurewebsites.net/Poker?roomId");
         Assert.assertTrue("Current room link is not uniquely generated", Setup.browser.getCurrentUrl().contains("https://pokerface-dev.azurewebsites.net/Poker?roomId"));
         Assert.assertNotEquals("General link and uniquely generated link are the same", Setup.POKER_URL, Setup.browser.getCurrentUrl());
@@ -443,8 +429,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void compareModeratorAndPlayerRoomLinksTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         String moderatorRoomLink = Setup.browser.getCurrentUrl();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
@@ -456,8 +440,6 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void compareGeneratedRoomLinksFromTwoDifferentModeratorsTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         String firstModeratorRoomLink = Setup.browser.getCurrentUrl();
         Setup.launchFourthBrowser();
         LoginLogout.loginModerator(LoginLogout.SECOND_EMAIL, LoginLogout.PASSWORD_CORRECT);
@@ -468,14 +450,33 @@ public class ModeratorSettingsJunitTest {
 
     @Test
     public void checkIfTimerIsVisibleInPlayersSectionTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
         LoginLogout.waitForNameResults("testemail@gmail.com");
         ModeratorSettings.getTimerVisibleInPlayersSection();
         Assert.assertTrue("Timer is not displayed", ModeratorSettings.getTimerVisibleInPlayersSection());
     }
 
+    @Test
+    public void checkIfReEnteredRoomHasPreviouslySavedCardOptionsTest() {
+        ModeratorSettings.clickVotingConfigurationButton();
+        ModeratorSettings.waitForCardCheckboxOptions();
+        ModeratorSettings.clickCardCheckbox("13");
+        ModeratorSettings.clickCardCheckbox("20");
+        ModeratorSettings.clickCardCheckbox("100");
+        ModeratorSettings.clickSaveButton();
+        List <String> expectedListBeforeLogout = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
+        LoginLogout.pressLoginNameButton();
+        LoginLogout.pressLogoutButton();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
+        ModeratorSettings.waitForCardsOptions();
+        List <String> actualListAfterLogoutRoomReEntered = ModeratorSettings.getPossibleModeratorVotingAreaCardsList();
+        Assert.assertEquals("Previously saved card options are not visible",expectedListBeforeLogout, actualListAfterLogoutRoomReEntered);
+    }
+
     @After
     public void finish() {
+        ModeratorSettings.resetPreviouslySavedValuesJavaScript();
+        ModeratorSettings.resetAutoRevealJavaScript();
         Setup.closePage();
     }
 }

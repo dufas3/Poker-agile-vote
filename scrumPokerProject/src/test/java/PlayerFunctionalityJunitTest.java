@@ -13,6 +13,8 @@ public class PlayerFunctionalityJunitTest {
     @Before
     public void setup() {
         Setup.launchMainBrowser();
+        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
+        LoginLogout.waitForLoginResults();
 
         expectedUsersList = new ArrayList<>();
         expectedUsersList.add("testemail@gmail.com");
@@ -22,8 +24,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void getCheckMarkPlayerVotedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -45,8 +45,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void comparePlayerCardsWithModeratorCardsPositiveTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -70,8 +68,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void getPlayerNameInTheListTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
@@ -84,8 +80,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void getAllUsersInTheListTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME);
         LoginLogout.clickEnterPlayerButton();
@@ -101,8 +95,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void getQuestionMarkPlayerNotVotedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -130,8 +122,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void getVotingResultNextToPlayerNameTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         ModeratorSettings.clickVotingConfigurationButton();
         ModeratorSettings.waitForCardCheckboxOptions();
         ModeratorSettings.clickCardCheckbox("0");
@@ -156,8 +146,6 @@ public class PlayerFunctionalityJunitTest {
 
     @Test
     public void getVoteIconBeforePlayerVotedTest() {
-        LoginLogout.loginModerator(LoginLogout.EMAIL_CORRECT, LoginLogout.PASSWORD_CORRECT);
-        LoginLogout.waitForLoginResults();
         Setup.launchAlternativeBrowser();
         LoginLogout.loginPlayer(LoginLogout.FIELD_NAME_SECOND);
         LoginLogout.clickEnterPlayerButton();
@@ -169,6 +157,8 @@ public class PlayerFunctionalityJunitTest {
 
     @After
     public void finish() {
+        ModeratorSettings.resetPreviouslySavedValuesJavaScript();
+        ModeratorSettings.resetAutoRevealJavaScript();
         Setup.closePage();
     }
 }

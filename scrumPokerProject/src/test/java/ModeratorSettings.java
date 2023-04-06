@@ -1,5 +1,6 @@
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,6 +19,7 @@ public class ModeratorSettings {
     public static final By CARD = By.className("card-css");
     public static final By CARD_NUMBER = By.className("number");
     public static final By SAVE_BUTTON = By.xpath("//*[@id=\"root\"]/div[1]/div[1]/div[1]/div[2]/div[3]/button[1]/h6");
+    public static final By CANCEL_BUTTON = By.xpath("//*[@id=\"root\"]/div[1]/div[1]/div[1]/div[2]/div[3]/button[2]/h6");
     public static final By VOTING_SUMMARY_CIRCLE = By.className("circle");
     public static final By VOTE_PERCENTAGE = By.className("vote-percentage");
     public static final By VOTE_VALUE = By.className("vote-value");
@@ -57,10 +59,36 @@ public class ModeratorSettings {
 
     public static void waitForCardCheckboxOptions() {
         new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.numberOfElementsToBeMoreThan(CARD_CHECKBOX, 2));
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(15),Duration.ofMillis(50)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(CARD_CHECKBOX));
     }
 
     public static void waitForCardsOptions() {
         new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.numberOfElementsToBeMoreThan(CARD, 1));
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(CARD));
+    }
+
+    public static void resetPreviouslySavedValuesJavaScript() {
+        ((JavascriptExecutor) Setup.browser).executeAsyncScript("fetch('https://pokerface-devbackend.azurewebsites.net/api/session/setActiveCards', {\n" +
+                "  headers: {\n" +
+                "    'content-type': 'application/json',\n" +
+                "  },\n" +
+                "  body: `{\\\"roomId\\\":\"${new URLSearchParams(location.search).get('roomId')}\",\\\"cardIds\\\":[]}`,\n" +
+                "  method: 'POST',\n" +
+                "  mode: 'cors',\n" +
+                "  credentials: 'omit'\n" +
+                "}).then(()=>arguments[0]());");
+    }
+
+    public static void resetAutoRevealJavaScript() {
+        ((JavascriptExecutor) Setup.browser).executeAsyncScript("fetch('https://pokerface-devbackend.azurewebsites.net/api/settings/setSettings', {\n" +
+                "  headers: {\n" +
+                "    'content-type': 'application/json',\n" +
+                "  },\n" +
+                "  body: `{\\\"roomId\\\":\"${new URLSearchParams(location.search).get('roomId')}\",\\\"ids\\\":[]}`,\n" +
+                "  method: 'POST',\n" +
+                "  mode: 'cors',\n" +
+                "  credentials: 'omit'\n" +
+                "}).then(()=>arguments[0]());");
     }
 
     public static void waitForCardsOptionsVotingArea() {
@@ -68,11 +96,13 @@ public class ModeratorSettings {
     }
 
     public static void clickCardCheckbox(String text) {
+        Setup.waitForElementToAppear(By.xpath("//label[contains(.,'" + text + "')]"));
         WebElement cardBoxOption = Setup.browser.findElement(By.xpath("//label[contains(.,'" + text + "')]"));
         cardBoxOption.click();
     }
 
     public static Boolean checkIfCardCheckboxIsMarked(String text) {
+        Setup.waitForElementToAppear(By.xpath("//label[contains(.,'" + text + "')]"));
         WebElement checkbox = Setup.browser.findElement(By.xpath("//label[contains(.,'" + text + "')]"));
         if(!checkbox.isSelected()) {
             System.out.println("Checkbox is not selected");
@@ -100,6 +130,13 @@ public class ModeratorSettings {
         WebElement saveButton = Setup.browser.findElement(SAVE_BUTTON);
         Assert.assertTrue("Save button is invisible", saveButton.isDisplayed());
         saveButton.click();
+    }
+
+    public static void clickCancelButton() {
+        Setup.waitForElementToAppear(CANCEL_BUTTON);
+        WebElement cancelButton = Setup.browser.findElement(CANCEL_BUTTON);
+        Assert.assertTrue("Cancel button is invisible", cancelButton.isDisplayed());
+        cancelButton.click();
     }
 
     public static ArrayList<String> getPossibleCardCheckboxValuesList() {

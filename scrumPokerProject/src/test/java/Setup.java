@@ -44,7 +44,7 @@ public class Setup {
     }
 
     public static void waitForElementToAppear(By elementSelector) {
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(20)).until(e -> e.findElement(elementSelector).isDisplayed());
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(20),Duration.ofMillis(50)).until(e -> e.findElement(elementSelector).isDisplayed());
     }
 
     public static void clickJavaScript(WebElement element) {

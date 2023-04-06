@@ -104,6 +104,7 @@ public class LoginLogout {
     }
 
     public static void pressLogoutButton() {
+        LoginLogout.waitForLoginResults();
         WebElement logoutButton = Setup.browser.findElement(LOGOUT_BUTTON);
         Assert.assertTrue("Logout button located in Header is invisible", logoutButton.isDisplayed());
         logoutButton.click();
