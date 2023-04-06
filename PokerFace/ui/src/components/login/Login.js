@@ -60,7 +60,7 @@ const Login = () => {
   return (
     <>
       <Nav user={null}/>
-      <div className="center">
+      <div className="center mb-345">
         {isLoading ? <LoadingScreen /> : ""}
         <div className="login">
           <div className="info">
