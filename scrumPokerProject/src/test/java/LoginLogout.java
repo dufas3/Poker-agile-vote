@@ -26,7 +26,7 @@ public class LoginLogout {
     public static final By NAME_FIELD = By.id("loginname");
     public static final By EMAIL_FIELD = By.id("emailenter");
     public static final By PASSWORD_FIELD = By.id("passwordenter");
-    public static final By LOGIN_BUTTON = By.className("login-button");
+    public static final By LOGIN_BUTTON = By.id("loginbutton");
     public static final By LOGIN_NAME_RESULT = By.id("dropdown-basic");
     public static final By LOGIN_ERROR_MESSAGE = By.cssSelector(".error-text.text-danger");
     public static final By LOGOUT_BUTTON = By.id("logoutbutton");
