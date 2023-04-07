@@ -202,6 +202,7 @@ public class ModeratorSettings {
     }
 
     public static void waitPhaseMessageResults(String text) {
+        Setup.waitForElementToAppear(PHASE_MESSAGE);
         WebElement message = Setup.browser.findElement(PHASE_MESSAGE);
         new WebDriverWait(Setup.browser, Duration.ofSeconds(20), Duration.ofMillis(50)).until(ExpectedConditions.textToBePresentInElement(message, text));
     }
