@@ -364,6 +364,7 @@ public class ModeratorSettingsJunitTest {
         ModeratorSettings.clickCardCheckbox("Auto Reveal");
         ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal");
         ModeratorSettings.clickSaveButton();
+        ModeratorSettings.clickVotingConfigurationButton();
         Assert.assertTrue("Auto Reveal is not selected", ModeratorSettings.checkIfCardCheckboxIsMarked("Auto Reveal"));
     }
 

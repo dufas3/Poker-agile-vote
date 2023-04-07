@@ -25,7 +25,7 @@ public class ModeratorSettings {
     public static final By VOTE_VALUE = By.className("vote-value");
     public static final By CHECKMARK = By.xpath("//i[@class='fa-regular fa-circle-check text-primary']");
     public static final By USER_IN_LIST = By.className("align-center-start");
-    public static final By PHASE_MESSAGE = By.cssSelector("#root > div.App > div.poker > div.player-list.border.rounded.bg-light > div.player-list-top > h6");
+    public static final By PHASE_MESSAGE = By.cssSelector("#root > div.App > div.poker > div.player-list > div.player-list-top > h6");
     public static final By TIMER = By.xpath("//*[@id=\"root\"]/div[1]/div[1]/div[2]/div[1]/div/h6[2]");
 
 
