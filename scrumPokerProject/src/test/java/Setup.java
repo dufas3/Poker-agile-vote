@@ -1,7 +1,4 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -9,10 +6,12 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class Setup {
+
     public static WebDriver browser;
     public static WebDriver mainBrowser;
     public static WebDriver alternativeBrowser;
@@ -20,7 +19,7 @@ public class Setup {
     public static WebDriver fourthBrowser;
     public static final String POKER_URL = "https://pokerface-dev.azurewebsites.net/Login";
     public static final String URL_ROOM_PLAYER = "https://pokerface-dev.azurewebsites.net/Poker?roomId=92aabb76-af53-4652-a2cc-16d7ce4dfe76";
-    public static final String URL_FESTO ="https://www.festo.com/us/en/";
+    public static final String URL_FESTO = "https://www.festo.com/us/en/";
 
     public static WebDriver setup() {
         String browserType = System.getenv("BROWSER");
@@ -44,7 +43,7 @@ public class Setup {
     }
 
     public static void waitForElementToAppear(By elementSelector) {
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(20),Duration.ofMillis(50)).until(e -> e.findElement(elementSelector).isDisplayed());
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(20), Duration.ofMillis(50)).until(e -> e.findElement(elementSelector).isDisplayed());
     }
 
     public static void clickJavaScript(WebElement element) {
@@ -100,7 +99,6 @@ public class Setup {
         fourthBrowser = null;
     }
 }
-
 
 
 

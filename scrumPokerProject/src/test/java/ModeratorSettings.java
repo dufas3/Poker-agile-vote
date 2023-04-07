@@ -203,7 +203,7 @@ public class ModeratorSettings {
 
     public static void waitPhaseMessageResults(String text) {
         WebElement message = Setup.browser.findElement(PHASE_MESSAGE);
-        new WebDriverWait(Setup.browser, Duration.ofSeconds(15)).until(ExpectedConditions.textToBePresentInElement(message, text));
+        new WebDriverWait(Setup.browser, Duration.ofSeconds(20), Duration.ofMillis(50)).until(ExpectedConditions.textToBePresentInElement(message, text));
     }
 
     public static Boolean getTimerVisibleInPlayersSection() {

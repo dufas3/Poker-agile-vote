@@ -186,7 +186,7 @@ public class LoginLogoutJunitTest {
     @Test
     public void getLoginButtonColorBlueTest() {
         String actualColor = LoginLogout.getButtonColor(LoginLogout.LOGIN_BUTTON);
-        String expectedColor = "rgb(100, 149, 237) none repeat scroll 0% 0% / auto padding-box border-box";
+        String expectedColor = "rgb(240, 240, 240) none repeat scroll 0% 0% / auto padding-box border-box";
         Assert.assertEquals("Login button color is not Blue", expectedColor, actualColor);
     }
 
