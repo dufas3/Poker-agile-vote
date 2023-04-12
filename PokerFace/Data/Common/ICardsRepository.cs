@@ -2,9 +2,9 @@
 
 namespace PokerFace.Data.Common
 {
-    public interface ICardsRepository
+    public interface ICardsRepository : IAsyncRepository<Card>
     {
         Task<List<Card>> GetCardsAsync();
-        Task<Card> GetAsync(int cardId);
+        Task<Card> GetCardAsync(int id);
     }
 }

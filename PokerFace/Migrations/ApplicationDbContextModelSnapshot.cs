@@ -33,47 +33,21 @@ namespace PokerFace.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("SessionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SessionId");
+
                     b.ToTable("Cards");
                 });
 
-            modelBuilder.Entity("PokerFace.Data.Entities.Session", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CardIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ModeratorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sessions");
-                });
-
-            modelBuilder.Entity("PokerFace.Data.Entities.User", b =>
+            modelBuilder.Entity("PokerFace.Data.Entities.Moderator", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +56,6 @@ namespace PokerFace.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ConnectionId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -94,12 +67,78 @@ namespace PokerFace.Migrations
                     b.Property<string>("RoomId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SelectedCardId")
+                    b.HasKey("Id");
+
+                    b.ToTable("Moderators");
+                });
+
+            modelBuilder.Entity("PokerFace.Data.Entities.Session", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("LastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModeratorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("PokerFace.Data.Entities.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SessionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("PokerFace.Data.Entities.Card", b =>
+                {
+                    b.HasOne("PokerFace.Data.Entities.Session", null)
+                        .WithMany("ActiveCards")
+                        .HasForeignKey("SessionId");
+                });
+
+            modelBuilder.Entity("PokerFace.Data.Entities.Setting", b =>
+                {
+                    b.HasOne("PokerFace.Data.Entities.Session", null)
+                        .WithMany("ActiveSettings")
+                        .HasForeignKey("SessionId");
+                });
+
+            modelBuilder.Entity("PokerFace.Data.Entities.Session", b =>
+                {
+                    b.Navigation("ActiveCards");
+
+                    b.Navigation("ActiveSettings");
                 });
 #pragma warning restore 612, 618
         }

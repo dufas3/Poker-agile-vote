@@ -1,25 +1,32 @@
-import './VotingControls.css';
-import '../GlobalCSS.css'
+import "./VotingControls.css";
+import "../GlobalCSS.css";
 import { useEffect, useState } from "react";
 import { SessionState } from "../../common/sessionState";
 import setSessionState from "../../api/set/setSessionState";
 import ClearSessionVotes from "../../api/clearSessionVotes";
 import SetActiveCards from "../../api/set/setActiveCards";
+import SetSettings from "../../api/set/setSettings";
 
-const VotingControls = ({ cards, activeCards, roomId }) => {
+const VotingControls = ({ cards, activeCards, roomId, settings }) => {
   const [inSettings, setInSettings] = useState(false);
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+  const [isCheckAll, setIsCheckAll] = useState(false);
+  const [settingsCheckBox, setSettingsCheckbox] = useState([]);
 
   useEffect(() => {
     setUpAlreadyActiveCards();
   }, [activeCards]);
 
   useEffect(() => {
-    setUpAlreadyActiveCards();
-  }, []);
+    setUpAlreadyActiveSettings();
+  }, [settings]);
 
-  const handleSetAllCards = () => {
-    //  To Do (set all cards for players to vote)
+  const handleSetAllCards = (e) => {
+    setIsCheckAll(!isCheckAll);
+    setSelectedCheckboxes(cards.map((li) => li.id.toString()));
+    if (isCheckAll) {
+      setSelectedCheckboxes([]);
+    }
   };
 
   const handleFlipCards = async () => {
@@ -45,23 +52,29 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     await ClearSessionVotes({ roomId: roomId });
   };
 
-  const handleCheckboxChange = (event, id) => {
-    if (event) {
-      const value = event.target.value;
-      const checked = event.target.checked;
-      if (checked) {
-        setSelectedCheckboxes([...selectedCheckboxes, value]);
+  const handleSettingsCheckboxChange = (e, id) => {
+    if (e) {
+      const { value, checked } = e.target;
+      console.log("value", value);
+      setSettingsCheckbox([...settingsCheckBox, id]);
+      if (!checked) {
+        setSettingsCheckbox(settingsCheckBox.filter((item) => item !== value));
       } else {
+        setSettingsCheckbox([...settingsCheckBox, value]);
+      }
+    }
+  };
+
+  const handleCheckboxChange = (e, id) => {
+    if (e) {
+      const { value, checked } = e.target;
+      setSelectedCheckboxes([...selectedCheckboxes, id]);
+      if (!checked) {
         setSelectedCheckboxes(
           selectedCheckboxes.filter((item) => item !== value)
         );
-      }
-    } else {
-      let checked = !(selectedCheckboxes.filter((x) => x == id).length > 0);
-      if (checked) {
-        setSelectedCheckboxes([...selectedCheckboxes, id]);
       } else {
-        setSelectedCheckboxes(selectedCheckboxes.filter((item) => item !== id));
+        setSelectedCheckboxes([...selectedCheckboxes, value]);
       }
     }
   };
@@ -71,16 +84,27 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     selectedCheckboxes.map((cb) => {
       if (!ids.includes(cb)) ids.push(cb);
     });
-    setInSettings(false);
+    ids.sort((a, b) => a - b);
 
-    //if (ids.length == 0) return; //toast error
-    await SetActiveCards({
-      roomId: roomId,
-      cardIds: ids,
-    });
+    if (ids.length == 0) {
+      await setSessionState({
+        roomId: roomId,
+        state: SessionState.NONECARDSSELECTED,
+      });
+    } else {
+      await setSessionState({
+        roomId: roomId,
+        state: SessionState.VOTINGSTART,
+      });
+      setInSettings(false);
 
-    await ClearSessionVotes({ roomId: roomId });
-    setUpAlreadyActiveCards();
+      await SetActiveCards({
+        roomId: roomId,
+        cardIds: ids,
+      });
+      await SetSettings({ roomId: roomId, ids: settingsCheckBox });
+      await ClearSessionVotes({ roomId: roomId });
+    }
   };
 
   const handleChangeCardsCancel = async () => {
@@ -89,13 +113,21 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
     } else {
       setInSettings(true);
     }
-    setUpAlreadyActiveCards();
   };
 
-  //sets up all cards
   const setUpAlreadyActiveCards = async () => {
     activeCards?.map((card) => {
       handleCheckboxChange(undefined, card.id.toString());
+      setSelectedCheckboxes(activeCards.map((li) => li.id.toString()));
+    });
+  };
+
+  const setUpAlreadyActiveSettings = async () => {
+    settings?.map((setting) => {
+      if (setting.isActive) {
+        handleSettingsCheckboxChange(undefined, setting.id.toString());
+        setSettingsCheckbox(settings.map((li) => li.id.toString()));
+      }
     });
   };
 
@@ -136,31 +168,51 @@ const VotingControls = ({ cards, activeCards, roomId }) => {
         </div>
       ) : (
         <div className="voting-container border rounded bg-light">
-          <div className="options">
-            <div className="form-check border rounded bg-light">
+          <div className="cards-select">
+            <div className="form-check bg-light">
               <input
                 className="form-check-input"
                 type="checkbox"
                 value=""
                 id="flexCheckDefault"
-                onClick={handleSetAllCards}
+                checked={
+                  selectedCheckboxes.length >= cards?.length ? true : false
+                }
+                onChange={handleSetAllCards}
               />
               <label className="form-check-label" htmlFor="flexCheckDefault">
                 Use all cards
               </label>
             </div>
             {cards.map((card) => (
-              <div className="form-check border rounded bg-light">
+              <div className="form-check bg-light">
                 <input
                   onChange={handleCheckboxChange}
                   value={card.id.toString()}
                   className="form-check-input"
                   type="checkbox"
                   checked={selectedCheckboxes.includes(card.id.toString())}
-                  id="flexCheckDefault"
+                  id={card.value}
                 />
-                <label className="form-check-label" htmlFor="flexCheckDefault">
+                <label className="form-check-label" htmlFor={card.value}>
                   {card.value}
+                </label>
+              </div>
+            ))}
+          </div>
+          <div className="settings">
+            {settings.map((setting) => (
+              <div className="">
+                <input
+                  className="form-check-input "
+                  type="checkbox"
+                  value={setting.id}
+                  id={setting.name}
+                  checked={settingsCheckBox.includes(setting.id.toString())}
+                  onChange={handleSettingsCheckboxChange}
+                />
+                <label className="form-check-label ml-5" htmlFor={setting.name}>
+                  {setting.name}
                 </label>
               </div>
             ))}

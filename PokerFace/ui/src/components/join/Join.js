@@ -1,7 +1,6 @@
 import "./Join.css";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import Nav from "../header/Nav";
 import addToSession from "../../api/addToSession";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import GetRoom from "../../api/get/getRoom";
@@ -10,10 +9,11 @@ import { signalRConnection } from "../../api/signalR/signalRHub";
 import * as signalR from "@microsoft/signalr";
 import { setUserId } from "../../common/UserId";
 import GetSessionUsers from "../../api/get/getSessionUsers";
+import Nav from "../header/Nav";
 
 const Join = () => {
   const [name, setName] = useState("");
-  const [roomId, setId] = useState("");
+  const [roomId, setRoomId] = useState("");
   const [enter, setEnter] = useState(false);
   const [errors, setErrors] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,63 +25,63 @@ const Join = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("room") == undefined) {
+    if (searchParams.get("roomId") == undefined) {
       setNavig(navigate("/Login", { replace: true }));
     } else {
-      setId(searchParams.get("room"));
+      setRoomId(searchParams.get("roomId"));
     }
   }, []);
+
+  const setError = (message) => {
+    setErrorMessage(message);
+    setErrors(true);
+    setIsLoading(false);
+  };
 
   const validation = async () => {
     let isUsernameTaken = false;
     let sessionUserList = await GetSessionUsers({
-      id: searchParams.get("room"),
+      roomId: searchParams.get("roomId"),
     });
+    console.log("sessionUserList", sessionUserList);
 
     sessionUserList.map((sessionUser) => {
       if (sessionUser.name == name) {
         isUsernameTaken = true;
       }
     });
+
     setIsLoading(true);
     if (!name) {
-      setErrorMessage("Please enter username!");
-      setErrors(true);
-      setIsLoading(false);
+      setError("Please enter username!");
     } else if (name.replaceAll(" ", "").length == 0) {
-      setErrorMessage("Please enter username!");
-      setErrors(true);
-      setIsLoading(false);
+      setError("Please enter username!");
     } else if (name.includes("@")) {
-      setErrorMessage("You can't use @ in your username!");
-      setErrors(true);
-      setIsLoading(false);
-    } else if (sessionUserList.length >= 9) {
-      setErrorMessage("This room is full!");
-      setErrors(true);
-      setIsLoading(false);
-    } else if (name.length <= 2) {
-      setErrorMessage("Username is too short!");
-      setErrors(true);
-      setIsLoading(false);
+      setError("You can't use @ in your username!");
+    } //else if (sessionUserList.length >= 10) {
+      //setError("This room is full!");
+   // } 
+      else if (name.length <= 2) {
+      setError("Username is too short!");
     } else if (isUsernameTaken) {
-      setErrorMessage("This username is taken!");
-      setErrors(true);
-      setIsLoading(false);
+      setError("This username is taken!");
     } else {
       setErrors(false);
       let roomExist = await GetRoom({ roomId: roomId });
 
       if (!roomExist) {
-        setErrors(true);
+        setError("No room with this id!");
         return;
       }
 
-      if (signalRConnection.state === signalR.HubConnectionState.Connected) {
+      if (signalRConnection.state === signalR.HubConnectionState.Connected)
         await signalRConnection.stop();
-      }
       await signalRConnection.start();
-      await signalRConnection.invoke(MethodNames.ReceiveConnectSockets, "");
+      await signalRConnection.invoke(
+        MethodNames.ReceiveConnectSockets,
+        0,
+        searchParams.get("roomId")
+      );
 
       let response = await addToSession({
         name: name,
@@ -90,8 +90,10 @@ const Join = () => {
       });
 
       if (!response) {
-        setErrors(true);
+        setError("Network error, contact admin");
+        return;
       }
+
       setUserId(response.id);
       setIsLoading(false);
       setNavig(navigate("/Poker?" + searchParams, { replace: true }));
@@ -102,8 +104,9 @@ const Join = () => {
 
   return (
     <>
+      <Nav user={null}/>
       {isLoading ? <LoadingScreen /> : ""}
-      <body className="center">
+      <body className="center mb-355">
         <div className="register">
           <div className="info">
             <h2>Let's start!</h2>
@@ -136,14 +139,14 @@ const Join = () => {
           >
             {enter ? (
               <Link
-                to={"/Poker?room=" + searchParams.get("room")}
+                to={"/Poker?roomId=" + searchParams.get("roomId")}
                 style={{ textDecoration: "none" }}
               >
                 <h3>Enter</h3>
               </Link>
             ) : (
               <Link
-                to={"/Join?room=" + searchParams.get("room")}
+                to={"/Join?roomId=" + searchParams.get("roomId")}
                 style={{ textDecoration: "none" }}
               >
                 <h3>Enter</h3>

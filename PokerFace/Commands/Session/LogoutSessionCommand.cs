@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using PokerFace.Data.Common;
+using PokerFace.Data.Hubs;
 
 namespace PokerFace.Commands.Session
 {
-    //moderators log's out or inactivity period reaches, session is deleted
     public class LogoutSessionCommand : IRequest
     {
         public string RoomId { get; set; }
@@ -11,16 +11,19 @@ namespace PokerFace.Commands.Session
 
     public class LogoutSessionCommandHandler : IRequestHandler<LogoutSessionCommand>
     {
-        private readonly ISessionRepository sessionRepository;
+        private readonly ISessionService sessionService;
+        private readonly ISignalRService signalRService;
 
-        public LogoutSessionCommandHandler(ISessionRepository sessionRepository)
+
+        public LogoutSessionCommandHandler(ISessionService sessionService, ISignalRService signalRService)
         {
-            this.sessionRepository = sessionRepository;
+            this.sessionService = sessionService;
+            this.signalRService = signalRService;
         }
 
         public async Task<Unit> Handle(LogoutSessionCommand request, CancellationToken cancellationToken)
         {
-            await sessionRepository.LogoutSessionAsync(request.RoomId);
+            await sessionService.LogoutSessionAsync(request.RoomId);
             return Unit.Value;
         }
     }

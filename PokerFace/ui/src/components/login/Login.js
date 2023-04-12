@@ -1,12 +1,12 @@
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import Nav from "../header/Nav";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import GetModerator from "../../api/get/getModerator";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
 import { MethodNames } from "../../common/methodNames";
 import { signalRConnection } from "../../api/signalR/signalRHub";
 import { setUserId } from "../../common/UserId";
+import Nav from "../header/Nav";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -30,31 +30,37 @@ const Login = () => {
       setErrors(true);
       setIsLoading(false);
       return;
-    } else {
-      setErrors(false);
-      setIsLoading(true);
-
-      await signalRConnection.start();
-      await signalRConnection.invoke(
-        MethodNames.ReceiveConnectSockets,
-        response.id.toString()
-      );
-      setIsLoading(false);
-      setEnter(true);
-
-      setUserId(response.id);
-      setNavig(
-        navigate("/Poker?room=" + response.roomId, {
-          replace: true,
-        })
-      );
-
-      handleOnClick();
     }
+
+    setErrors(false);
+    setIsLoading(true);
+
+    console.log(response);
+
+    await signalRConnection.start();
+
+    await signalRConnection.invoke(
+      MethodNames.ReceiveConnectSockets,
+      response.userId,
+      response.roomId
+    );
+
+    setIsLoading(false);
+    setEnter(true);
+
+    setUserId(response.userId);
+    setNavig(
+      navigate("/Poker?roomId=" + response.roomId, {
+        replace: true,
+      })
+    );
+
+    handleOnClick();
   };
   return (
     <>
-      <div className="center">
+      <Nav user={null}/>
+      <div className="center mb-345">
         {isLoading ? <LoadingScreen /> : ""}
         <div className="login">
           <div className="info">

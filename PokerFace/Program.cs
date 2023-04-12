@@ -5,6 +5,8 @@ using PokerFace.Data.Common;
 using PokerFace.Data.Hubs;
 using PokerFace.Data.Repositories;
 using PokerFace.Services;
+using PokerFace.Data.Entities;
+using PokerFace.Commands.Email;
 
 namespace PokerFace.Web
 {
@@ -26,16 +28,26 @@ namespace PokerFace.Web
                 );
 
             //repos
+            builder.Services.AddScoped<IAsyncRepository<Session>, AsyncRepository<Session>>();
+            builder.Services.AddScoped<IAsyncRepository<Card>, AsyncRepository<Card>>();
+            builder.Services.AddScoped<IAsyncRepository<Moderator>, AsyncRepository<Moderator>>();
+
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ICardsRepository, CardsRepository>();
+            builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 
             //services
             builder.Services.AddScoped<ISignalRService, SignalRService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
 
-            //for adding static data 
-            //builder.Services.AddSingleton(new StaticData(builder.Services.BuildServiceProvider().GetService<ApplicationDbContext>()));
+            //email
+            var emailConfig = builder.Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig);
+            builder.Services.AddScoped<IEmailSender, EmailSender>();
+
 
             builder.Services.AddCors(options =>
             {
@@ -43,7 +55,6 @@ namespace PokerFace.Web
                                   policy =>
                                   {
                                       policy
-                                      .WithOrigins("https://pokerface-test.azurewebsites.net")
                                       .WithOrigins("https://pokerface-dev.azurewebsites.net")
                                       .AllowCredentials()
                                       .AllowAnyHeader()
@@ -66,7 +77,6 @@ namespace PokerFace.Web
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.Run();
         }

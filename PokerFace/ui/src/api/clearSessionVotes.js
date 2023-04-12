@@ -1,27 +1,26 @@
 import ConnectionUrl from "../common/connectionUrl";
 
-const ClearSessionVotes = async (props) => {
+const ClearSessionVotes = async ({ roomId }) => {
+  const requestOptions = {
+    method: "Get",
+    headers: { "Content-Type": "application/json" },
+  };
 
-    const requestOptions = {
-        method: "Get",
-        headers: {"Content-Type": "application/json"},
-    };
+  if (!roomId) return;
 
-    if (!props) return;
+  const url = ConnectionUrl({ appendix: "/session/clearvotes" });
 
-    const url = ConnectionUrl({appendix: "/session/clearvotes"});
+  url.searchParams.append("roomId", roomId);
 
-    url.searchParams.append("roomId", props.roomId);
-
-    try {
-        const response = await fetch(url.toString(), requestOptions);
-        const isJson = response.headers
-            .get("content-type")
-            ?.includes("application/json");
-        const data = isJson && (await response.json());
-        return data;
-    } catch (error) {
-        return;
-    }
+  try {
+    const response = await fetch(url.toString(), requestOptions);
+    const isJson = response.headers
+      .get("content-type")
+      ?.includes("application/json");
+    const data = isJson && (await response.json());
+    return data;
+  } catch (error) {
+    return;
+  }
 };
 export default ClearSessionVotes;

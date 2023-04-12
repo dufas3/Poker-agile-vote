@@ -13,20 +13,19 @@ namespace PokerFace.Commands.User
     {
         private readonly IUserRepository userRepository;
         private readonly ISessionService sessionService;
+
         public GetModeratorCommandHandler(IUserRepository userRepository, ISessionService sessionService)
         {
             this.userRepository = userRepository;
             this.sessionService = sessionService;
         }
+
         public async Task<ModeratorDto> Handle(GetModeratorCommand request, CancellationToken cancellationToken)
         {
-            //create new session if in session table doesnt exist moderator id, otherwise do nothign
-            var user = await userRepository.GetModerator(request.UserEmail, request.UserPassword);
+            var user = await userRepository.GetModeratorAsync(request.UserEmail, request.UserPassword);
+            await sessionService.CreateSession(user);
 
-            if (String.IsNullOrEmpty(user.RoomId))
-                await sessionService.CreateSession(user.Id);
-
-            return user.ToModeratorDto();
+            return user.ToDto();
         }
     }
 }

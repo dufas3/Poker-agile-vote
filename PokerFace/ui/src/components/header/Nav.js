@@ -2,10 +2,10 @@ import FestoLogo from "../../imgs/festo.png";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Link, useSearchParams } from "react-router-dom";
 import "./Nav.css";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoutUser from "../../api/logoutUser";
 import { signalRConnection } from "../../api/signalR/signalRHub";
+import { WebsiteUrl } from "../../common/connectionUrl";
 
 const Nav = ({ user }) => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Nav = ({ user }) => {
         <div className="container-fluid">
           <a className="navbar-brand">Festo Scrum Poker</a>
           <div className="d-flex justify-content-end">
-            {!user.name ? (
+            {!user ? (
               <Link to="/Login">
                 <a className="btn mx-5" id="H1">
                   <i className="bi bi-person-fill" />
@@ -41,8 +41,9 @@ const Nav = ({ user }) => {
                     <Dropdown.Item
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          "https://pokerface-test.azurewebsites.net/?room=" +
-                            searchParams.get("room")
+                          WebsiteUrl +
+                            "/?roomId=" +
+                            searchParams.get("roomId")
                         );
                       }}
                     >

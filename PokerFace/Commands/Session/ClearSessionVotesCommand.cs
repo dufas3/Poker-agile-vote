@@ -11,20 +11,19 @@ namespace PokerFace.Commands.Session
 
     public class ClearVotesCommandHandler : IRequestHandler<ClearSessionVotesCommand>
     {
-        private readonly ISessionRepository sessionRepository; 
+        private readonly ISessionService sessionService; 
         private readonly ISignalRService signalRService;
 
-        public ClearVotesCommandHandler(ISessionRepository sessionRepository, ISignalRService signalRService)
+        public ClearVotesCommandHandler(ISessionService sessionService, ISignalRService signalRService)
         {
-            this.sessionRepository = sessionRepository;
+            this.sessionService = sessionService;
             this.signalRService = signalRService;
-
         }
 
         public async Task<Unit> Handle(ClearSessionVotesCommand request, CancellationToken cancellationToken)
         {
             await signalRService.SendMessage(StaticHubMethodNames.SendPlayerListUpdate, request.RoomId);
-            await sessionRepository.ClearVotes(request.RoomId);
+            await sessionService.ClearVotes(request.RoomId);
             return Unit.Value;
         }
     }

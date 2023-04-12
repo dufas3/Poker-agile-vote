@@ -18,8 +18,8 @@ namespace PokerFace.Controllers
         [HttpGet]
         public async Task<ActionResult> LogoutUser([FromQuery] LogoutUserCommand command) => await SendMessage(command);
 
-        //[HttpGet]
-        //public async Task<ActionResult> GetUserSelectedCards([FromQuery] GetUserSelectedCardsCommand command) => await SendMessage(command);
+        [HttpGet]
+        public async Task<ActionResult> GetUserSelectedCards([FromQuery] GetUserSelectedCardsCommand command) => await SendMessage(command);
 
         [HttpPost]
         public async Task<ActionResult> SetSessionState([FromBody] SetSessionStateCommand command) => await SendMessage(command);
@@ -27,13 +27,19 @@ namespace PokerFace.Controllers
         [HttpGet]
         public async Task<ActionResult> GetSessionState([FromQuery] GetSessionStateCommand command) => await SendMessage(command);
 
-        //[HttpGet]
-        //public async Task<ActionResult> ClearVotes([FromQuery] ClearSessionVotesCommand command) => await SendMessage(command);
+        [HttpGet]
+        public async Task<ActionResult> ClearVotes([FromQuery] ClearSessionVotesCommand command) => await SendMessage(command);
 
-        //[HttpGet]
-        //public async Task<ActionResult> GetActiveCards([FromQuery] GetActiveCardsCommand command) => await SendMessage(command);
+        [HttpGet]
+        public async Task<ActionResult> GetActiveCards([FromQuery] GetActiveCardsCommand command) => await SendMessage(command);
 
-        //[HttpPost]
-        //public async Task<ActionResult> SetActiveCards([FromBody] SetActiveCardsCommand command) => await SendMessage(command);
+        [HttpPost]
+        public async Task<ActionResult> SetActiveCards([FromBody] SetActiveCardsCommand command) => await SendMessage(command);
+
+        [HttpGet]
+        public async Task<ActionResult> GetLastTimer([FromQuery] GetLastTimerCommand command) => await SendMessage(command);
+
+        [HttpPost]
+        public async Task<ActionResult> SetLastTimer([FromBody] SetLastTimerCommand command) => await SendMessage(command);
     }
 }

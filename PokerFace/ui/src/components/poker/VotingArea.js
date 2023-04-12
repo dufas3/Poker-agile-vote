@@ -1,44 +1,37 @@
 import "./Poker.css";
 import Card from "../card/Card";
 import VotingSummary from "./VotingSummary";
-import './VotingArea.css'
-import '../GlobalCSS.css'
+import "./VotingArea.css";
+import "../GlobalCSS.css";
+import { SessionState } from "../../common/sessionState";
+import { useEffect, useState } from "react";
+
 
 const VotingArea = ({ sessionState, roomId, cards, userId, userList }) => {
+  const [summary, setSummary] = useState(false);
+  useEffect(() => {
+    if (SessionState.FINILIZESTATE == sessionState) {
+      setSummary(true)
+    } else if (SessionState.ALLUSERSVOTED == sessionState) {
+      setSummary(true)
+    } else {
+      setSummary(false)
+    }
+  }, [sessionState])
+  
   return (
     <div className="voting-area border rounded bg-light">
-      {sessionState != 1 ? (
+      { !summary ? (
         <div className="voting-area">
-          <div className="row-1">
+          <div className="cards-container">
             {cards.map((card) =>
-              card.id < 8 ? (
                 <Card
-                  cardValue={{
-                    cardValue: card.value,
-                    cardId: card.id,
-                    userId: userId,
-                    roomId: roomId,
-                  }}
+                  cardValue={card.value}
+                  cardId={card.id}
+                  userId={userId}
+                  sessionState={sessionState}
+                  roomId={roomId}
                 />
-              ) : (
-                " "
-              )
-            )}
-          </div>
-          <div className="row-2">
-            {cards.map((card) =>
-              card.id > 7 ? (
-                <Card
-                  cardValue={{
-                    cardValue: card.value,
-                    cardId: card.id,
-                    userId: userId,
-                    roomId: roomId,
-                  }}
-                />
-              ) : (
-                " "
-              )
             )}
           </div>
         </div>
